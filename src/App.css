@@ -1,0 +1,11 @@
+#p1-overlay {
+  padding: 20px;
+}
+.left {
+  display: flex;
+  flex-direction: column;
+}
+.right {
+  width: 50%;
+  margin: auto;
+}
