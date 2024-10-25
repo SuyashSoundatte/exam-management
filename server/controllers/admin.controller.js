@@ -1,51 +1,62 @@
-const Admin = require('../models/Admin.models');
-const bcrypt = require('bcrypt');
-const Student = require('../models/Student.models');
-const fs = require('fs');
-const path = require('path');
-const csv = require('csv-parser');
 const College = require('../models/College.models');
+const City = require('../models/City.models');
+const Admin = require('../models/Admin.models');
+const ExamConfig = require('../models/ExamConfig.models');
+const Announcement = require('../models/Announcement.models');
+const Student = require('../models/Student.models');
 
-const { readAdminExcelFile }= require("../config/excelReader");
+const bcrypt = require('bcrypt');
+const jwt = require("jsonwebtoken");
+const nodemailer = require('nodemailer');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+
+const addCollege = async(req, res)=>{
+    try {
+        const college = new College(req.body);
+        await college.save();
+        return res.status(201).json({ message: "College added successfully!" });
+    } catch (error) {
+      console.log("Error: ", error);
+      return res.status(500).json({ message: "Internal server error!" });
+    }
+}
+
+const addCity = async (req, res)=>{
+  try {
+    const city = new City(req.body);
+    await city.save();
+    return res.status(201).json({ message: "City added successfully!" });
+  } catch (error) {
+    console.log("Error: ", error);
+    return res.status(500).json({ message: "Internal server error!" });
+  }
+}
 
 const registerAdmin = async (req, res) => {
     try {
         const { username, email, password } = req.body;
 
-        // Check if username is taken
         const existingAdmin = await Admin.findOne({ email });
+
         if (existingAdmin) {
-            return res.status(400).json({ message: 'Username already taken. Please choose another one.' });
-        }
-
-        const adminExists = await Admin.findOne(); // To check if super admin exists
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        if (!adminExists) {
-            const newAdmin = new Admin({
-                username,
-                password: hashedPassword,
-                isSuperAdmin: true,
-                isApproved: true,
-            });
-            await newAdmin.save();
-
-            return res.status(201).json({
-                message: 'Super Admin registered successfully',
-                admin: newAdmin,
+            return res.status(400).json({
+                message: 'Admin with the same email already exists.',
             });
         }
 
-        // If super admin exists, register normal admin
+        const hashPassword = await bcrypt.hash(password, 10);
+
         const newAdmin = new Admin({
             username,
-            password: hashedPassword,
+            email,
+            password :hashPassword
         });
 
         await newAdmin.save();
 
         res.status(201).json({
-            message: 'Admin registration successful. Pending approval by Super Admin.',
+            message: 'Admin registered successfully, approvel pending by super admin',
             admin: newAdmin,
         });
     } catch (error) {
@@ -57,300 +68,237 @@ const registerAdmin = async (req, res) => {
 };
 
 const loginAdmin = async (req, res) => {
-    try {
-        const { email, password } = req.body;
+  const { email, password } = req.body;
 
-        // Validate required fields
-        if (!email || !password) {
-            return res.status(400).json({ message: 'Username and password are required.' });
-        }
+  try {
+      const admin = await Admin.findOne({ email });
 
-        // Find admin by username
-        const admin = await Admin.findOne({ email });
-        if (!admin || !admin.isApproved) {
-            return res.status(403).json({ message: 'Admin not approved or does not exist.' });
-        }
+      if (!admin) {
+          return res.status(401).json({ message: 'Invalid credentials' });
+      }
 
-        // Compare pasloginAdmin
-        // Create JWT token
-        const token = jwt.sign({ id: admin._id, email: admin.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
+      if (!admin.isApproved) {
+          return res.status(403).json({ message: 'Admin account is not approved yet.' });
+      }
 
-        res.status(200).json({ message: 'Login successful', token });
-    } catch (error) {
-        res.status(500).json({ message: 'Error logging in', error });
-    }
-};
+      const isMatch = await bcrypt.compare(password, admin.password);
+      if (!isMatch) {
+          return res.status(401).json({ message: 'Password is wrong!' });
+      }
 
-const getCollegesAndCities = async (req, res) => {
-    try {
-        const colleges = await College.find();
-        const cities = [...new Set(colleges.map(college => college.city))]; // Get unique cities
+      const token = jwt.sign({
+          id: admin._id,
+          email: admin.email,
+          isSuperAdmin: admin.isSuperAdmin
+      }, process.env.JWT_SEC, { expiresIn: '24h' });
 
-        res.status(200).json({
-            colleges,
-            cities,
-        });
-    } catch (error) {
-        res.status(500).json({
-            message: 'Server error. Please try again later.',
-            error: error.message,
-        });
-    }
+      res.cookie('token', token, {
+          httpOnly: true, // Prevent client-side access to the cookie
+          secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+          maxAge: 24 * 60 * 60 * 1000
+      });
+
+      req.session.adminId = admin._id; // Store admin ID in session
+
+      res.status(200).json({
+          message: 'Login successful',
+          admin: {
+              username: admin.username,
+              isSuperAdmin: admin.isSuperAdmin,
+              isApproved: admin.isApproved
+          },
+          token: token
+      });
+  } catch (error) {
+      res.status(500).json({ message: 'Server error. Please try again later.', error: error.message });
+  }
 };
 
 const approveAdmin = async (req, res) => {
-    try {
-        const { approverId } = req.body;
+  const { adminId } = req.params;
+  const { approved } = req.body; // Expecting { approved: true/false, y/n, yes/no, Yes/No, YES/NO} const
 
-        const approver = await Admin.findById(approverId);
-        if (!approver || !approver.isSuperAdmin) {
-            return res.status(403).json({ message: 'Only Super Admin can approve admins' });
-        }
+  try {
+      const adminToApprove = await Admin.findById(adminId);
+      if (!adminToApprove) {
+          return res.status(404).json({ message: 'Admin not found.' });
+      }
 
-        const adminData = await readAdminExcelFile(); // Read data from Excel file
+      // Normalize the approved input
+      const normalizedApproval = String(approved).trim().toLowerCase();
 
-        const approvedAdmins = [];
-        let approvedCount = 0;
-        for (const adminInfo of adminData) {
-            const admin = await Admin.findOne({ email: adminInfo.email });
-            if (admin && !admin.isApproved) {
-                admin.isApproved = true;
-                admin.approvedBy = approverId;
-                await admin.save();
-                approvedAdmins.push(admin);
-                approvedCount++;
-            }
-        }
+      // Determine approval status based on normalized input
+      if (normalizedApproval === 'true' || normalizedApproval === 'yes' || normalizedApproval === 'y') {
+          adminToApprove.isApproved = true;
+      } else if (normalizedApproval === 'false' || normalizedApproval === 'no' || normalizedApproval === 'n') {
+          adminToApprove.isApproved = false;
+      } else {
+          return res.status(400).json({ message: 'Invalid approval status. Please provide true/false or yes/no.' });
+      }
 
-        res.status(200).json({
-            message: `${approvedCount} admins approved successfully`,
-            approvedAdmins,
-        });
-    } catch (error) {
-        res.status(500).json({
-            message: 'Server error. Please try again later.',
-            error: error.message,
-        });
+      await adminToApprove.save();
+
+      res.status(200).json({ message: `Admin ${adminToApprove.isApproved ? 'approved' : 'disapproved'} successfully.`, admin: adminToApprove });
+  } catch (error) {
+      res.status(500).json({ message: 'Error updating admin status.', error: error.message });
+  }
+};
+
+const approveSuperAdmin = async (req, res) => {
+  const { adminId } = req.params;
+  const { superAdminApproval } = req.body;
+
+  try {
+      const adminToApprove = await Admin.findById(adminId);
+      if (!adminToApprove) {
+          return res.status(404).json({ message: 'Admin not found.' });
+      }
+
+      // Normalize the superAdminApproval input
+      const normalizedSuperAdminApproval = String(superAdminApproval).trim().toLowerCase();
+
+      // Determine superadmin approval status based on normalized input
+      if (normalizedSuperAdminApproval === 'true' || normalizedSuperAdminApproval === 'yes' || normalizedSuperAdminApproval === 'y') {
+          adminToApprove.isSuperAdmin = true;
+      } else if (normalizedSuperAdminApproval === 'false' || normalizedSuperAdminApproval === 'no' || normalizedSuperAdminApproval === 'n') {
+          adminToApprove.isSuperAdmin = false;
+      } else {
+          return res.status(400).json({ message: 'Invalid superadmin approval status. Please provide true/false or yes/no.' });
+      }
+
+      await adminToApprove.save();
+
+      res.status(200).json({
+          message: `Superadmin ${adminToApprove.isSuperAdminApproved ? 'approved' : 'disapproved'} successfully.`,
+          admin: adminToApprove
+      });
+  } catch (error) {
+      res.status(500).json({ message: 'Error updating superadmin status.', error: error.message });
+  }
+};
+
+
+const getAllAdmins = async (req, res) => {
+  try {
+      const admins = await Admin.find({});
+      res.status(200).json(admins);
+  } catch (error) {
+      res.status(500).json({ message: 'Error fetching admins.', error: error.message });
+  }
+};
+
+const deleteAdmin = async (req, res) => {
+  const { adminId } = req.params;
+
+  try {
+      const adminToDelete = await Admin.findById(adminId);
+      if (!adminToDelete) {
+          return res.status(404).json({ message: 'Admin not found.' });
+      }
+
+      await Admin.deleteOne({ _id: adminId });
+
+      res.status(200).json({ message: 'Admin deleted successfully.', admin: adminToDelete });
+  } catch (error) {
+      res.status(500).json({ message: 'Error deleting admin.', error: error.message });
+  }
+};
+
+const updateExamConfig = async (req, res) => {
+  try {
+    const { examTitle, examDate, description } = req.body;
+
+    const updatedConfig = await ExamConfig.findOneAndUpdate(
+      {},
+      { examTitle, examDate, description, lastUpdate: Date.now() },
+      { new: true, upsert: true }
+    );
+
+    res.status(200).json({ message: 'Exam configuration updated successfully.', config: updatedConfig });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating exam configuration.', error: error.message });
+  }
+};
+
+// Get Exam Config
+const getExamConfig = async (req, res) => {
+  try {
+    const config = await ExamConfig.findOne({});
+    res.status(200).json(config);
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving exam configuration.', error: error.message });
+  }
+};
+
+// Create Announcement
+const createAnnouncement = async (req, res) => {
+  try {
+    const { title, content, examDate } = req.body;
+
+    const announcement = new Announcement({
+      title,
+      content,
+      examDate,
+      createdBy: req.user.id
+    });
+
+    await announcement.save();
+    res.status(201).json({ message: 'Announcement created successfully', announcement });
+  } catch (error) {
+    res.status(500).json({ message: 'Error creating announcement.', error: error.message });
+  }
+};
+
+// Get Announcements
+const getAnnouncements = async (req, res) => {
+  try {
+    // Fetch all announcements
+    const announcements = await Announcement.find({});
+    
+    // Fetch all registered students
+    const students = await Student.find({}); // Assuming you have a Student model
+
+    // Set up Nodemailer transporter
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.GMAIL_USER, // Your Gmail address
+        pass: process.env.GMAIL_PASS, // Your Gmail password or app-specific password
+      },
+    });
+
+    // Email content
+    const mailOptions = {
+      from: process.env.GMAIL_USER, // Sender address
+      subject: 'New Announcements',
+      text: `Dear Students,\n\nHere are the new announcements:\n\n${announcements.map(announcement => announcement.title).join('\n')}\n\nBest regards,\nYour Team`, // Customize the message as needed
+    };
+
+    // Send email to each student
+    for (const student of students) {
+      mailOptions.to = student.email; // Assuming each student has an email field
+      await transporter.sendMail(mailOptions);
     }
-};
 
-const declareResults = async (req, res) => {
-    const { results } = req.body; // Expecting results as an array of objects { email, result }
-
-    try {
-        const declaredResults = [];
-        let successCount = 0;
-        let failedCount = 0;
-
-        for (const result of results) {
-            const student = await Student.findOne({ email: result.email });
-
-            if (student) {
-                student.result = result.result; // Assuming a 'result' field exists in the Student model
-                await student.save();
-                declaredResults.push(student);
-                successCount++;
-            } else {
-                failedCount++;
-            }
-        }
-
-        res.status(200).json({
-            message: `${successCount} results declared successfully, ${failedCount} students not found`,
-            declaredResults,
-        });
-    } catch (error) {
-        res.status(500).json({
-            message: 'Error declaring results',
-            error: error.message,
-        });
-    }
-};
-
-const setExamDate = async (req, res) => {
-    try {
-        const { examId, date } = req.body; // Extract examId and date from request body
-
-        // Validate input
-        if (!examId || !date) {
-            return res.status(400).json({ message: 'Exam ID and date are required.' });
-        }
-
-        const exam = await Exam.findById(examId);
-        if (!exam) {
-            return res.status(404).json({ message: 'Exam not found' });
-        }
-
-        exam.date = date;
-        await exam.save();
-
-        res.status(200).json({ message: 'Exam date set successfully', exam });
-    } catch (error) {
-        res.status(500).json({ message: 'Error setting exam date', error });
-    }
-};
-
-const getExamSchedule = async (req, res) => {
-    try {
-        const exams = await Exam.find({ date: { $exists: true } }).populate('subject'); // Assuming exams have a date field and can be populated with subjects
-
-        if (!exams || exams.length === 0) {
-            return res.status(404).json({ message: 'No exams found in the schedule.' });
-        }
-
-        res.status(200).json({ message: 'Exam schedule retrieved successfully', exams });
-    } catch (error) {
-        res.status(500).json({ message: 'Error retrieving exam schedule', error });
-    }
-};
-
-const allocateSeats = async (req, res) => {
-    const { examId } = req.params;
-    const { studentIds } = req.body;
-
-    try {
-        const exam = await Exam.findById(examId);
-
-        if (!exam) {
-            return res.status(404).json({ message: 'Exam not found.' });
-        }
-
-        const allocatedSeats = exam.allocatedSeats || [];
-        const totalSeats = exam.totalSeats;
-        const currentAllocationCount = allocatedSeats.length;
-
-        const remainingSeats = totalSeats - currentAllocationCount;
-
-        if (studentIds.length > remainingSeats) {
-            return res.status(400).json({ message: 'Not enough seats available for the requested students.' });
-        }
-
-        allocatedSeats.push(...studentIds);
-
-        exam.allocatedSeats = allocatedSeats;
-        await exam.save();
-
-        res.status(200).json({
-            message: 'Seats allocated successfully.',
-            exam: {
-                id: exam._id,
-                allocatedSeats: exam.allocatedSeats,
-                totalSeats: exam.totalSeats,
-            },
-        });
-    } catch (error) {
-        res.status(500).json({ message: 'Error allocating seats', error });
-    }
-};
-
-const viewStudents = async (req, res) => {
-    const { examId } = req.params;
-
-    try {
-        const students = await Student.find({ examId }).select('-__v');
-
-        if (students.length === 0) {
-            return res.status(404).json({ message: 'No students allocated for this exam.' });
-        }
-
-        res.status(200).json({
-            message: 'Students retrieved successfully.',
-            students,
-        });
-    } catch (error) {
-        res.status(500).json({ message: 'Error retrieving students', error });
-    }
-};
-
-const viewAdmins = async (req, res) => {
-    try {
-        const admins = await Admin.find().select('-__v'); // Exclude version field
-
-        if (admins.length === 0) {
-            return res.status(404).json({ message: 'No admins found.' });
-        }
-
-        res.status(200).json({
-            message: 'Admins retrieved successfully.',
-            admins,
-        });
-    } catch (error) {
-        res.status(500).json({ message: 'Error retrieving admins', error });
-    }
-};
-
-const uploadResults = async (req, res) => {
-    try {
-        if (!req.file) {
-            return res.status(400).json({ message: 'No file uploaded.' });
-        }
-
-        const results = [];
-        const filePath = path.join(__dirname, '../uploads', req.file.filename);
-
-        // Parse the CSV file
-        fs.createReadStream(filePath)
-            .pipe(csv())
-            .on('data', (data) => results.push(data))
-            .on('end', async () => {
-                try {
-                    await Result.insertMany(results);
-                    res.status(200).json({ message: 'Results uploaded successfully.', results });
-                } catch (dbError) {
-                    res.status(500).json({ message: 'Error saving results to database.', error: dbError });
-                } finally {
-                    fs.unlinkSync(filePath);
-                }
-            });
-    } catch (error) {
-        res.status(500).json({ message: 'Error uploading results', error });
-    }
-};
-
-const addCollege = async (req, res) => {
-    try {
-        const { name, city, state, courses } = req.body;
-
-        // Validate input
-        if (!name || !city || !state || !courses) {
-            return res.status(400).json({ message: 'All fields are required.' });
-        }
-
-        // Create a new college document
-        const newCollege = new College({
-            name,
-            city,
-            state,
-            courses
-        });
-
-        // Save to database
-        await newCollege.save();
-
-        // Respond with success message and college data
-        res.status(201).json({
-            message: 'College added successfully.',
-            college: newCollege
-        });
-    } catch (error) {
-        console.error('Error adding college:', error);
-        res.status(500).json({ message: 'Error adding college', error });
-    }
+    // Send announcements back to the response
+    res.status(200).json(announcements);
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving announcements.', error: error.message });
+  }
 };
 
 
-
-module.exports = { 
-    addCollege,
-    uploadResults,
-    viewAdmins,
-    viewStudents,
-    allocateSeats,
-    getExamSchedule, 
-    setExamDate, 
-    registerAdmin, 
-    approveAdmin, 
-    getCollegesAndCities, 
-    declareResults,
-    loginAdmin
-};
+module.exports = {
+  addCollege,
+  addCity,
+  registerAdmin,
+  loginAdmin,
+  approveAdmin,
+  getAllAdmins,
+  deleteAdmin,
+  updateExamConfig,
+  getExamConfig,
+  createAnnouncement,
+  getAnnouncements,
+  approveSuperAdmin
+}

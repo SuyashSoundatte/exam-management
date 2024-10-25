@@ -1,60 +1,54 @@
 const express = require('express');
 const router = express.Router();
-const {
-    registerAdmin,
-    approveAdmin,
-    getCollegesAndCities,
-    declareResults,
-    setExamDate,
-    getExamSchedule,
-    allocateSeats,
-    viewStudents,
-    viewAdmins,
-    uploadResults,
-    sendResults,
-    addCollege,
-    loginAdmin
+const { 
+  addCollege, 
+  addCity, 
+  registerAdmin, 
+  loginAdmin, 
+  getAllAdmins, 
+  deleteAdmin, 
+  approveAdmin, 
+  updateExamConfig ,
+  getExamConfig,
+  getAnnouncements,
+  createAnnouncement,
+  approveSuperAdmin
 } = require('../controllers/admin.controller');
-const adminAuth = require('../middlewares/admin.middleware');
 
-// Register a new admin
-router.post('/register', adminAuth, registerAdmin);
+const { 
+  collegeAuth, 
+  cityAuth, 
+  registerValidation, 
+  adminAuth, 
+  authenticateSuperAdmin,
+  loginValidation
+} = require('../middlewares/admin.middleware');
 
-// Login an admin
-router.post("/login", loginAdmin)
-// Approve a new admin
-router.put('/approve/:adminId', adminAuth, approveAdmin);
+// College and City Routes
+router.post('/addCollege', adminAuth, collegeAuth, addCollege);
+router.post("/addCity", adminAuth, cityAuth, addCity);
 
-// Route to get colleges and cities
-router.get('/colleges-cities', adminAuth, getCollegesAndCities);
+// Admin Registration and Login
+router.post("/register", registerValidation, registerAdmin);
+router.post("/login", loginValidation, loginAdmin);
 
-// Declare results
-router.post('/declare-results', adminAuth, declareResults);
+// Get All Admins (only accessible to super admin)
+router.get('/allAdmins', authenticateSuperAdmin, getAllAdmins);
 
-// Set exam date
-router.post('/set-exam-date', adminAuth, setExamDate);
+// Approve or Disapprove Admin (super admin only)
+router.patch('/approve/:adminId', authenticateSuperAdmin, approveAdmin);
 
-// Get exam schedule
-router.get('/exam-schedule', adminAuth, getExamSchedule);
+router.patch('/approveSuperAdmin/:adminId', authenticateSuperAdmin, approveSuperAdmin);
 
-// Allocate seat numbers for students
-router.post('/allocate-seats', adminAuth, allocateSeats);
+// Delete Admin (super admin only)
+router.delete('/delete/:adminId', authenticateSuperAdmin, deleteAdmin);
 
-// View registered students with seat numbers
-router.get('/view-students', adminAuth, viewStudents);
+// Exam Config routes
+router.put('/examConfig', authenticateSuperAdmin, updateExamConfig);
+router.get('/examConfig', adminAuth, getExamConfig);
 
-// View registered admins
-router.get('/view-admins', adminAuth, viewAdmins);
-
-// Upload student results via Excel file
-router.post('/upload-results', adminAuth, uploadResults);
-
-// Send result emails to students
-// router.post('/send-results', adminAuth, sendResults);
-
-// Add a new college
-router.post('/add-college', adminAuth, addCollege);
-
-router.get("/get-college", adminAuth, getCollegesAndCities);
+// Announcement routes
+router.post('/announcements', authenticateSuperAdmin, createAnnouncement);
+router.get('/announcements', adminAuth, getAnnouncements);
 
 module.exports = router;

@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
         required: true,
     },
     dateOfBirth: {
-        type: Date,
+        type: String,
         required: true,
         match:/^\d{4}-\d{2}-\d{2}$/,
     },
@@ -69,6 +69,6 @@ const userSchema = new mongoose.Schema({
     },
 });
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model('Student', userSchema);
 
 module.exports = User;

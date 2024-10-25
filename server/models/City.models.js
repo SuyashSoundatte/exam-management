@@ -1,24 +1,12 @@
 const mongoose = require('mongoose');
 
 const citySchema = new mongoose.Schema({
-    name: {
+    cityName: {
         type: String,
         required: true,
         unique: true,
-    },
-    state: {
-        type: String,
-        required: true,
-    },
-    country: {
-        type: String,
-        required: true,
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-    },
-});
+    }
+}, {timestamps: true});
 
 const City = mongoose.model('City', citySchema);
 module.exports = City;

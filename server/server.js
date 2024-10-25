@@ -1,8 +1,10 @@
 const express = require("express");
+const session = require("express-session");
 const app = express();
 require('dotenv').config();
 require("./config/db");
 const cors = require('cors');
+const cookieParser = require("cookie-parser");
 
 // Routes
 const adminRoutes = require("./routes/admin.routes");
@@ -10,7 +12,15 @@ const studentRoutes = require("./routes/student.routes");
 
 const port = process.env.PORT || 8080;
 
-app.use(express.urlencoded({extended:false}));
+app.use(cookieParser());
+app.use(session({
+  secret: process.env.SESSION_SECRET, // Your session secret
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true, httpOnly: true } // Adjust based on your needs
+}));
+
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
 

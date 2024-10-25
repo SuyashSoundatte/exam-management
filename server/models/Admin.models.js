@@ -4,8 +4,11 @@ const adminSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true,
-        unique: true,
-        match: /^[a-zA-Z0-9_]{3,30}$/, // Example regex for username validation
+    },
+    email:{
+        type:String,
+        required:true,
+        unique:true
     },
     password: {
         type: String,

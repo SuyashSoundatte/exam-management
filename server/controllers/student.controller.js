@@ -1,4 +1,5 @@
 const Student = require('../models/Student.models');
+const { allocateSeats } = require('../config/seatAllocator');
 
 const registerStudent = async (req, res) => {
     try {
@@ -45,8 +46,12 @@ const registerStudent = async (req, res) => {
             email,
             schoolName,
             board,
-            medium,
+            medium
         });
+
+        await newStudent.save();
+        
+        await allocateSeats([newStudent]);
 
         await newStudent.save();
 
