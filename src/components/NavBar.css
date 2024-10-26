@@ -1,31 +1,34 @@
-#nav{
-    background-color: black;
-    padding: 15px;
+* {
+    text-decoration: none;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
 }
 
-#login{
-    color: white;
-    background-color: red;
-    padding: 10px;
-    border-radius: 5px;
-    margin-right: 10px;
-    font-size: 50px;
+#nav {
+    height: 60px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2vw 4vw;
 }
 
-#signup{
-    color: white;
-    background-color: green;
-    padding: 10px;
-    border-radius: 5px;
-    margin-right: 10px;
-    font-size: 50px;
+.navLeft {
+    height: 100%;
+    width: 50%;
 }
 
-#home{
-    color: white;
-    background-color: blue;
-    padding: 10px;
-    border-radius: 5px;
-    margin-right: 10px;
-    font-size: 50px;
+.navRight {
+    height: 100%;
+    width: 50%;
+    display: flex;
+    /* justify-content: end; */
+    justify-content: space-between;
+}
+
+#nav button {
+    height: 40px;
+    width: 70px;
 }
