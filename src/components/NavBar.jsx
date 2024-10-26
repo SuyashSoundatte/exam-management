@@ -1,5 +1,5 @@
 import React from 'react'
-import "./NavBar.css"
+import "./NavBar.css";
 import { Outlet, Link } from 'react-router-dom'
 
 function NavBar() {
@@ -7,29 +7,21 @@ function NavBar() {
     <>
       <nav id="nav">
         {/* <div id="admin">Only for Admin</div> */}
-        <div className='navLeft'>
-          <Link to={"/"}>
-            {/* <p id="home">Home</p> */}
-            <button id='home'>HOME</button>
+        <Link to={"/"}>
+          <p id="home">Home</p>
+        </Link>
+        <Link to={"/login"}>
+            <p id="login" >Login</p>
           </Link>
-        </div>
-        <div className='navRight'>
-            {/* <Link to={"/signup"}>
-              <p id="signup">SignUp</p>
-            </Link> */}
-            <Link to={"/student/register"}>
-              {/* <p id="student">Student</p> */}
-              <button id='student'>Student</button>
-            </Link>
-            <Link to={"/result"}>
-              {/* <p id="result">Result</p> */}
-              <button id="result">Result</button>
-            </Link>
-            <Link to={"/login"}>
-              {/* <p id="login" >Login</p> */}
-              <button id='login'>Login</button>
-            </Link>
-        </div>
+          <Link to={"/signup"}>
+            <p id="signup">SignUp</p>
+          </Link>
+          <Link to={"/student/register"}>
+            <p id="student">Student</p>
+          </Link>
+          <Link to={"/result"}>
+            <p id="result">Result</p>
+          </Link>
       </nav>
       <Outlet/>
     </>
