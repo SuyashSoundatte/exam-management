@@ -57,7 +57,7 @@ function Login() {
 
                     <div class="buttons">
                       <button class="btn-one" onClick={handleLogin}>Log in</button>
-                      {/* <a href="../signup/admin-signup.html"><button class="btn-one">Sign Up</button></a> */}
+                      <a><button class="btn-one">Sign Up</button></a>
                     </div>
                   </form>
                   

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
+import "./ViewResult.css"
 function ViewResult() {
   const [email, setEmail] = useState('');
   const [dob, setDob] = useState('');
@@ -33,30 +33,68 @@ function ViewResult() {
   };
 
   return (
+    // <>
+    //   <div>View Result</div>
+
+    //   <p>Email</p>
+    //   <input
+    //     type="text"
+    //     placeholder="Enter Email"
+    //     value={email}
+    //     onChange={(e) => setEmail(e.target.value)}
+    //   />
+
+    //   <p>Date of Birth</p>
+    //   <input
+    //     type="date"
+    //     placeholder="Enter Date of Birth"
+    //     value={dob}
+    //     onChange={(e) => setDob(e.target.value)}
+    //   />
+
+    //   <button onClick={handleResult}>View Result</button>
+
+    //   {resultData && <p>{resultData.message}</p>}
+    //   {resultData && <p>Result: {JSON.stringify(resultData.result)}</p>}
+    // </>
     <>
-      <div>View Result</div>
+  <div id="main">
+  <div className="wrapper-left">
+    <div className="part-one">
+      <h3>View Result</h3>
+      <div className="container-left">
+        <div className="inp">
+          <p>Email</p>
+          <input
+            type="text"
+            className="inp-left"
+            placeholder="Enter Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <p>Date of Birth</p>
+          <input
+            type="date"
+            className="inp-left"
+            placeholder="Enter Date of Birth"
+            value={dob}
+            onChange={(e) => setDob(e.target.value)}
+          />
+        </div>
 
-      <p>Email</p>
-      <input
-        type="text"
-        placeholder="Enter Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
+        <div className="buttons">
+          <button className="btn-one" onClick={handleResult}>View Result</button>
+        </div>
 
-      <p>Date of Birth</p>
-      <input
-        type="date"
-        placeholder="Enter Date of Birth"
-        value={dob}
-        onChange={(e) => setDob(e.target.value)}
-      />
+        {resultData && <p>{resultData.message}</p>}
+        {resultData && <p>Result: {JSON.stringify(resultData.result)}</p>}
+      </div>
+    </div>
+  </div>
+</div>
 
-      <button onClick={handleResult}>View Result</button>
+</>
 
-      {resultData && <p>{resultData.message}</p>}
-      {resultData && <p>Result: {JSON.stringify(resultData.result)}</p>}
-    </>
   );
 }
 

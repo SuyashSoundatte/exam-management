@@ -1,0 +1,117 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: "Montserrat";
+}
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+}
+
+#main {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #eaf2ff;
+    /* Set a background color for the entire view */
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    /* Center the container */
+}
+
+.wrapper-left .part-one {
+    width: 100%;
+    height: fit-content;
+    /* Change to fit-content to wrap the content properly */
+    border-radius: 10px;
+    background-color: #fff;
+    /* Set white background for the part */
+    padding: 30px 20px;
+    margin-bottom: 40px;
+}
+
+.container-left {
+    width: 350px;
+    height: fit-content;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #d3d3d5;
+    background-color: #fff;
+    border: none;
+}
+
+.wrapper-left .part-one h3 {
+    color: #195bc9;
+    margin-bottom: 4px;
+}
+
+.wrapper-left .part-one p {
+    color: #02021a;
+}
+
+.wrapper-left .inp form {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.inp-left {
+    border: 0;
+    outline: none;
+    width: 100%;
+    border: 1px solid #d7d6db;
+    border-radius: 7px;
+    height: 40px;
+    margin: 15px 0;
+    padding: 1vw;
+    /* display: none; */
+}
+
+.wrapper-left .buttons {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+    gap: 12px;
+}
+
+.wrapper-left .buttons .btn-one,
+.btn-two {
+    border: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 45px;
+    border-radius: 25px;
+}
+
+.wrapper-left .buttons .btn-one {
+    background-color: #115efa;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.wrapper-left .buttons .btn-two {
+    background-color: #6c757d;
+    /* Add styles for secondary button */
+    color: #fff;
+}
+
+.wrapper-left .buttons .btn-one:hover {
+    background-color: #0e4bc4;
+    /* Darken button on hover */
+}
+
+.wrapper-left p {
+    margin-top: 10px;
+    color: #333;
+    /* General text color */
+}

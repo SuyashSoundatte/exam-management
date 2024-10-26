@@ -42,7 +42,7 @@ function SignUp() {
                 <div class="inp">
                   <form method="post" id="loginForm">
                     <label htmlFor="" class="name">User Name</label>
-                    <input type="text" placeholder='enter Your name' value={name} onChange={(e)=>{setName(e.target.value)}} /> 
+                    <input class="inp-left" type="text" placeholder='enter Your name' value={name} onChange={(e)=>{setName(e.target.value)}} /> 
                     
                     <label for="" class="email">E-mail </label>
                     <input class="inp-left" type="email" name="email" placeholder="email" value={email} 
