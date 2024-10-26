@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import "./SignUp.css"
 
 function SignUp() {
   const [name, setName] = useState('');
@@ -30,14 +31,41 @@ function SignUp() {
 
   return (
     <>
-      <div>SignUp Page</div>
-      <p>User Name</p>
-      <input type="text" placeholder='enter Your name' value={name} onChange={(e)=>{setName(e.target.value)}} /> 
-      <p>Email</p>
-      <input type="text" placeholder='enter your email' value={email} onChange={(e)=>{setEmail(e.target.value)}} />
-      <p>Password</p>
-      <input type="password" placeholder='enter your password' value={pass} onChange={(e)=>{setPass(e.target.value)}} />
-      <button onClick={handleSignUp} >SignUp</button>
+      <div id="main">
+        <div class="container">
+            <div class="container-left">
+              <div class="wrapper-left">
+                <div class="part-one">
+                  <h3>Get started</h3>
+                  <p>Log in your account</p>
+                </div>
+                <div class="inp">
+                  <form method="post" id="loginForm">
+                    <label htmlFor="" class="name">User Name</label>
+                    <input type="text" placeholder='enter Your name' value={name} onChange={(e)=>{setName(e.target.value)}} /> 
+                    
+                    <label for="" class="email">E-mail </label>
+                    <input class="inp-left" type="email" name="email" placeholder="email" value={email} 
+                    onChange={(e) => setEmail(e.target.value)} />
+
+                    <label for="" class="pass">Password </label>
+                    <i class="fas fa-lock pass"></i>
+                    <input class="inp-left" type="password" placeholder="password" name="password" id="" value={pass} 
+                    onChange={(e) => setPass(e.target.value)} />
+
+
+                    <div class="buttons">
+                      <button class="btn-one" onClick={handleSignUp}>SignUp</button>
+                      {/* <a href="../signup/admin-signup.html"><button class="btn-one">Sign Up</button></a> */}
+                    </div>
+                  </form>
+                  
+                </div>
+                
+              </div>
+            </div>
+          </div>
+    </div>
     </>
   )
 }
