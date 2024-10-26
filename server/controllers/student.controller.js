@@ -73,7 +73,7 @@ const viewResult = async (req, res) => {
 
     try {
         // Find the student by email and dob
-        const student = await Student.findOne({ email, dateOfBirth: dob });
+        const student = await Student.findOne({ email });
 
         if (!student) {
             return res.status(404).json({ message: 'Student not found' });

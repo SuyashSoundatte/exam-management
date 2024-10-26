@@ -1,15 +1,10 @@
 const mongoose = require('mongoose');
 
 const collegeSchema = new mongoose.Schema({
-    name: {
+    collegeName: {
         type: String,
-        required: true,
-        unique: true,
+        required: true
     },
-    city:{
-        type:String,
-        required:true
-    }
 }, { timestamps: true });
 
 const College = mongoose.model('College', collegeSchema);

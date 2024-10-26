@@ -37,30 +37,32 @@ const adminAuth = async (req, res, next) => {
   }
 };
 
-const collgeSchema = Joi.object({
-  name: Joi.string().required(),
-  city: Joi.string().required(),
+const collegeSchema = Joi.object({
+  collegeName: Joi.string().required(),
 });
 
 const collegeAuth = async (req, res, next) => {
   try {
-    const { error } = collgeSchema.validate(req.body);
+    const { error } = collegeSchema.validate(req.body); // Validate the request body
     if (error) {
       return res.status(400).json({
         message: error.details[0].message,
       });
     }
-    const { college, city } = await College.findOne({
-      name: req.body.name,
-      city: req.body.city,
+
+    const { collegeName } = req.body;
+    // Check if a college with the same name already exists (case-insensitive)
+    const college = await College.findOne({
+      collegeName: collegeName
     });
-    if (college || city) {
+
+    if (college) {
       return res.status(400).json({
-        message: `${college} already exists at ${city}`,
+        message: `College ${college.req.body} already exists`,
       });
     }
 
-    next();
+    next(); // Proceed to the next middleware if no error
   } catch (error) {
     res.status(500).json({
       message: "Server error during authentication",
@@ -68,6 +70,9 @@ const collegeAuth = async (req, res, next) => {
     });
   }
 };
+
+
+
 
 const citySchema = Joi.object({
   cityName: Joi.string().required(),
@@ -81,7 +86,16 @@ const cityAuth = async (req, res, next) => {
         message: error.details[0].message,
       });
     }
-    const city = await City.findOne({ cityName: req.body.cityName });
+
+    // Normalize the city name to lowercase before checking
+    const inputCityName = req.body.cityName.toLowerCase();
+
+    // Find the city using case-insensitive search
+    /*
+    Case-insensitive search using RegExp: This allows MongoDB to search for the city name regardless of case or slight variations in spelling.
+    */
+    const city = await City.findOne({ cityName: new RegExp(`^${inputCityName}$`, 'i') });
+    
     if (city) {
       return res.status(400).json({
         message: "City already exists",
@@ -96,6 +110,7 @@ const cityAuth = async (req, res, next) => {
     });
   }
 };
+
 
 const adminSchema = Joi.object({
   username: Joi.string().required(),

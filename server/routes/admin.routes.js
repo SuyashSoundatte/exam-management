@@ -12,7 +12,9 @@ const {
   getExamConfig,
   getAnnouncements,
   createAnnouncement,
-  approveSuperAdmin
+  approveSuperAdmin,
+  getAllColleges,
+  getAllCities
 } = require('../controllers/admin.controller');
 
 const { 
@@ -27,6 +29,8 @@ const {
 // College and City Routes
 router.post('/addCollege', adminAuth, collegeAuth, addCollege);
 router.post("/addCity", adminAuth, cityAuth, addCity);
+router.get('/allColleges', getAllColleges);
+router.get('/allCities', getAllCities);
 
 // Admin Registration and Login
 router.post("/register", registerValidation, registerAdmin);

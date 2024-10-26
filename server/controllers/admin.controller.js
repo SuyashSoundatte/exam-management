@@ -11,20 +11,60 @@ const nodemailer = require('nodemailer');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 
-const addCollege = async(req, res)=>{
-    try {
-        const college = new College(req.body);
-        await college.save();
-        return res.status(201).json({ message: "College added successfully!" });
-    } catch (error) {
-      console.log("Error: ", error);
-      return res.status(500).json({ message: "Internal server error!" });
+const addCollege = async(req, res) => {
+  try {
+    const { collegeName } = req.body;
+
+    // Check if collegeName is provided and is not empty
+    if (!collegeName) {
+      return res.status(400).json({ message: "College name is required" });
     }
+
+    // Check if a college with the same name already exists
+    const existingCollege = await College.findOne({ collegeName: collegeName });
+    if (existingCollege) {
+      return res.status(400).json({ message: "College already exists" });
+    }
+
+    // Create a new college
+    const college = new College({
+      collegeName: collegeName,
+    });
+
+    await college.save(); // Save the new college to the database
+    return res.status(201).json({ message: "College added successfully!" });
+  } catch (error) {
+    console.log("Error: ", error);
+    return res.status(500).json({ message: "Internal server error!" });
+  }
+};
+
+const getAllColleges= async (req, res)=>{
+  try {
+    const schools = await College.find({});
+    return res.status(200).json({schools});
+  } catch (error) {
+    console.log("Error: ", error);
+    return res.status(500).json({ message: "Internal server error!" });
+  }
+}
+
+const getAllCities= async (req, res)=>{
+  try {
+    const cities = await City.find({});
+    return res.status(200).json(cities);
+  } catch (error) {
+    console.log("Error: ", error);
+    return res.status(500).json({ message: "Internal server error!" });
+  }
 }
 
 const addCity = async (req, res)=>{
   try {
-    const city = new City(req.body);
+    const { cityName } = req.body;
+    const city = new City({
+      cityName: cityName,
+    });
     await city.save();
     return res.status(201).json({ message: "City added successfully!" });
   } catch (error) {
@@ -299,6 +339,8 @@ module.exports = {
   updateExamConfig,
   getExamConfig,
   createAnnouncement,
+  getAllCities,
+  getAllColleges,
   getAnnouncements,
   approveSuperAdmin
 }
