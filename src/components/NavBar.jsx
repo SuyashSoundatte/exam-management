@@ -14,20 +14,25 @@ function NavBar() {
           </Link>
         </div>
         <div className='navRight'>
-            {/* <Link to={"/signup"}>
-              <p id="signup">SignUp</p>
-            </Link> */}
             <Link to={"/student/register"}>
               {/* <p id="student">Student</p> */}
-              <button id='student'>Student</button>
+              <button id='student'>Register</button>
             </Link>
             <Link to={"/result"}>
               {/* <p id="result">Result</p> */}
               <button id="result">Result</button>
             </Link>
+            <Link to={"/contact"}>
+              {/* <p id="login" >Login</p> */}
+              <button id='contact'>Contact</button>
+            </Link>
             <Link to={"/login"}>
               {/* <p id="login" >Login</p> */}
               <button id='login'>Login</button>
+            </Link>
+            <Link>
+              {/* <p id="login" >Login</p> */}
+              <button id='menu'>Menu</button>
             </Link>
         </div>
       </nav>

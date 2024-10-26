@@ -7,28 +7,99 @@
 }
 
 #nav {
-    height: 60px;
+    height: 100px;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 2vw 4vw;
+    padding: 2vw 2vw;
+    position: fixed;
+    top: 0;
+    background-color: transparent;
 }
 
 .navLeft {
     height: 100%;
-    width: 50%;
+    width: 30%;
+    display: flex;
+    align-items: center;
 }
 
 .navRight {
     height: 100%;
-    width: 50%;
+    width: 70%;
     display: flex;
     justify-content: end;
-    gap: 100px;
+    gap: 40px;
+    align-items: center;
 }
 
 #nav button {
-    height: 40px;
-    width: 70px;
+    height: 6vh;
+    /* width: 100%; */
+    width: 10vw;
+    border: none;
+    border-radius: 11px;
+    font-size: 15px;
+    font-weight: 600;
+    background-color: #0990F8;
+    color: #fff;
+}
+
+#nav #menu {
+    display: none;
+}
+
+#nav button:hover {
+    background-color: #0078D4;
+}
+
+@media screen and (max-width: 1024px) {
+    #nav {
+        padding: 2vw 2vw;
+        /* Less padding */
+    }
+
+    .navRight {
+        gap: 40px;
+        /* Less gap between buttons */
+    }
+
+    #nav button {
+        width: 12vw;
+        /* Slightly wider buttons */
+    }
+}
+
+@media screen and (max-width: 768px) {
+    #nav {
+        padding: 2vw 4vw;
+    }
+
+    .navLeft {
+        width: 50%;
+    }
+
+    .navRight {
+        width: 50%;
+    }
+
+    #nav #menu {
+        display: initial;
+    }
+
+    #nav #home {
+        display: initial;
+    }
+
+    #nav button {
+        font-size: 14px;
+        height: 50px;
+        width: 18vw;
+        display: none;
+    }
+
+    #nav button:hover {
+        background-color: #0078D4;
+    }
 }
