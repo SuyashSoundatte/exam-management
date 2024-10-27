@@ -1,0 +1,270 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins";
+}
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+}
+
+#p1-overlay {
+    height: 100vh;
+    width: 100vw;
+    background-image: url(./img/dktepic.avif);
+    background-size: cover;
+    background-position: 10% 65%;
+}
+
+#page1 {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    background-color: #1c4b79c7;
+}
+
+#page1 .left {
+    height: 100%;
+    width: 57%;
+    display: flex;
+}
+
+.left .left-lcontent {
+    height: 100%;
+    width: 50%;
+    padding: 1vw 2vw;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    line-height: 1.3;
+}
+
+.left-lcontent h3 {
+    color: #fff;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.left-lcontent h1 {
+    font-size: 4.5rem;
+    color: #F5C219;
+}
+
+.left-lcontent h2 {
+    color: #fff;
+    font-weight: 400;
+    font-size: 1.1rem;
+    margin-bottom: 1.4vw;
+}
+
+.left-lcontent h4 {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #fff;
+}
+
+.left .left-rcontent {
+    height: 100%;
+    width: 50%;
+}
+
+.left-rcontent img {
+    padding-right: 1vw;
+    height: 24vw;
+    width: 21.3vw;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-right: 1px solid #fff;
+}
+
+#page1 .right {
+    height: 100%;
+    width: 43%;
+    padding: 4vw 2vw;
+}
+
+.right #form {
+    height: 100%;
+    width: 100%;
+    margin-top: 30px;
+    padding: 1vw 2vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1vw;
+}
+
+.header h1 {
+    text-align: center;
+    font-size: 1.67rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.subdiv {
+    height: 10%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 1vw;
+}
+
+.subdiv input,
+.subdiv select {
+    height: 100%;
+    padding: 0.2vw 1vw;
+    outline: none;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border: none;
+    border-radius: 0.6vw;
+}
+
+.fname,
+.lname,
+.mname,
+.gender,
+.dob,
+.mob,
+.whatsapp,
+.board,
+.medium {
+    width: 50%;
+}
+
+.add {
+    width: 70%;
+}
+
+.city {
+    width: 30%;
+}
+
+.school,
+.email {
+    width: 100%;
+}
+
+.register {
+    height: 90%;
+    width: 100%;
+    background-color: #0990F8;
+    color: #fff;
+    border: none;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 0.5vw;
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 900px) {
+    #p1-overlay {
+        height: auto;
+    }
+
+    #page1 {
+        height: auto;
+        width: 100vw;
+        display: flex;
+        flex-direction: column;
+        background-color: #1c4b79c7;
+    }
+
+    #page1 .left {
+        margin-top: 10px;
+        height: 40%;
+        width: 100%;
+        display: flex;
+        padding: 2vw 2vw;
+    }
+
+    .left .left-lcontent {
+        margin-top: 100px;
+        height: 100%;
+        width: 100%;
+        padding: 3vw 5vw;
+        line-height: 1.5;
+    }
+
+    .left-lcontent h3 {
+        font-size: 0.9rem;
+    }
+
+    .left-lcontent h1 {
+        font-size: 5rem;
+    }
+
+    .left-lcontent h2 {
+        font-weight: 500;
+        font-size: 1.4rem;
+        margin-bottom: 1.4vw;
+    }
+
+    .left-lcontent h4 {
+        font-size: 1rem;
+        font-weight: 400;
+    }
+
+    .left .left-rcontent {
+        display: none;
+    }
+
+    #page1 .right {
+        height: 100%;
+        width: 100vw;
+        padding: 1vw 3vw;
+        margin-bottom: 50px;
+    }
+
+    .right #form {
+        height: 100vh;
+        padding: 1vw 2vw;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .header h1 {
+        font-size: 1.4rem;
+    }
+
+    .subdiv {
+        height: 100px;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .subdiv input,
+    .subdiv select {
+        padding: 0.2vw 3vw;
+        font-size: 0.9rem;
+    }
+
+    .fname,
+    .mname,
+    .lname,
+    .gender,
+    .dob,
+    .mob,
+    .whatsapp,
+    .board,
+    .medium,
+    .add,
+    .city,
+    .school,
+    .email {
+        width: 100%;
+    }
+
+    .register {
+        height: 50%;
+        width: 100%;
+    }
+}

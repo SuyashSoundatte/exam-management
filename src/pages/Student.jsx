@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
-
+import "./Student.css"
 const Student = () => {
   const [cities, setCities] = useState([]);
   const [schools, setSchools] = useState([]);
@@ -123,121 +123,112 @@ const Student = () => {
       toast.error("Error: " + error.message); // Notify the user on error
     }
   };
-
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: "600px", margin: "0 auto" }}>
-      <h2>User Registration Form</h2>
-
-      {/* First Name */}
-      <div className="form-group">
-        <label>First Name:</label>
-        <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required />
+    <>
+      {/* Main Content */}
+      <div id="p1-overlay">
+        <div id="page1">
+          <div className="left">
+            <div className="left-lcontent">
+              <h3>Fueling Futures, Empowering Dreams</h3>
+              <h1>DKTE's</h1>
+              <h2>IIT and Medical Academy</h2>
+              <h4>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Delectus, obcaecati. Ipsam nihil sequi dignissimos. Architecto
+                necessitatibus doloribus dolor odio.
+              </h4>
+            </div>
+            <div className="left-rcontent">
+              <img src="./img/scholars-image.webp" alt="Scholars" />
+            </div>
+          </div>
+  
+          <div className="right">
+            {/* Registration Form */}
+            <form id="form" onSubmit={handleSubmit} style={{ maxWidth: "600px", margin: "0 auto" }}>
+              <div className="header">
+                <h1>DKTE EXAM REGISTRATION</h1>
+              </div>
+  
+              {/* First Name, Middle Name, and Last Name */}
+              <div className="subdiv">
+                <input name="firstName" className="fname" type="text" value={formData.firstName} onChange={handleChange} placeholder="First Name" required />
+                <input name="middleName" className="mname" type="text" value={formData.middleName} onChange={handleChange} placeholder="Middle Name" required />
+                <input name="lastName" className="lname" type="text" value={formData.lastName} onChange={handleChange} placeholder="Last Name" required />
+              </div>
+  
+              {/* Gender and Date of Birth */}
+              <div className="subdiv">
+                <select name="gender" className="gender" value={formData.gender} onChange={handleChange} required>
+                  <option value="">Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+  
+                <input name="dateOfBirth" type="date" className="dob" value={formData.dateOfBirth} onChange={handleChange} required />
+              </div>
+  
+              {/* Address and City or Village */}
+              <div className="subdiv">
+                <input name="address" className="add" type="text" value={formData.address} onChange={handleChange} placeholder="Address" required />
+                <select name="cityOrVillage" className="city" value={formData.cityOrVillage} onChange={handleChange} required>
+                  <option value="">City or Village</option>
+                  <option value="City A">City A</option>
+                  <option value="Village B">Village B</option>
+                  {/* Add more cities/villages as needed */}
+                </select>
+              </div>
+  
+              {/* Mobile and WhatsApp Numbers */}
+              <div className="subdiv">
+                <input name="mobileNumber" className="mob" type="tel" pattern="\d{10}" value={formData.mobileNumber} onChange={handleChange} placeholder="Mobile" required />
+                <input name="whatsappNumber" className="whatsapp" type="tel" pattern="\d{10}" value={formData.whatsappNumber} onChange={handleChange} placeholder="WhatsApp" required />
+              </div>
+  
+              {/* Email and School Name */}
+              <div className="subdiv">
+                <input name="email" className="email" type="email" value={formData.email} onChange={handleChange} placeholder="Email" required />
+                <select name="schoolName" className="school" value={formData.schoolName} onChange={handleChange} required>
+                  <option value="">School Name</option>
+                  <option value="School A">School A</option>
+                  <option value="School B">School B</option>
+                  {/* Add more school names as needed */}
+                </select>
+              </div>
+  
+              {/* Board and Medium */}
+              <div className="subdiv">
+                <select name="board" className="board" value={formData.board} onChange={handleChange} required>
+                  <option value="">Board</option>
+                  <option value="SSC">SSC</option>
+                  <option value="CBSE">CBSE</option>
+                  <option value="ICSE">ICSE</option>
+                  <option value="OLYMPIAD">OLYMPIAD</option>
+                </select>
+  
+                <select name="medium" className="medium" value={formData.medium} onChange={handleChange} required>
+                  <option value="">Medium</option>
+                  <option value="Marathi">Marathi</option>
+                  <option value="Semi-English">Semi-English</option>
+                  <option value="English">English</option>
+                </select>
+              </div>
+  
+              {/* Submit Button */}
+              <div className="subdiv btndiv">
+                <button className="register" type="submit">Register</button>
+              </div>
+  
+              <ToastContainer />
+            </form>
+          </div>
+        </div>
       </div>
-
-      {/* Middle Name */}
-      <div className="form-group">
-        <label>Middle Name:</label>
-        <input type="text" name="middleName" value={formData.middleName} onChange={handleChange} />
-      </div>
-
-      {/* Last Name */}
-      <div className="form-group">
-        <label>Last Name:</label>
-        <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} required />
-      </div>
-
-      {/* Gender */}
-      <div className="form-group">
-        <label>Gender:</label>
-        <select name="gender" value={formData.gender} onChange={handleChange} required>
-          <option value="">Select</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
-
-      {/* Date of Birth */}
-      <div className="form-group">
-        <label>Date of Birth (YYYY-MM-DD):</label>
-        <input type="date" name="dateOfBirth" value={formData.dateOfBirth} onChange={handleChange} required />
-      </div>
-
-      {/* Address */}
-      <div className="form-group">
-        <label>Address:</label>
-        <input type="text" name="address" value={formData.address} onChange={handleChange} required />
-      </div>
-
-      {/* City or Village */}
-      <div className="form-group">
-        <label>City or Village:</label>
-        <select name="cityOrVillage" value={formData.cityOrVillage} onChange={handleChange} required>
-          <option value="">Select</option>
-          {cities.map((city) => (
-            <option key={city._id} value={city.cityName}>{city.cityName}</option>
-          ))}
-        </select>
-      </div>
-
-      {/* Mobile Number */}
-      <div className="form-group">
-        <label>Mobile Number:</label>
-        <input type="text" name="mobileNumber" pattern="\d{10}" value={formData.mobileNumber} onChange={handleChange} required />
-      </div>
-
-      {/* WhatsApp Number */}
-      <div className="form-group">
-        <label>WhatsApp Number:</label>
-        <input type="text" name="whatsappNumber" pattern="\d{10}" value={formData.whatsappNumber} onChange={handleChange} required />
-      </div>
-
-      {/* Email */}
-      <div className="form-group">
-        <label>Email:</label>
-        <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-      </div>
-
-      {/* College Name */}
-      <div className="form-group">
-        <label>College Name:</label>
-        <select name="schoolName" value={formData.schoolName} onChange={handleChange} required>
-          <option value="">Select</option>
-          {schools.map((school) => (
-            <option key={school._id} value={school.collegeName}>
-              {school.collegeName}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Board */}
-      <div className="form-group">
-        <label>Board:</label>
-        <select name="board" value={formData.board} onChange={handleChange} required>
-          <option value="">Select</option>
-          <option value="SSC">SSC</option>
-          <option value="CBSE">CBSE</option>
-          <option value="ICSE">ICSE</option>
-          <option value="OLYMPIAD">OLYMPIAD</option>
-        </select>
-      </div>
-
-      {/* Medium */}
-      <div className="form-group">
-        <label>Medium:</label>
-        <select name="medium" value={formData.medium} onChange={handleChange} required>
-          <option value="">Select</option>
-          <option value="Marathi">Marathi</option>
-          <option value="Semi-English">Semi-English</option>
-          <option value="English">English</option>
-        </select>
-      </div>
-
-      <button type="submit">Submit</button>
-      <ToastContainer />
-    </form>
+    </>
   );
+  
 };
 
 export default Student;
