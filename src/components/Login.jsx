@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -50,6 +51,10 @@ function Login() {
         onChange={(e) => setPass(e.target.value)} 
       />
       <button id="login" onClick={handleLogin}>Login</button>
+      <p>Create an account</p>
+      <Link to={'/signup'}>
+        <button>SignUp</button>
+      </Link>
     </>
   )
 }
