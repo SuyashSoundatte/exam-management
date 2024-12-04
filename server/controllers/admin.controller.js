@@ -8,8 +8,6 @@ const Student = require('../models/Student.models');
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const nodemailer = require('nodemailer');
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
 
 const addCollege = async(req, res) => {
   try {

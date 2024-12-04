@@ -5,6 +5,7 @@ import NavBar from './components/NavBar';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
 import ViewResult from './pages/ViewResult';
+import AdminDashboard from './components/AdminDashboard';
 import { Routes, Route } from 'react-router-dom';
 
 const App = () => {
@@ -17,6 +18,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/result" element={<ViewResult />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
       </Routes>
     </>
   );

@@ -50,7 +50,9 @@ function Login() {
         value={pass} 
         onChange={(e) => setPass(e.target.value)} 
       />
-      <button id="login" onClick={handleLogin}>Login</button>
+      <Link to={'/admin/dashboard'}>
+        <button id="login" onClick={handleLogin}>Login</button>
+      </Link>
       <p>Create an account</p>
       <Link to={'/signup'}>
         <button>SignUp</button>
