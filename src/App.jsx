@@ -11,7 +11,7 @@ import { Routes, Route } from 'react-router-dom';
 const App = () => {
   return (
     <>
-      <Routes>
+      {/* <Routes>
         <Route path="/" element={<NavBar />}>
         </Route>
           <Route path="/student/register" element={<Student />} />
@@ -19,7 +19,10 @@ const App = () => {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/result" element={<ViewResult />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
-      </Routes>
+      </Routes> */}
+
+
+      <AdminDashboard/>
     </>
   );
 };
