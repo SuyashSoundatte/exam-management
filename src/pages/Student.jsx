@@ -125,120 +125,99 @@ const Student = () => {
   };
 
   return (
-    <div className="main flex h-screen align-middle  bg-gray-100">
-      {/* Left Placeholder Content */}
-      <div className="left h-screen w-3/6
-      bg-black text-white">
-          hiiii
+    <div className="main
+      h-screen
+      w-screen
+      bg-[#F0F0F0]
+      flex
+    ">
+      <div className="left h-full w-1/2">
+        <h1>INFORMATION</h1>
       </div>
-
-      {/* Form Section */}
-      <div className="right h-screen w3/6 bg-black">
-      <div
-        className="right flex h-auto w-auto  bg-white shadow-lg p-8 rounded-lg flex items-center justify-center"
-        style={{ maxWidth: "600px" }}
-      >
-        <form onSubmit={handleSubmit} className="w-full">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-            User Registration Form
-          </h2>
-
-          {/* First Name */}
-          <div className="form-group mb-4">
-            <label className="block text-gray-700 font-medium">First Name:</label>
-            <input
-              type="text"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border border-gray-300 rounded-lg"
-            />
-          </div>
-
-          {/* Middle Name */}
-          <div className="form-group mb-4">
-            <label className="block text-gray-700 font-medium">Middle Name:</label>
-            <input
-              type="text"
-              name="middleName"
-              value={formData.middleName}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-lg"
-            />
-          </div>
-
+      <div className="right h-full w-1/2
+      flex justify-center ">
+        <form onSubmit={handleSubmit}
+        className="form h-fit w-2/3 bg-white px-4 py-6 rounded-lg mt-40" >
+        <div className="inputFeild flex gap-2">
+            {/* First Name */}
+            <div className="form-group mb-4">
+              {/* <label className="block text-gray-700 font-medium">First Name:</label> */}
+              <input
+                placeholder="First Name"
+                type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
+              />
+            </div>
+            {/* Middle Name */}
+            <div className="form-group mb-4">
+              {/* <label className="block text-gray-700 font-medium">Middle Name:</label> */}
+              <input
+                placeholder="Middle name"
+                type="text"
+                name="middleName"
+                value={formData.middleName}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
+              />
+            </div>
           {/* Last Name */}
-          <div className="form-group mb-4">
-            <label className="block text-gray-700 font-medium">Last Name:</label>
-            <input
-              type="text"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border border-gray-300 rounded-lg"
-            />
+            <div className="form-group mb-4">
+              {/* <label className="block text-gray-700 font-medium">Last Name:</label> */}
+              <input
+                placeholder="Last Name"
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
+              />
+              </div>
           </div>
-
-          {/* Gender */}
+        <div className="inputFSelecteild flex gap-2 ">
           <div className="form-group mb-4">
-            <label className="block text-gray-700 font-medium">Gender:</label>
+            {/* <label className="block text-gray-700 font-medium">Gender:</label> */}
             <select
               name="gender"
               value={formData.gender}
               onChange={handleChange}
               required
-              className="w-full p-2 border border-gray-300 rounded-lg"
-            >
-              <option value="">Select</option>
+              className="border border-gray-300 rounded-lg px-4 py-2 h-11 w-36 outline-none"            >
+              <option value="">Gender</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
               <option value="Other">Other</option>
             </select>
           </div>
-
-          {/* Date of Birth */}
           <div className="form-group mb-4">
-            <label className="block text-gray-700 font-medium">
+            {/* <label className="block text-gray-700 font-medium">
               Date of Birth (YYYY-MM-DD):
-            </label>
+            </label> */}
             <input
               type="date"
               name="dateOfBirth"
               value={formData.dateOfBirth}
               onChange={handleChange}
               required
-              className="w-full p-2 border border-gray-300 rounded-lg"
-            />
+              className="w-44 border border-gray-300 rounded-lg px-3 py-2 outline-none"/>
           </div>
-
-          {/* Address */}
-          <div className="form-group mb-4">
-            <label className="block text-gray-700 font-medium">Address:</label>
-            <input
-              type="text"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border border-gray-300 rounded-lg"
-            />
-          </div>
-
           {/* City or Village */}
           <div className="form-group mb-4">
-            <label className="block text-gray-700 font-medium">
+            {/* <label className="block text-gray-700 font-medium">
               City or Village:
-            </label>
+            </label> */}
             <select
               name="cityOrVillage"
               value={formData.cityOrVillage}
               onChange={handleChange}
               required
-              className="w-full p-2 border border-gray-300 rounded-lg"
+              className="border border-gray-300 rounded-lg px-4 py-2 h-11 w-36 outline-none"
             >
-              <option value="">Select</option>
+              <option value="">City</option>
               {cities.map((city) => (
                 <option key={city._id} value={city.cityName}>
                   {city.cityName}
@@ -246,13 +225,29 @@ const Student = () => {
               ))}
             </select>
           </div>
-
-          {/* Mobile Number */}
+        </div>
+        <div className="inputFeild"></div>
+          {/* Address */}
           <div className="form-group mb-4">
-            <label className="block text-gray-700 font-medium">
-              Mobile Number:
-            </label>
+            {/* <label className="block text-gray-700 font-medium">Address:</label> */}
             <input
+            placeholder="Address"
+              type="text"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
+            />
+        </div>
+        <div className="inputFeild flex gap-2 ">
+            {/* Mobile Number */}
+          <div className="form-group mb-4">
+            {/* <label className="block text-gray-700 font-medium">
+              Mobile Number:
+            </label> */}
+            <input
+              placeholder="Mobile Number"
               type="text"
               name="mobileNumber"
               pattern="\d{10}"
@@ -265,10 +260,11 @@ const Student = () => {
 
           {/* WhatsApp Number */}
           <div className="form-group mb-4">
-            <label className="block text-gray-700 font-medium">
+            {/* <label className="block text-gray-700 font-medium">
               WhatsApp Number:
-            </label>
+            </label> */}
             <input
+              placeholder="Whatsapp Number"
               type="text"
               name="whatsappNumber"
               pattern="\d{10}"
@@ -278,11 +274,13 @@ const Student = () => {
               className="w-full p-2 border border-gray-300 rounded-lg"
             />
           </div>
-
+        </div>  
+        <div className="inputFeild"> 
           {/* Email */}
           <div className="form-group mb-4">
-            <label className="block text-gray-700 font-medium">Email:</label>
+            {/* <label className="block text-gray-700 font-medium">Email:</label> */}
             <input
+              placeholder="Email"
               type="email"
               name="email"
               value={formData.email}
@@ -291,20 +289,21 @@ const Student = () => {
               className="w-full p-2 border border-gray-300 rounded-lg"
             />
           </div>
-
+        </div>
+        <div className="inputFeild flex gap-2 ">
           {/* College Name */}
           <div className="form-group mb-4">
-            <label className="block text-gray-700 font-medium">
+            {/* <label className="block text-gray-700 font-medium">
               College Name:
-            </label>
+            </label> */}
             <select
               name="schoolName"
               value={formData.schoolName}
               onChange={handleChange}
               required
-              className="w-full p-2 border border-gray-300 rounded-lg"
+              className="border border-gray-300 rounded-lg px-4 py-2 h-11 w-44 outline-none"
             >
-              <option value="">Select</option>
+              <option value="">College</option>
               {schools.map((school) => (
                 <option key={school._id} value={school.collegeName}>
                   {school.collegeName}
@@ -315,15 +314,15 @@ const Student = () => {
 
           {/* Board */}
           <div className="form-group mb-4">
-            <label className="block text-gray-700 font-medium">Board:</label>
+            {/* <label className="block text-gray-700 font-medium">Board:</label> */}
             <select
               name="board"
               value={formData.board}
               onChange={handleChange}
               required
-              className="w-full p-2 border border-gray-300 rounded-lg"
+              className="border border-gray-300 rounded-lg px-4 py-2 h-11 w-36 outline-none"
             >
-              <option value="">Select</option>
+              <option value="">Board</option>
               <option value="SSC">SSC</option>
               <option value="CBSE">CBSE</option>
               <option value="ICSE">ICSE</option>
@@ -333,30 +332,28 @@ const Student = () => {
 
           {/* Medium */}
           <div className="form-group mb-4">
-            <label className="block text-gray-700 font-medium">Medium:</label>
+            {/* <label className="block text-gray-700 font-medium">Medium:</label> */}
             <select
               name="medium"
               value={formData.medium}
               onChange={handleChange}
               required
-              className="w-full p-2 border border-gray-300 rounded-lg"
+              className="border border-gray-300 rounded-lg px-4 py-2 h-11 w-36 outline-none"
             >
-              <option value="">Select</option>
+              <option value="">Medium</option>
               <option value="Marathi">Marathi</option>
               <option value="Semi-English">Semi-English</option>
               <option value="English">English</option>
             </select>
           </div>
-
-          <button
+        </div>
+        <button
             type="submit"
             className="w-full bg-red-500 text-white font-medium py-2 rounded-lg hover:bg-red-600"
           >
             Submit
           </button>
         </form>
-        <ToastContainer />
-      </div>
       </div>
     </div>
   );
