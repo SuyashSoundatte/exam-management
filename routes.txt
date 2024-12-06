@@ -1,0 +1,52 @@
+/
+/admin
+post =>
+('/addCollege', adminAuth, collegeAuth, addCollege);
+("/addCity", adminAuth, cityAuth, addCity);
+
+get =>
+('/allColleges', getAllColleges);
+('/allCities', getAllCities);
+
+post =>
+("/register", registerValidation, registerAdmin);
+("/login", loginValidation, loginAdmin);
+
+get =>
+('/allAdmins', authenticateSuperAdmin, getAllAdmins);
+
+patch =>
+('/approve/:adminId', authenticateSuperAdmin, approveAdmin);
+('/approveSuperAdmin/:adminId', authenticateSuperAdmin, approveSuperAdmin);
+
+delete =>
+('/delete/:adminId', authenticateSuperAdmin, deleteAdmin);
+
+put =>
+('/examConfig', authenticateSuperAdmin, updateExamConfig);
+
+get =>
+('/examConfig', adminAuth, getExamConfig);
+
+post =>
+('/announcements', authenticateSuperAdmin, createAnnouncement);
+
+get =>
+('/announcements', adminAuth, getAnnouncements);
+
+
+
+
+
+
+
+/student
+post =>
+('/register', registerValidation, registerStudent);
+('/viewResult', viewResultValidation, viewResult);
+("/submitMarks", updateStudentMarks);
+
+get =>
+("/allStudents",  getAllStudents);
+
+
