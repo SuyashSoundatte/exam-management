@@ -5,7 +5,7 @@ const registerSchema = Joi.object({
     middleName: Joi.string().allow(null, ''), // Optional field
     lastName: Joi.string().required(),
     gender: Joi.string().valid('Male', 'Female', 'Other').required(),
-    dateOfBirth: Joi.string().pattern(/^\d{4}-\d{2}-\d{2}$/).required(), // Validates dd-mm-yyyy format
+    dateOfBirth: Joi.string().pattern(/^\d{2}-\d{2}-\d{4}$/).required(), // Validates dd-mm-yyyy format
     address: Joi.string().required(),
     cityOrVillage: Joi.string().required(),
     mobileNumber: Joi.string().pattern(/^\d{10}$/).required(), // 10-digit number validation
@@ -29,9 +29,10 @@ const registerValidation = (req, res, next) => {
 };
 
 const viewResultSchema = Joi.object({
-    email: Joi.string().email().required(),
-    dob: Joi.string().pattern(/^\d{4}-\d{2}-\d{2}$/).required(), // Validates dd-mm-yyyy format
+    seatNumber: Joi.string().required(),
+    dob: Joi.string().pattern(/^\d{2}-\d{2}-\d{4}$/).required(), 
 });
+
 
 const viewResultValidation = (req, res, next)=>{
     const { error } = viewResultSchema.validate(req.body);
