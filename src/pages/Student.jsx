@@ -128,7 +128,7 @@ const Student = () => {
 
   return (
     <div
-      className="main h-screen w-screen bg-[#F0F0F0] flex flex-col md:flex-row"
+      className="main h-fit w-screen bg-[#F0F0F0] flex flex-col md:flex-row"
     >
 
       {/* Left Section */}
