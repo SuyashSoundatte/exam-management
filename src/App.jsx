@@ -7,19 +7,23 @@ import SignUp from "./components/SignUp";
 import ViewResult from "./pages/ViewResult";
 import AdminDashboard from "./components/AdminDashboard";
 import { Routes, Route } from "react-router-dom";
+import { ThemeProvider, CssBaseline } from "@mui/material";
+import theme from "./Utils/theme"; // Import your MUI custom theme here
 
 const App = () => {
   return (
-    <>
+    <ThemeProvider theme={theme}>
+      <CssBaseline /> {/* Ensures consistent global styles */}
       <NavBar />
-   <Routes>
+      {/* <Routes>
         <Route path="/" element={<Student />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/result" element={<ViewResult />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
-      </Routes> 
-    </>
+      </Routes> */}
+     <AdminDashboard /> 
+    </ThemeProvider>
   );
 };
 
