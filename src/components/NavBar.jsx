@@ -28,7 +28,7 @@ const Navbar = () => {
               <span className="text-red-600">DKTE</span>
               <span className="text-gray-800">COLLEGE</span>
               <div className="text-sm text-gray-500 font-light">
-                DKTE ENTRANCE TEST
+              DKTE COLLEGE ENTRANCE TEST
               </div>
             </div>
           </Link>
