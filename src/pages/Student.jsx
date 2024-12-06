@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, toast } from 
+
+"react-toastify";
 
 const Student = () => {
   const [cities, setCities] = useState([]);
@@ -127,24 +129,20 @@ const Student = () => {
   };
 
   return (
-    <div
-      className="main
+    <div className="main
       h-screen
       w-screen
       bg-[#F0F0F0]
       flex
-    "
-    >
-      <div className="left h-full w-1/2"></div>
-      <div
-        className="right h-full w-1/2
-      flex justify-center "
-      >p
-        <form
-          onSubmit={handleSubmit}
-          className="form h-fit w-2/3 bg-white px-4 py-6 rounded-lg mt-40"
-        >
-          <div className="inputFeild flex gap-2">
+    ">
+      <div className="left h-full w-1/2">
+        <h1>INFORMATION</h1>
+      </div>
+      <div className="right h-full w-1/2
+      flex justify-center ">
+        <form onSubmit={handleSubmit}
+        className="form h-fit w-2/3 bg-white px-4 py-6 rounded-lg mt-40" >
+        <div className="inputFeild flex gap-2">
             {/* First Name */}
             <div className="form-group mb-4">
               {/* <label className="block text-gray-700 font-medium">First Name:</label> */}
