@@ -69,10 +69,14 @@ function SignUp() {
 
         <button 
           onClick={handleSignUp} 
-          className="w-full py-2 px-4 bg-[#C51100] text-white font-bold rounded-md hover:bg-[#C53541] focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full py-2 px-4 bg- text-white font-bold rounded-md hover:bg-[#C53541] focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           Sign Up
         </button>
+        
+        <p className="text-sm flex font-medium mb-4" >Already have an account?<Link to={'/login'}>
+            <p className='text-red-500'>&nbsp;Login</p>
+          </Link></p>
       </div>
     </div>
     </>

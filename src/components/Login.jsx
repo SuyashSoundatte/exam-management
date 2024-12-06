@@ -46,7 +46,7 @@ function Login() {
             placeholder="Enter your email" 
             value={email} 
             onChange={(e) => setEmail(e.target.value)} 
-            className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
           />
         </div>
         
@@ -57,7 +57,7 @@ function Login() {
             placeholder="Enter your password" 
             value={pass} 
             onChange={(e) => setPass(e.target.value)} 
-            className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
           />
         </div>
         
@@ -65,15 +65,15 @@ function Login() {
           <button 
             id="login" 
             onClick={handleLogin} 
-            className="w-full py-2 px-4 bg-[#C51100] text-white font-bold rounded-md hover:bg-[#C53541] focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full py-2 px-4 bg-red-500 text-white font-bold rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             Login
           </button>
         </Link>
         
         <div className="mt-4 text-center">
-          <p className="text-sm flex" >Create an account<Link to={'/signup'}>
-            <p>&nbsp;Sign Up</p>
+          <p className="text-sm flex font-medium mb-4" >Don't have an account?<Link to={'/signup'}>
+            <p className='text-red-500'>&nbsp;Sign up</p>
           </Link></p>
           
         </div>
