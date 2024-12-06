@@ -241,7 +241,7 @@ const AdminDashboard = () => {
           <List>
             <ListItem button onClick={handleLogout}>
               <ListItemIcon>
-                <LogoutIcon />
+                <LogoutIcon   />
               </ListItemIcon>
               <ListItemText primary="Logout" />
             </ListItem>
