@@ -26,10 +26,10 @@ const Navbar = () => {
           <Link to="/" className="flex items-center">
             <div className="text-2xl font-bold">
               <span className="text-red-600">DKTE</span>
-              <span className="text-gray-800">INSTITUTE</span>
+              <span className="text-gray-800">COLLEGE</span>
               <div className="text-sm text-gray-500 font-light">
-                COMMON ENTRANCE TEST
-              </div>
+                DKTE ENTRANCE TEST
+              </div> 
             </div>
           </Link>
 
