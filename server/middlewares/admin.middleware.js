@@ -6,8 +6,7 @@ const Joi = require("joi");
 const jwt = require("jsonwebtoken");
 
 const adminAuth = async (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1];
-
+  const token = req.cookies.token; 
   if (!token) {
     return res.status(401).json({ message: "Unauthorized" });
   }
@@ -15,17 +14,8 @@ const adminAuth = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SEC);
     const admin = await Admin.findById(decoded.id);
-
     if (!admin || !admin.isApproved) {
       return res.status(403).json({ message: "You do not have admin access" });
-    }
-
-    // (Optional) Check if session has expired (if session management implemented)
-    const sessionExpiry = admin.sessionExpiry; // Assuming there's a sessionExpiry field in Admin model
-    if (sessionExpiry && new Date() > sessionExpiry) {
-      return res
-        .status(403)
-        .json({ message: "Session has expired. Please log in again." });
     }
 
     next();
@@ -33,7 +23,8 @@ const adminAuth = async (req, res, next) => {
     res.status(500).json({
       message: "Server error during authentication",
       error: error.message,
-    });
+    });     
+    
   }
 };
 
