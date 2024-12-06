@@ -40,13 +40,13 @@ get =>
 
 
 
-/student
+/student (3/4)
 post =>
-('/register', registerValidation, registerStudent);
-('/viewResult', viewResultValidation, viewResult);
+('/register', registerValidation, registerStudent); //done
 ("/submitMarks", updateStudentMarks);
 
 get =>
-("/allStudents",  getAllStudents);
+('/viewResult', viewResultValidation, viewResult); //done
+("/allStudents",  getAllStudents); //done
 
 
