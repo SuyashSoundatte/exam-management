@@ -65,7 +65,7 @@ function SignUp() {
         </div>
         <button
           onClick={handleSignUp}
-          className="w-full py-2 px-4 bg-red-500 text-white font-bold rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full py-2 px-4 bg-red-500 text-white font-bold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-red-500"
         >
           Sign Up
         </button>
