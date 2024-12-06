@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import dayjs from "dayjs";
 import {
@@ -27,7 +28,6 @@ import {
 } from "@mui/material";
 import {
   Menu as MenuIcon,
-  Dashboard as DashboardIcon,
   School as SchoolIcon,
   Assignment as AssignmentIcon,
   Logout as LogoutIcon,
@@ -182,188 +182,192 @@ const AdminDashboard = () => {
     { field: "studentId", headerName: "Student ID", flex: 1 },
   ];
 
+  const redTheme = createTheme({
+    palette: {
+      primary: {
+        main: "#f44336",
+      },
+      secondary: {
+        main: "#ff7961",
+      },
+    },
+  });
+
   return (
-    <Box sx={{ display: "flex" }}>
-      <AppBar position="fixed" sx={{ zIndex: theme.zIndex.drawer + 1 }}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            edge="start"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            sx={{ mr: 2, display: { sm: "none" } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Admin Dashboard
-          </Typography>
-        </Toolbar>
-      </AppBar>
+    <ThemeProvider theme={redTheme}>
+      <Box sx={{ display: "flex" }}>
+        <AppBar position="fixed" sx={{ zIndex: theme.zIndex.drawer + 1 }}>
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              edge="start"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              sx={{ mr: 2, display: { sm: "none" } }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" noWrap component="div">
+              Admin Dashboard
+            </Typography>
+          </Toolbar>
+        </AppBar>
 
-      <Drawer
-        variant={isMobile ? "temporary" : "permanent"}
-        open={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
+        <Drawer
+          variant={isMobile ? "temporary" : "permanent"}
+          open={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+          sx={{
             width: drawerWidth,
-            boxSizing: "border-box",
-          },
-        }}
-      >
-        <Toolbar />
-        <Box sx={{ overflow: "auto" }}>
-          <List>
-            <ListItem
-              button
-              selected={activeSection === "exams"}
-              onClick={() => setActiveSection("exams")}
-            >
-              <ListItemIcon>
-                <AssignmentIcon />
-              </ListItemIcon>
-              <ListItemText primary="Exams" />
-            </ListItem>
-            <ListItem
-              button
-              selected={activeSection === "students"}
-              onClick={() => setActiveSection("students")}
-            >
-              <ListItemIcon>
-                <SchoolIcon />
-              </ListItemIcon>
-              <ListItemText primary="Students" />
-            </ListItem>
-          </List>
-          <Divider />
-          <List>
-            <ListItem button onClick={handleLogout}>
-              <ListItemIcon>
-                <LogoutIcon   />
-              </ListItemIcon>
-              <ListItemText primary="Logout" />
-            </ListItem>
-          </List>
-        </Box>
-      </Drawer>
-
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
-        }}
-      >
-        <Toolbar />
-
-        {activeSection === "exams" && (
-          <Button
-            variant="contained"
-            onClick={() => setDialogOpen(true)}
-            sx={{ mb: 2 }}
-            startIcon={<AssignmentIcon />}
-          >
-            Create New Exam
-          </Button>
-        )}
-
-        <Box sx={{ height: "calc(100vh - 180px)", width: "100%" }}>
-          <DataGrid
-            rows={activeSection === "exams" ? exams : students}
-            columns={activeSection === "exams" ? examColumns : studentColumns}
-            pageSize={5}
-            rowsPerPageOptions={[5]}
-            getRowId={(row) => row._id || row.studentId}
-            loading={loading}
-            sx={{
-              boxShadow: 2,
-              border: 2,
-              borderColor: "primary.light",
-              "& .MuiDataGrid-cell:hover": {
-                color: "primary.main",
-              },
-            }}
-          />
-        </Box>
-
-        <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-          <DialogTitle>Create New Exam</DialogTitle>
-          <DialogContent>
-            <Box sx={{ mt: 2 }}>
-              <TextField
-                fullWidth
-                label="Exam Title"
-                value={examForm.examTitle}
-                onChange={(e) =>
-                  setExamForm({ ...examForm, examTitle: e.target.value })
-                }
-                required
-                error={!examForm.examTitle && !!error}
-                helperText={
-                  !examForm.examTitle && error ? "Title is required" : ""
-                }
-                sx={{ mb: 2 }}
-              />
-
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  label="Exam Date"
-                  value={examForm.examDate}
-                  onChange={(date) =>
-                    setExamForm({ ...examForm, examDate: date })
-                  }
-                  slotProps={{
-                    textField: {
-                      fullWidth: true,
-                      required: true,
-                      error: !examForm.examDate && !!error,
-                      helperText:
-                        !examForm.examDate && error ? "Date is required" : "",
-                    },
-                  }}
-                />
-              </LocalizationProvider>
-
-              <TextField
-                fullWidth
-                label="Description"
-                value={examForm.description}
-                onChange={(e) =>
-                  setExamForm({ ...examForm, description: e.target.value })
-                }
-                multiline
-                rows={4}
-                sx={{ mt: 2 }}
-              />
-            </Box>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
-            <Button
-              onClick={handleCreateExam}
-              variant="contained"
-              disabled={loading}
-            >
-              {loading ? <CircularProgress size={24} /> : "Create"}
-            </Button>
-          </DialogActions>
-        </Dialog>
-
-        <Snackbar
-          open={!!error}
-          autoHideDuration={6000}
-          onClose={() => setError("")}
+            flexShrink: 0,
+            "& .MuiDrawer-paper": {
+              width: drawerWidth,
+              boxSizing: "border-box",
+            },
+          }}
         >
-          <Alert severity="error" onClose={() => setError("")}>
-            {error}
-          </Alert>
-        </Snackbar>
+          <Toolbar />
+          <Box sx={{ overflow: "auto" }}>
+            <List>
+              <ListItem
+                button
+                selected={activeSection === "exams"}
+                onClick={() => setActiveSection("exams")}
+              >
+                <ListItemIcon>
+                  <AssignmentIcon />
+                </ListItemIcon>
+                <ListItemText primary="Exams" />
+              </ListItem>
+              <ListItem
+                button
+                selected={activeSection === "students"}
+                onClick={() => setActiveSection("students")}
+              >
+                <ListItemIcon>
+                  <SchoolIcon />
+                </ListItemIcon>
+                <ListItemText primary="Students" />
+              </ListItem>
+            </List>
+            <Divider />
+            <List>
+              <ListItem button onClick={handleLogout}>
+                <ListItemIcon>
+                  <LogoutIcon />
+                </ListItemIcon>
+                <ListItemText primary="Logout" />
+              </ListItem>
+            </List>
+          </Box>
+        </Drawer>
+
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            p: 3,
+            width: { sm: `calc(100% - ${drawerWidth}px)` },
+            ml: { sm: `${drawerWidth}px` },
+          }}
+        >
+          <Toolbar />
+
+          {activeSection === "exams" && (
+            <Button
+              variant="contained"
+              onClick={() => setDialogOpen(true)}
+              sx={{ mb: 2 }}
+              startIcon={<AssignmentIcon />}
+            >
+              Create New Exam
+            </Button>
+          )}
+
+          <Box sx={{ height: "calc(100vh - 180px)", width: "100%" }}>
+            <DataGrid
+              rows={activeSection === "exams" ? exams : students}
+              columns={activeSection === "exams" ? examColumns : studentColumns}
+              pageSize={5}
+              rowsPerPageOptions={[5]}
+              getRowId={(row) => row._id || row.studentId}
+              loading={loading}
+              sx={{
+                boxShadow: 2,
+                border: 2,
+                borderColor: "primary.light",
+                "& .MuiDataGrid-cell:hover": {
+                  color: "primary.main",
+                },
+              }}
+            />
+          </Box>
+
+          <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+            <DialogTitle>Create New Exam</DialogTitle>
+            <DialogContent>
+              <Box sx={{ mt: 2 }}>
+                <TextField
+                  fullWidth
+                  label="Exam Title"
+                  value={examForm.examTitle}
+                  onChange={(e) =>
+                    setExamForm({ ...examForm, examTitle: e.target.value })
+                  }
+                  required
+                />
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label="Exam Date"
+                    value={examForm.examDate}
+                    onChange={(newValue) =>
+                      setExamForm({ ...examForm, examDate: newValue })
+                    }
+                    renderInput={(params) => (
+                      <TextField {...params} fullWidth />
+                    )}
+                  />
+                </LocalizationProvider>
+                <TextField
+                  fullWidth
+                  label="Description"
+                  value={examForm.description}
+                  onChange={(e) =>
+                    setExamForm({ ...examForm, description: e.target.value })
+                  }
+                  required
+                  multiline
+                  rows={4}
+                />
+              </Box>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setDialogOpen(false)} color="primary">
+                Cancel
+              </Button>
+              <Button
+                onClick={handleCreateExam}
+                color="primary"
+                disabled={loading}
+              >
+                {loading ? (
+                  <CircularProgress size={24} sx={{ color: "white" }} />
+                ) : (
+                  "Create"
+                )}
+              </Button>
+            </DialogActions>
+          </Dialog>
+
+          <Snackbar
+            open={!!error}
+            autoHideDuration={6000}
+            onClose={() => setError("")}
+          >
+            <Alert severity="error">{error}</Alert>
+          </Snackbar>
+        </Box>
       </Box>
-    </Box>
+    </ThemeProvider>
   );
 };
 
