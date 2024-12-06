@@ -67,13 +67,12 @@ const registerStudent = async (req, res) => {
     });
   }
 };
-
 const viewResult = async (req, res) => {
-  const { email, dob } = req.body; // Expecting email and dob in the request body
+  const { seatNumber, dob } = req.body; // Expecting email and dob in the request body
 
   try {
     // Find the student by email and dob
-    const student = await Student.findOne({ email });
+    const student = await Student.findOne({ seatNumber, dateOfBirth:dob });
 
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
