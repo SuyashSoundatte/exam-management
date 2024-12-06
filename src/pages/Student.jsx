@@ -130,16 +130,27 @@ const Student = () => {
     <div
       className="main h-screen w-screen bg-[#F0F0F0] flex flex-col md:flex-row"
     >
+
       {/* Left Section */}
-      <div className="left h-full md:h-full w-full md:w-1/2 flex items-center justify-center bg-blue-100">
-        <h1 className="text-lg md:text-3xl font-bold text-gray-800">
-          INFORMATION
-        </h1>
+      <div className="left h-full md:h-full w-full md:w-1/2 sm:flex items-center justify-center px-6 py-24 sm:px-24 sm:py-44">
+        {/* <h1 className="text-lg md:text-3xl font-bold text-gray-800">
+          
+        </h1> */}
+        <div className="left-part1 h-full w-full">
+          <h1
+          className="sm:text-6xl text-4xl font-bold mb-4">DKTE'S  <br /> ENTRANCE <br />EXAM</h1>
+          <h3
+          className="sm:text-2xl text-lg font-medium mb-2 sm:mb-10">Great Opportunity</h3>
+          <h5>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam vero debitis laudantium repellendus a repellat, totam officiis nulla distinctio minus ut odit, harum adipisci possimus rem, eveniet quos amet impedit placeat soluta recusandae cum neque sequi! Rerum corporis enim voluptates ratione voluptatum perferendis. Repudiandae, doloribus ut iste cum consequatur nam temporibus iure sunt rerum sit rem veniam, maxime neque odit?</h5>
+        </div>
+        {/* <div className="left-part2 h-full w-1/2 bg-slate-600">
+
+        </div> */}
       </div>
   
       {/* Right Section */}
       <div
-        className="right h-fit md:h-full w-full md:w-1/2 flex justify-center bg-black"
+        className="right h-fit md:h-full w-full md:w-1/2 flex justify-center"
       >
         <form
           onSubmit={handleSubmit}
@@ -156,7 +167,7 @@ const Student = () => {
                 value={formData.firstName}
                 onChange={handleChange}
                 required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
               />
             </div>
   
@@ -168,7 +179,7 @@ const Student = () => {
                 name="middleName"
                 value={formData.middleName}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
               />
             </div>
   
@@ -181,7 +192,7 @@ const Student = () => {
                 value={formData.lastName}
                 onChange={handleChange}
                 required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
               />
             </div>
           </div>
@@ -195,7 +206,7 @@ const Student = () => {
                 value={formData.gender}
                 onChange={handleChange}
                 required
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-none"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
               >
                 <option value="">Gender</option>
                 <option value="Male">Male</option>
@@ -212,7 +223,7 @@ const Student = () => {
                 value={formData.dateOfBirth}
                 onChange={handleChange}
                 required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
               />
             </div>
   
@@ -223,7 +234,7 @@ const Student = () => {
                 value={formData.cityOrVillage}
                 onChange={handleChange}
                 required
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-none"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
               >
                 <option value="">City</option>
                 {cities.map((city) => (
@@ -244,7 +255,7 @@ const Student = () => {
               value={formData.address}
               onChange={handleChange}
               required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
             />
           </div>
   
@@ -260,7 +271,7 @@ const Student = () => {
                 value={formData.mobileNumber}
                 onChange={handleChange}
                 required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
               />
             </div>
   
@@ -274,7 +285,7 @@ const Student = () => {
                 value={formData.whatsappNumber}
                 onChange={handleChange}
                 required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
               />
             </div>
           </div>
@@ -288,7 +299,7 @@ const Student = () => {
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
             />
           </div>
   
@@ -301,7 +312,7 @@ const Student = () => {
                 value={formData.schoolName}
                 onChange={handleChange}
                 required
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-none"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
               >
                 <option value="">College</option>
                 {schools.map((school) => (
@@ -319,7 +330,7 @@ const Student = () => {
                 value={formData.board}
                 onChange={handleChange}
                 required
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-none"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
               >
                 <option value="">Board</option>
                 <option value="SSC">SSC</option>
@@ -336,7 +347,7 @@ const Student = () => {
                 value={formData.medium}
                 onChange={handleChange}
                 required
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-none"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
               >
                 <option value="">Medium</option>
                 <option value="Marathi">Marathi</option>
@@ -354,8 +365,9 @@ const Student = () => {
             Submit
           </button>
         </form>
-      </div>
+      </div>  
     </div>
+    
   );  
 };
 
