@@ -1,323 +1,370 @@
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import dayjs from "dayjs";
 import {
   Box,
-  Drawer,
-  AppBar,
-  Toolbar,
-  Typography,
-  IconButton,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Card,
-  CardContent,
+  Button,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  Button,
   TextField,
-  Stack,
+  Typography,
+  CircularProgress,
+  Snackbar,
   Alert,
-  createTheme,
-  ThemeProvider
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Divider,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import {
   Menu as MenuIcon,
-  Person as PersonIcon,
+  Dashboard as DashboardIcon,
+  School as SchoolIcon,
   Assignment as AssignmentIcon,
   Logout as LogoutIcon,
-  Add as AddIcon
 } from "@mui/icons-material";
 import { DataGrid } from "@mui/x-data-grid";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import dayjs from 'dayjs';
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { useNavigate } from "react-router-dom";
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#d32f2f',
-      light: '#ff6659',
-      dark: '#9a0007',
-      contrastText: '#ffffff'
-    }
+// Setup axios interceptors
+axios.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers["Authorization"] = `Bearer ${token}`;
   }
+  return config;
 });
 
-const drawerWidth = 240;
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem("token");
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
+);
 
-function AdminDashboard() {
+const AdminDashboard = () => {
+  const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const drawerWidth = 240;
+
+  const [sidebarOpen, setSidebarOpen] = useState(!isMobile);
   const [students, setStudents] = useState([]);
   const [exams, setExams] = useState([]);
-  const [open, setOpen] = useState(true);
-  const [activeSection, setActiveSection] = useState("students");
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("exams");
   const [examForm, setExamForm] = useState({
-    examTitle: '',
+    examTitle: "",
     examDate: null,
-    description: ''
+    description: "",
   });
 
-  useEffect(() => {
-    if (activeSection === "students") {
-      fetchStudents();
-    } else if (activeSection === "exams") {
-      fetchExams();
-    }
-  }, [activeSection]);
-
-  const fetchStudents = async () => {
+  const fetchStudents = useCallback(async () => {
     try {
-      const response = await axios.get("http://localhost:3000/student/allStudents");
+      setLoading(true);
+      const response = await axios.get(
+        "http://localhost:3000/student/allStudents"
+      );
       setStudents(response.data.students || []);
-    } catch (error) {
-      setError("Failed to fetch students");
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to fetch students");
+    } finally {
+      setLoading(false);
     }
-  };
+  }, []);
 
-  const fetchExams = async () => {
+  const fetchExams = useCallback(async () => {
     try {
-      const response = await axios.get("http://localhost:3000/exam/all");
-      setExams(response.data || []);
-    } catch (error) {
-      setError("Failed to fetch exams");
+      setLoading(true);
+      const response = await axios.get(
+        "http://localhost:3000/admin/examConfig"
+      );
+      setExams(Array.isArray(response.data) ? response.data : [response.data]);
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to fetch exams");
+    } finally {
+      setLoading(false);
     }
-  };
+  }, []);
 
-  const handleCreateExam = async () => {
-    if (!examForm.examTitle || !examForm.examDate) {
-      setError("Please fill all required fields");
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
       return;
     }
 
-    setLoading(true);
+    let mounted = true;
+
+    const fetchData = async () => {
+      if (!mounted) return;
+      try {
+        if (activeSection === "students") {
+          await fetchStudents();
+        } else if (activeSection === "exams") {
+          await fetchExams();
+        }
+      } catch (err) {
+        if (mounted) {
+          setError("Failed to fetch data");
+        }
+      }
+    };
+
+    fetchData();
+    return () => {
+      mounted = false;
+    };
+  }, [activeSection, fetchStudents, fetchExams, navigate]);
+
+  const handleCreateExam = async () => {
     try {
-      const formattedDate = dayjs(examForm.examDate).format('YYYY-MM-DD');
-      await axios.post("http://localhost:3000/exam/create", {
-        ...examForm,
-        examDate: formattedDate
-      });
-      await fetchExams();
-      setDialogOpen(false);
-      setExamForm({ examTitle: '', examDate: null, description: '' });
-      setError("");
+      if (!examForm.examTitle || !examForm.examDate) {
+        setError("Please fill all required fields");
+        return;
+      }
+
+      setLoading(true);
+      const formattedDate = dayjs(examForm.examDate).format("YYYY-MM-DD");
+
+      const response = await axios.put(
+        "http://localhost:3000/admin/examConfig",
+        {
+          ...examForm,
+          examDate: formattedDate,
+        }
+      );
+
+      if (response.data) {
+        await fetchExams();
+        setDialogOpen(false);
+        setExamForm({ examTitle: "", examDate: null, description: "" });
+        setError("");
+      }
     } catch (error) {
-      setError("Failed to create exam");
+      setError(error.response?.data?.message || "Failed to create exam");
     } finally {
       setLoading(false);
     }
   };
 
-  const studentColumns = [
-    { 
-      field: 'fullName', 
-      headerName: 'Full Name', 
-      flex: 2,
-      valueGetter: (params) => 
-        `${params.row.firstName || ''} ${params.row.middleName || ''} ${params.row.lastName || ''}`.trim()
-    },
-    { field: "seatNumber", headerName: "Seat No.", flex: 1 },    
-    { field: "mobileNumber", headerName: "Mobile", flex: 1 },
-    { field: "email", headerName: "Email", flex: 1.5 },
-    { field: "schoolName", headerName: "School", flex: 1.5 }
-  ];
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
 
   const examColumns = [
-    { field: "examTitle", headerName: "Exam Title", flex: 2 },
-    { 
-      field: "examDate", 
-      headerName: "Date", 
-      flex: 1,
-      valueFormatter: (params) => dayjs(params.value).format('DD/MM/YYYY')
-    },
-    { field: "description", headerName: "Description", flex: 2 }
+    { field: "examTitle", headerName: "Exam Title", flex: 1 },
+    { field: "examDate", headerName: "Date", flex: 1 },
+    { field: "description", headerName: "Description", flex: 1 },
+  ];
+
+  const studentColumns = [
+    { field: "name", headerName: "Name", flex: 1 },
+    { field: "email", headerName: "Email", flex: 1 },
+    { field: "studentId", headerName: "Student ID", flex: 1 },
   ];
 
   return (
-    <ThemeProvider theme={theme}>
-      <Box sx={{ display: "flex" }}>
-        <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              edge="start"
-              onClick={() => setOpen(!open)}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
-              Admin Dashboard
-            </Typography>
-            <IconButton color="inherit">
-              <LogoutIcon />
-            </IconButton>
-          </Toolbar>
-        </AppBar>
+    <Box sx={{ display: "flex" }}>
+      <AppBar position="fixed" sx={{ zIndex: theme.zIndex.drawer + 1 }}>
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            edge="start"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            sx={{ mr: 2, display: { sm: "none" } }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" noWrap component="div">
+            Admin Dashboard
+          </Typography>
+        </Toolbar>
+      </AppBar>
 
-        <Drawer
-          variant="permanent"
-          sx={{
+      <Drawer
+        variant={isMobile ? "temporary" : "permanent"}
+        open={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          "& .MuiDrawer-paper": {
             width: drawerWidth,
-            flexShrink: 0,
-            [`& .MuiDrawer-paper`]: {
-              width: drawerWidth,
-              boxSizing: "border-box",
-            },
-          }}
-          open={open}
-        >
-          <Toolbar />
+            boxSizing: "border-box",
+          },
+        }}
+      >
+        <Toolbar />
+        <Box sx={{ overflow: "auto" }}>
           <List>
-            <ListItemButton
-              selected={activeSection === "students"}
-              onClick={() => setActiveSection("students")}
-            >
-              <ListItemIcon>
-                <PersonIcon />
-              </ListItemIcon>
-              <ListItemText primary="Students" />
-            </ListItemButton>
-            <ListItemButton
+            <ListItem
+              button
               selected={activeSection === "exams"}
               onClick={() => setActiveSection("exams")}
             >
               <ListItemIcon>
                 <AssignmentIcon />
               </ListItemIcon>
-              <ListItemText primary="Exam Management" />
-            </ListItemButton>
+              <ListItemText primary="Exams" />
+            </ListItem>
+            <ListItem
+              button
+              selected={activeSection === "students"}
+              onClick={() => setActiveSection("students")}
+            >
+              <ListItemIcon>
+                <SchoolIcon />
+              </ListItemIcon>
+              <ListItemText primary="Students" />
+            </ListItem>
           </List>
-        </Drawer>
-
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-          <Toolbar />
-          {error && (
-            <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError("")}>
-              {error}
-            </Alert>
-          )}
-          
-          {activeSection === "students" && (
-            <Card sx={{ height: "calc(100vh - 130px)" }}>
-              <CardContent>
-                <DataGrid
-                  rows={students}
-                  columns={studentColumns}
-                  pageSize={10}
-                  getRowId={(row) => row._id}
-                  density="comfortable"
-                  disableSelectionOnClick
-                  sx={{
-                    '& .MuiDataGrid-columnHeaders': {
-                      backgroundColor: 'primary.main',
-                      color: 'primary.contrastText'
-                    }
-                  }}
-                />
-              </CardContent>
-            </Card>
-          )}
-
-          {activeSection === "exams" && (
-            <Card sx={{ height: "calc(100vh - 130px)" }}>
-              <CardContent>
-                <Box sx={{ mb: 2 }}>
-                  <Button
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    onClick={() => setDialogOpen(true)}
-                  >
-                    Add New Exam
-                  </Button>
-                </Box>
-                <DataGrid
-                  rows={exams}
-                  columns={examColumns}
-                  pageSize={10}
-                  getRowId={(row) => row._id}
-                  density="comfortable"
-                  disableSelectionOnClick
-                  sx={{
-                    '& .MuiDataGrid-columnHeaders': {
-                      backgroundColor: 'primary.main',
-                      color: 'primary.contrastText'
-                    }
-                  }}
-                />
-              </CardContent>
-            </Card>
-          )}
-
-          <Dialog 
-            open={dialogOpen} 
-            onClose={() => {
-              setDialogOpen(false);
-              setError("");
-              setExamForm({ examTitle: '', examDate: null, description: '' });
-            }}
-          >
-            <DialogTitle>Create New Exam</DialogTitle>
-            <DialogContent>
-              <Stack spacing={2} sx={{ mt: 2, minWidth: 400 }}>
-                <TextField
-                  label="Exam Title"
-                  value={examForm.examTitle}
-                  onChange={(e) => setExamForm({...examForm, examTitle: e.target.value})}
-                  fullWidth
-                  required
-                  error={!examForm.examTitle && !!error}
-                />
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    label="Exam Date"
-                    value={examForm.examDate}
-                    onChange={(date) => setExamForm({...examForm, examDate: date})}
-                    renderInput={(params) => (
-                      <TextField 
-                        {...params} 
-                        required
-                        error={!examForm.examDate && !!error}
-                      />
-                    )}
-                  />
-                </LocalizationProvider>
-                <TextField
-                  label="Description"
-                  value={examForm.description}
-                  onChange={(e) => setExamForm({...examForm, description: e.target.value})}
-                  multiline
-                  rows={4}
-                  fullWidth
-                />
-              </Stack>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={() => {
-                setDialogOpen(false);
-                setError("");
-                setExamForm({ examTitle: '', examDate: null, description: '' });
-              }}>
-                Cancel
-              </Button>
-              <Button 
-                onClick={handleCreateExam}
-                variant="contained"
-                disabled={loading || !examForm.examTitle || !examForm.examDate}
-              >
-                {loading ? "Creating..." : "Create"}
-              </Button>
-            </DialogActions>
-          </Dialog>
+          <Divider />
+          <List>
+            <ListItem button onClick={handleLogout}>
+              <ListItemIcon>
+                <LogoutIcon />
+              </ListItemIcon>
+              <ListItemText primary="Logout" />
+            </ListItem>
+          </List>
         </Box>
-      </Box>
-    </ThemeProvider>
-  );
-}
+      </Drawer>
 
-export default AdminDashboard;  
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          ml: { sm: `${drawerWidth}px` },
+        }}
+      >
+        <Toolbar />
+
+        {activeSection === "exams" && (
+          <Button
+            variant="contained"
+            onClick={() => setDialogOpen(true)}
+            sx={{ mb: 2 }}
+            startIcon={<AssignmentIcon />}
+          >
+            Create New Exam
+          </Button>
+        )}
+
+        <Box sx={{ height: "calc(100vh - 180px)", width: "100%" }}>
+          <DataGrid
+            rows={activeSection === "exams" ? exams : students}
+            columns={activeSection === "exams" ? examColumns : studentColumns}
+            pageSize={5}
+            rowsPerPageOptions={[5]}
+            getRowId={(row) => row._id || row.studentId}
+            loading={loading}
+            sx={{
+              boxShadow: 2,
+              border: 2,
+              borderColor: "primary.light",
+              "& .MuiDataGrid-cell:hover": {
+                color: "primary.main",
+              },
+            }}
+          />
+        </Box>
+
+        <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+          <DialogTitle>Create New Exam</DialogTitle>
+          <DialogContent>
+            <Box sx={{ mt: 2 }}>
+              <TextField
+                fullWidth
+                label="Exam Title"
+                value={examForm.examTitle}
+                onChange={(e) =>
+                  setExamForm({ ...examForm, examTitle: e.target.value })
+                }
+                required
+                error={!examForm.examTitle && !!error}
+                helperText={
+                  !examForm.examTitle && error ? "Title is required" : ""
+                }
+                sx={{ mb: 2 }}
+              />
+
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="Exam Date"
+                  value={examForm.examDate}
+                  onChange={(date) =>
+                    setExamForm({ ...examForm, examDate: date })
+                  }
+                  slotProps={{
+                    textField: {
+                      fullWidth: true,
+                      required: true,
+                      error: !examForm.examDate && !!error,
+                      helperText:
+                        !examForm.examDate && error ? "Date is required" : "",
+                    },
+                  }}
+                />
+              </LocalizationProvider>
+
+              <TextField
+                fullWidth
+                label="Description"
+                value={examForm.description}
+                onChange={(e) =>
+                  setExamForm({ ...examForm, description: e.target.value })
+                }
+                multiline
+                rows={4}
+                sx={{ mt: 2 }}
+              />
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
+            <Button
+              onClick={handleCreateExam}
+              variant="contained"
+              disabled={loading}
+            >
+              {loading ? <CircularProgress size={24} /> : "Create"}
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        <Snackbar
+          open={!!error}
+          autoHideDuration={6000}
+          onClose={() => setError("")}
+        >
+          <Alert severity="error" onClose={() => setError("")}>
+            {error}
+          </Alert>
+        </Snackbar>
+      </Box>
+    </Box>
+  );
+};
+
+export default AdminDashboard;
