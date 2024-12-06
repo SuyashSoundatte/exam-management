@@ -176,19 +176,23 @@ const AdminDashboard = () => {
     { field: "description", headerName: "Description", flex: 1 },
   ];
 
-  const studentColumns = [
-    { field: "name", headerName: "Name", flex: 1 },
-    { field: "email", headerName: "Email", flex: 1 },
-    { field: "studentId", headerName: "Student ID", flex: 1 },
-  ];
+const studentColumns = [
+  { field: "studentId", headerName: "Student ID", flex: 1 },
+  { field: "name", headerName: "Name", flex: 1 },
+  { field: "email", headerName: "Email", flex: 1 },
+  { field: "schoolName", headerName: "School Name", flex: 1 },
+  { field: "phoneNumber", headerName: "Phone Number", flex: 1 },
+  { field: "DOB", headerName: "DOB", flex: 1 },
+  // Add more columns as needed
+];
 
   const redTheme = createTheme({
     palette: {
       primary: {
-        main: "#f44336",
+        main: "#EF4444",
       },
       secondary: {
-        main: "#ff7961",
+        main: "#EF4444",
       },
     },
   });
