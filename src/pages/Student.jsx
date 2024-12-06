@@ -18,7 +18,7 @@ const Student = () => {
     email: "",
     schoolName: "",
     board: "",
-    medium: ""
+    medium: "",
   });
 
   useEffect(() => {
@@ -45,12 +45,15 @@ const Student = () => {
 
     const fetchColleges = async () => {
       try {
-        const response = await fetch("http://localhost:3000/admin/allColleges", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          "http://localhost:3000/admin/allColleges",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Failed to fetch colleges");
@@ -94,7 +97,7 @@ const Student = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Error registering student');
+        throw new Error(errorData.message || "Error registering student");
       }
 
       const data = await response.json();
@@ -115,9 +118,8 @@ const Student = () => {
         email: "",
         schoolName: "",
         board: "",
-        medium: ""
+        medium: "",
       });
-
     } catch (error) {
       console.error("Error during registration: ", error.message);
       toast.error("Error: " + error.message); // Notify the user on error
@@ -125,20 +127,24 @@ const Student = () => {
   };
 
   return (
-    <div className="main
+    <div
+      className="main
       h-screen
       w-screen
       bg-[#F0F0F0]
       flex
-    ">
-      <div className="left h-full w-1/2">
-        <h1>INFORMATION</h1>
-      </div>
-      <div className="right h-full w-1/2
-      flex justify-center ">
-        <form onSubmit={handleSubmit}
-        className="form h-fit w-2/3 bg-white px-4 py-6 rounded-lg mt-40" >
-        <div className="inputFeild flex gap-2">
+    "
+    >
+      <div className="left h-full w-1/2"></div>
+      <div
+        className="right h-full w-1/2
+      flex justify-center "
+      >p
+        <form
+          onSubmit={handleSubmit}
+          className="form h-fit w-2/3 bg-white px-4 py-6 rounded-lg mt-40"
+        >
+          <div className="inputFeild flex gap-2">
             {/* First Name */}
             <div className="form-group mb-4">
               {/* <label className="block text-gray-700 font-medium">First Name:</label> */}
@@ -164,7 +170,7 @@ const Student = () => {
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
               />
             </div>
-          {/* Last Name */}
+            {/* Last Name */}
             <div className="form-group mb-4">
               {/* <label className="block text-gray-700 font-medium">Last Name:</label> */}
               <input
@@ -176,62 +182,64 @@ const Student = () => {
                 required
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
               />
-              </div>
+            </div>
           </div>
-        <div className="inputFSelecteild flex gap-2 ">
-          <div className="form-group mb-4">
-            {/* <label className="block text-gray-700 font-medium">Gender:</label> */}
-            <select
-              name="gender"
-              value={formData.gender}
-              onChange={handleChange}
-              required
-              className="border border-gray-300 rounded-lg px-4 py-2 h-11 w-36 outline-none"            >
-              <option value="">Gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-          <div className="form-group mb-4">
-            {/* <label className="block text-gray-700 font-medium">
+          <div className="inputFSelecteild flex gap-2 ">
+            <div className="form-group mb-4">
+              {/* <label className="block text-gray-700 font-medium">Gender:</label> */}
+              <select
+                name="gender"
+                value={formData.gender}
+                onChange={handleChange}
+                required
+                className="border border-gray-300 rounded-lg px-4 py-2 h-11 w-36 outline-none"
+              >
+                <option value="">Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div className="form-group mb-4">
+              {/* <label className="block text-gray-700 font-medium">
               Date of Birth (YYYY-MM-DD):
             </label> */}
-            <input
-              type="date"
-              name="dateOfBirth"
-              value={formData.dateOfBirth}
-              onChange={handleChange}
-              required
-              className="w-44 border border-gray-300 rounded-lg px-3 py-2 outline-none"/>
-          </div>
-          {/* City or Village */}
-          <div className="form-group mb-4">
-            {/* <label className="block text-gray-700 font-medium">
+              <input
+                type="date"
+                name="dateOfBirth"
+                value={formData.dateOfBirth}
+                onChange={handleChange}
+                required
+                className="w-44 border border-gray-300 rounded-lg px-3 py-2 outline-none"
+              />
+            </div>
+            {/* City or Village */}
+            <div className="form-group mb-4">
+              {/* <label className="block text-gray-700 font-medium">
               City or Village:
             </label> */}
-            <select
-              name="cityOrVillage"
-              value={formData.cityOrVillage}
-              onChange={handleChange}
-              required
-              className="border border-gray-300 rounded-lg px-4 py-2 h-11 w-36 outline-none"
-            >
-              <option value="">City</option>
-              {cities.map((city) => (
-                <option key={city._id} value={city.cityName}>
-                  {city.cityName}
-                </option>
-              ))}
-            </select>
+              <select
+                name="cityOrVillage"
+                value={formData.cityOrVillage}
+                onChange={handleChange}
+                required
+                className="border border-gray-300 rounded-lg px-4 py-2 h-11 w-36 outline-none"
+              >
+                <option value="">City</option>
+                {cities.map((city) => (
+                  <option key={city._id} value={city.cityName}>
+                    {city.cityName}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-        </div>
-        <div className="inputFeild"></div>
+          <div className="inputFeild"></div>
           {/* Address */}
           <div className="form-group mb-4">
             {/* <label className="block text-gray-700 font-medium">Address:</label> */}
             <input
-            placeholder="Address"
+              placeholder="Address"
               type="text"
               name="address"
               value={formData.address}
@@ -239,115 +247,115 @@ const Student = () => {
               required
               className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
             />
-        </div>
-        <div className="inputFeild flex gap-2 ">
+          </div>
+          <div className="inputFeild flex gap-2 ">
             {/* Mobile Number */}
-          <div className="form-group mb-4">
-            {/* <label className="block text-gray-700 font-medium">
+            <div className="form-group mb-4">
+              {/* <label className="block text-gray-700 font-medium">
               Mobile Number:
             </label> */}
-            <input
-              placeholder="Mobile Number"
-              type="text"
-              name="mobileNumber"
-              pattern="\d{10}"
-              value={formData.mobileNumber}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border border-gray-300 rounded-lg"
-            />
-          </div>
+              <input
+                placeholder="Mobile Number"
+                type="text"
+                name="mobileNumber"
+                pattern="\d{10}"
+                value={formData.mobileNumber}
+                onChange={handleChange}
+                required
+                className="w-full p-2 border border-gray-300 rounded-lg"
+              />
+            </div>
 
-          {/* WhatsApp Number */}
-          <div className="form-group mb-4">
-            {/* <label className="block text-gray-700 font-medium">
+            {/* WhatsApp Number */}
+            <div className="form-group mb-4">
+              {/* <label className="block text-gray-700 font-medium">
               WhatsApp Number:
             </label> */}
-            <input
-              placeholder="Whatsapp Number"
-              type="text"
-              name="whatsappNumber"
-              pattern="\d{10}"
-              value={formData.whatsappNumber}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border border-gray-300 rounded-lg"
-            />
+              <input
+                placeholder="Whatsapp Number"
+                type="text"
+                name="whatsappNumber"
+                pattern="\d{10}"
+                value={formData.whatsappNumber}
+                onChange={handleChange}
+                required
+                className="w-full p-2 border border-gray-300 rounded-lg"
+              />
+            </div>
           </div>
-        </div>  
-        <div className="inputFeild"> 
-          {/* Email */}
-          <div className="form-group mb-4">
-            {/* <label className="block text-gray-700 font-medium">Email:</label> */}
-            <input
-              placeholder="Email"
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border border-gray-300 rounded-lg"
-            />
+          <div className="inputFeild">
+            {/* Email */}
+            <div className="form-group mb-4">
+              {/* <label className="block text-gray-700 font-medium">Email:</label> */}
+              <input
+                placeholder="Email"
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                className="w-full p-2 border border-gray-300 rounded-lg"
+              />
+            </div>
           </div>
-        </div>
-        <div className="inputFeild flex gap-2 ">
-          {/* College Name */}
-          <div className="form-group mb-4">
-            {/* <label className="block text-gray-700 font-medium">
+          <div className="inputFeild flex gap-2 ">
+            {/* College Name */}
+            <div className="form-group mb-4">
+              {/* <label className="block text-gray-700 font-medium">
               College Name:
             </label> */}
-            <select
-              name="schoolName"
-              value={formData.schoolName}
-              onChange={handleChange}
-              required
-              className="border border-gray-300 rounded-lg px-4 py-2 h-11 w-44 outline-none"
-            >
-              <option value="">College</option>
-              {schools.map((school) => (
-                <option key={school._id} value={school.collegeName}>
-                  {school.collegeName}
-                </option>
-              ))}
-            </select>
-          </div>
+              <select
+                name="schoolName"
+                value={formData.schoolName}
+                onChange={handleChange}
+                required
+                className="border border-gray-300 rounded-lg px-4 py-2 h-11 w-44 outline-none"
+              >
+                <option value="">College</option>
+                {schools.map((school) => (
+                  <option key={school._id} value={school.collegeName}>
+                    {school.collegeName}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          {/* Board */}
-          <div className="form-group mb-4">
-            {/* <label className="block text-gray-700 font-medium">Board:</label> */}
-            <select
-              name="board"
-              value={formData.board}
-              onChange={handleChange}
-              required
-              className="border border-gray-300 rounded-lg px-4 py-2 h-11 w-36 outline-none"
-            >
-              <option value="">Board</option>
-              <option value="SSC">SSC</option>
-              <option value="CBSE">CBSE</option>
-              <option value="ICSE">ICSE</option>
-              <option value="OLYMPIAD">OLYMPIAD</option>
-            </select>
-          </div>
+            {/* Board */}
+            <div className="form-group mb-4">
+              {/* <label className="block text-gray-700 font-medium">Board:</label> */}
+              <select
+                name="board"
+                value={formData.board}
+                onChange={handleChange}
+                required
+                className="border border-gray-300 rounded-lg px-4 py-2 h-11 w-36 outline-none"
+              >
+                <option value="">Board</option>
+                <option value="SSC">SSC</option>
+                <option value="CBSE">CBSE</option>
+                <option value="ICSE">ICSE</option>
+                <option value="OLYMPIAD">OLYMPIAD</option>
+              </select>
+            </div>
 
-          {/* Medium */}
-          <div className="form-group mb-4">
-            {/* <label className="block text-gray-700 font-medium">Medium:</label> */}
-            <select
-              name="medium"
-              value={formData.medium}
-              onChange={handleChange}
-              required
-              className="border border-gray-300 rounded-lg px-4 py-2 h-11 w-36 outline-none"
-            >
-              <option value="">Medium</option>
-              <option value="Marathi">Marathi</option>
-              <option value="Semi-English">Semi-English</option>
-              <option value="English">English</option>
-            </select>
+            {/* Medium */}
+            <div className="form-group mb-4">
+              {/* <label className="block text-gray-700 font-medium">Medium:</label> */}
+              <select
+                name="medium"
+                value={formData.medium}
+                onChange={handleChange}
+                required
+                className="border border-gray-300 rounded-lg px-4 py-2 h-11 w-36 outline-none"
+              >
+                <option value="">Medium</option>
+                <option value="Marathi">Marathi</option>
+                <option value="Semi-English">Semi-English</option>
+                <option value="English">English</option>
+              </select>
+            </div>
           </div>
-        </div>
-        <button
+          <button
             type="submit"
             className="w-full bg-red-500 text-white font-medium py-2 rounded-lg hover:bg-red-600"
           >
