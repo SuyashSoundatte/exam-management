@@ -20,7 +20,7 @@ patch =>
 ('/approveSuperAdmin', authenticateSuperAdmin, approveSuperAdmin); //done
 
 delete =>
-('/delete/:adminId', authenticateSuperAdmin, deleteAdmin);
+('/delete', authenticateSuperAdmin, deleteAdmin); //done
 
 put =>
 ('/examConfig', authenticateSuperAdmin, updateExamConfig);
