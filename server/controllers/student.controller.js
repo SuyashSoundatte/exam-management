@@ -68,20 +68,20 @@ const registerStudent = async (req, res) => {
   }
 };
 const viewResult = async (req, res) => {
-  const { seatNumber, dob } = req.body; // Expecting email and dob in the request body
+  const { seatNumber, dob } = req.body; 
 
   try {
-    // Find the student by email and dob
+
     const student = await Student.findOne({ seatNumber, dateOfBirth:dob });
 
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
     }
 
-    // Return the student's result
+
     res.status(200).json({
       message: "Result retrieved successfully",
-      result: student.result, // Assuming the result field exists in the Student model
+      result: student.result,
     });
   } catch (error) {
     res.status(500).json({
@@ -102,7 +102,7 @@ const getAllStudents = async (req, res) => {
 };
 
 const updateStudentMarks = async (req, res) => {
-  const { marks } = req.body; // marks is an object with studentId as the key and the marks as the value
+  const { marks } = req.body; 
 
   try {
     const updatePromises = Object.keys(marks).map((studentId) => {

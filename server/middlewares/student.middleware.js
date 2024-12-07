@@ -2,14 +2,14 @@ const Joi = require('joi');
 
 const registerSchema = Joi.object({
     firstName: Joi.string().required(),
-    middleName: Joi.string().allow(null, ''), // Optional field
+    middleName: Joi.string().allow(null, ''),
     lastName: Joi.string().required(),
     gender: Joi.string().valid('Male', 'Female', 'Other').required(),
-    dateOfBirth: Joi.string().pattern(/^\d{2}-\d{2}-\d{4}$/).required(), // Validates dd-mm-yyyy format
+    dateOfBirth: Joi.string().pattern(/^\d{2}-\d{2}-\d{4}$/).required(), 
     address: Joi.string().required(),
     cityOrVillage: Joi.string().required(),
-    mobileNumber: Joi.string().pattern(/^\d{10}$/).required(), // 10-digit number validation
-    whatsappNumber: Joi.string().pattern(/^\d{10}$/).required(), // 10-digit number validation
+    mobileNumber: Joi.string().pattern(/^\d{10}$/).required(), 
+    whatsappNumber: Joi.string().pattern(/^\d{10}$/).required(),
     email: Joi.string().email().required(),
     schoolName: Joi.string().required(),
     board: Joi.string().valid('SSC', 'CBSE').required(),

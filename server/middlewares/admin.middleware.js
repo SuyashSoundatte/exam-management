@@ -62,9 +62,6 @@ const collegeAuth = async (req, res, next) => {
   }
 };
 
-
-
-
 const citySchema = Joi.object({
   cityName: Joi.string().required(),
 });
@@ -78,13 +75,9 @@ const cityAuth = async (req, res, next) => {
       });
     }
 
-    // Normalize the city name to lowercase before checking
     const inputCityName = req.body.cityName.toLowerCase();
 
-    // Find the city using case-insensitive search
-    /*
-    Case-insensitive search using RegExp: This allows MongoDB to search for the city name regardless of case or slight variations in spelling.
-    */
+   
     const city = await City.findOne({ cityName: new RegExp(`^${inputCityName}$`, 'i') });
     
     if (city) {
@@ -166,14 +159,13 @@ const authenticateSuperAdmin = async (req, res, next) => {
   }
 };
 
-// ExamConfig validation schema
 const examConfigSchema = Joi.object({
     examTitle: Joi.string().required(),
     examDate: Joi.date().required(),
     description: Joi.string().optional(),
 });
 
-// Announcement validation schema
+
 const announcementSchema = Joi.object({
     title: Joi.string().required(),
     content: Joi.string().required(),

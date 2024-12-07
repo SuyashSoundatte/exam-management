@@ -23,10 +23,10 @@ delete =>
 ('/delete', authenticateSuperAdmin, deleteAdmin); //done
 
 put =>
-('/examConfig', authenticateSuperAdmin, updateExamConfig);
+('/examConfig', authenticateSuperAdmin, updateExamConfig); //done
 
 get =>
-('/examConfig', adminAuth, getExamConfig);
+('/examConfig', adminAuth, getExamConfig); //done
 
 post =>
 ('/announcements', authenticateSuperAdmin, createAnnouncement);

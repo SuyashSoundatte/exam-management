@@ -13,23 +13,21 @@ const addCollege = async(req, res) => {
   try {
     const { collegeName } = req.body;
 
-    // Check if collegeName is provided and is not empty
     if (!collegeName) {
       return res.status(400).json({ message: "College name is required" });
     }
 
-    // Check if a college with the same name already exists
+
     const existingCollege = await College.findOne({ collegeName: collegeName });
     if (existingCollege) {
       return res.status(400).json({ message: "College already exists" });
     }
 
-    // Create a new college
     const college = new College({
       collegeName: collegeName,
     });
 
-    await college.save(); // Save the new college to the database
+    await college.save();
     return res.status(201).json({ message: "College added successfully!" });
   } catch (error) {
     console.log("Error: ", error);
@@ -252,7 +250,7 @@ const updateExamConfig = async (req, res) => {
   }
 };
 
-// Get Exam Config
+
 const getExamConfig = async (req, res) => {
   try {
     const config = await ExamConfig.findOne({});
@@ -262,7 +260,7 @@ const getExamConfig = async (req, res) => {
   }
 };
 
-// Create Announcement
+
 const createAnnouncement = async (req, res) => {
   try {
     const { title, content, examDate } = req.body;
@@ -281,7 +279,7 @@ const createAnnouncement = async (req, res) => {
   }
 };
 
-// Get Announcements
+
 const getAnnouncements = async (req, res) => {
   try {
     // Fetch all announcements
