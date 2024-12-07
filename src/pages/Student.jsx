@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import StudentPage2 from "./StudentPage2";
 
 const Student = () => {
   const [cities, setCities] = useState([]);
@@ -127,12 +128,11 @@ const Student = () => {
   };
 
   return (
-    <div
-      className="main lg:h-1 h-fit w-screen bg-[#F0F0F0] flex flex-col md:flex-row"
-    >
-
+    <div className="main bg-[#f0f0f0] h-full w-full">
+      {/* page 1 */}
+      <div className="page1 h-fit w-full bg-[#F0F0F0] flex flex-col md:flex-row mb-8">
       {/* Left Section */}
-      <div className="left h-full md:h-full w-full md:w-1/2 sm:flex items-center justify-center px-6 py-24 sm:px-24 sm:py-44">
+      <div className="left h-full md:h-full w-full md:w-1/2 sm:flex items-center justify-center px-6 py-24 sm:px-24 sm:py-36">
         {/* <h1 className="text-lg md:text-3xl font-bold text-gray-800">
           
         </h1> */}
@@ -141,7 +141,7 @@ const Student = () => {
           className="sm:text-6xl text-4xl font-bold mb-4">DKTE'S  <br /> ENTRANCE <br />EXAM</h1>
           <h3
           className="sm:text-2xl text-lg font-medium mb-2 sm:mb-10">Great Opportunity</h3>
-          <h5>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam vero debitis laudantium repellendus a repellat, totam officiis nulla distinctio minus ut odit, harum adipisci possimus rem, eveniet quos amet impedit placeat soluta recusandae cum neque sequi! Rerum corporis enim voluptates ratione voluptatum perferendis. Repudiandae, doloribus ut iste cum consequatur nam temporibus iure sunt rerum sit rem veniam, maxime neque odit?</h5>
+          <h5 className="w-3/5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam vero debitis laudantium repellendus a repellat, totam officiis nulla distinctio minus ut odit, harum adipisci possimus rem, eveniet quos amet impedit placeat soluta recusandae cum neque sequi! Rerum corporis enim voluptates ratione voluptatum perferendis. Repudiandae, doloribus ut iste cum consequatur nam temporibus iure sunt rerum sit rem veniam, maxime neque odit?</h5>
         </div>
         {/* <div className="left-part2 h-full w-1/2 bg-slate-600">
 
@@ -152,9 +152,11 @@ const Student = () => {
       <div
         className="right h-fit md:h-full w-full md:w-1/2 flex justify-center"
       >
+
+        <h3 className="text-center font-bold absolute top-40 sm:text-2xl text-lg ml-28 mb-2 sm:mb-10">DKTE Application Form 2025</h3>
         <form
           onSubmit={handleSubmit}
-          className="form h-fit w-11/12 sm:w-2/3 bg-white px-6 py-8 rounded-lg mt-6 md:mt-40 shadow-lg"
+          className="form h-fit w-11/12 sm:w-2/3 bg-white px-6 py-8 rounded-lg mt-6 ml-28 md:mt-52  shadow-lg"
         >
           {/* Name Fields */}
           <div className="inputField flex flex-col sm:flex-row gap-2">
@@ -365,7 +367,11 @@ const Student = () => {
             Submit
           </button>
         </form>
-      </div>  
+      </div>
+      </div>
+      <div className="page2 h-screen w-full bg-[#F0F0F0]">
+        <StudentPage2/>
+      </div>
     </div>
     
   );  
