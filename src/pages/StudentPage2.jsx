@@ -30,12 +30,12 @@ const StudentPage2 = () => {
   }, [slides.length]);
 
   return (
-    <div className="relative flex justify-center bottom-3/4 left-[30%] h-full w-96">
-      <div className="absolute w-96 h-3/4 overflow-hidden rounded-xl shadow-lg">
+    <div className="relative flex justify-center items-center h-full w-full p-4 lg:p-8 lg:bottom-3/4 lg:right-20 ">
+      <div className="relative w-full max-w-lg h-3/4 sm:h-3/4 md:h-[550px] lg:h-[650px] lg:w-[450px] overflow-hidden rounded-xl shadow-lg">
         {slides.map((slide, index) => (
           <div
             key={index}
-            className={`absolute w-full h-full transition-transform duration-700 ${
+            className={`absolute inset-0 transition-transform duration-700 ease-in-out ${
               index === currentIndex ? "translate-x-0" : "translate-x-full"
             }`}
             style={{
@@ -48,9 +48,9 @@ const StudentPage2 = () => {
                 alt={`Slide ${index + 1}`}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute bottom-4 left-4 text-white">
-                <h2 className="text-4xl font-bold">{slide.title}</h2>
-                <p className="text-lg">{slide.description}</p>
+              <div className="absolute bottom-4 left-4 text-white bg-black bg-opacity-50 p-4 rounded-lg">
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold">{slide.title}</h2>
+                <p className="text-sm sm:text-base lg:text-lg">{slide.description}</p>
               </div>
             </div>
           </div>
