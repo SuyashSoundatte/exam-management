@@ -188,10 +188,8 @@ const approveSuperAdmin = async (req, res) => {
           return res.status(404).json({ message: 'Admin not found.' });
       }
 
-      // Normalize the superAdminApproval input
       const normalizedSuperAdminApproval = String(superAdminApproval).trim().toLowerCase();
 
-      // Determine superadmin approval status based on normalized input
       if (normalizedSuperAdminApproval === 'true' || normalizedSuperAdminApproval === 'yes' || normalizedSuperAdminApproval === 'y') {
           adminToApprove.isSuperAdmin = true;
       } else if (normalizedSuperAdminApproval === 'false' || normalizedSuperAdminApproval === 'no' || normalizedSuperAdminApproval === 'n') {
@@ -222,15 +220,15 @@ const getAllAdmins = async (req, res) => {
 };
 
 const deleteAdmin = async (req, res) => {
-  const { adminId } = req.params;
+  const { username } = req.body;
 
   try {
-      const adminToDelete = await Admin.findById(adminId);
+      const adminToDelete = await Admin.findOne({username});
       if (!adminToDelete) {
           return res.status(404).json({ message: 'Admin not found.' });
       }
 
-      await Admin.deleteOne({ _id: adminId });
+      await Admin.deleteOne({username});
 
       res.status(200).json({ message: 'Admin deleted successfully.', admin: adminToDelete });
   } catch (error) {
