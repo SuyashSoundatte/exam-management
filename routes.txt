@@ -9,14 +9,14 @@ get =>
 ('/allCities', getAllCities); //done
 
 post =>
-("/register", registerValidation, registerAdmin); 
+("/register", registerValidation, registerAdmin); //done
 ("/login", loginValidation, loginAdmin); //done
 
 get =>
 ('/allAdmins', authenticateSuperAdmin, getAllAdmins); //done
 
 patch =>
-('/approve/:adminId', authenticateSuperAdmin, approveAdmin);
+('/approve', authenticateSuperAdmin, approveAdmin);
 ('/approveSuperAdmin/:adminId', authenticateSuperAdmin, approveSuperAdmin);
 
 delete =>
