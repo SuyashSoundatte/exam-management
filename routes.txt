@@ -1,19 +1,19 @@
 /
 /admin
 post =>
-('/addCollege', adminAuth, collegeAuth, addCollege);
-("/addCity", adminAuth, cityAuth, addCity);
+('/addCollege', adminAuth, collegeAuth, addCollege); //done
+("/addCity", adminAuth, cityAuth, addCity); //done
 
 get =>
-('/allColleges', getAllColleges);
-('/allCities', getAllCities);
+('/allColleges', getAllColleges); //done
+('/allCities', getAllCities); //done
 
 post =>
-("/register", registerValidation, registerAdmin);
-("/login", loginValidation, loginAdmin);
+("/register", registerValidation, registerAdmin); 
+("/login", loginValidation, loginAdmin); //done
 
 get =>
-('/allAdmins', authenticateSuperAdmin, getAllAdmins);
+('/allAdmins', authenticateSuperAdmin, getAllAdmins); //done
 
 patch =>
 ('/approve/:adminId', authenticateSuperAdmin, approveAdmin);
