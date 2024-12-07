@@ -16,8 +16,8 @@ get =>
 ('/allAdmins', authenticateSuperAdmin, getAllAdmins); //done
 
 patch =>
-('/approve', authenticateSuperAdmin, approveAdmin);
-('/approveSuperAdmin/:adminId', authenticateSuperAdmin, approveSuperAdmin);
+('/approve', authenticateSuperAdmin, approveAdmin); //done
+('/approveSuperAdmin', authenticateSuperAdmin, approveSuperAdmin); //done
 
 delete =>
 ('/delete/:adminId', authenticateSuperAdmin, deleteAdmin);
