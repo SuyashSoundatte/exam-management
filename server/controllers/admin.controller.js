@@ -153,7 +153,7 @@ const loginAdmin = async (req, res) => {
 };
 
 const approveAdmin = async (req, res) => {
-  const { username,approved } = req.body;
+  const { username,approval } = req.body;
 
   try {
       const adminToApprove = await Admin.findOne({username});
@@ -161,7 +161,7 @@ const approveAdmin = async (req, res) => {
           return res.status(404).json({ message: 'Admin not found.' });
       }
 
-      const normalizedApproval = String(approved).trim().toLowerCase();
+      const normalizedApproval = String(approval).trim().toLowerCase();
 
       if (normalizedApproval === 'true' || normalizedApproval === 'yes' || normalizedApproval === 'y') {
           adminToApprove.isApproved = true;
@@ -180,11 +180,10 @@ const approveAdmin = async (req, res) => {
 };
 
 const approveSuperAdmin = async (req, res) => {
-  const { adminId } = req.params;
-  const { superAdminApproval } = req.body;
+  const { username, superAdminApproval } = req.body;
 
   try {
-      const adminToApprove = await Admin.findById(adminId);
+      const adminToApprove = await Admin.findOne({username});
       if (!adminToApprove) {
           return res.status(404).json({ message: 'Admin not found.' });
       }
@@ -204,8 +203,8 @@ const approveSuperAdmin = async (req, res) => {
       await adminToApprove.save();
 
       res.status(200).json({
-          message: `Superadmin ${adminToApprove.isSuperAdminApproved ? 'approved' : 'disapproved'} successfully.`,
-          admin: adminToApprove
+        message: `Superadmin ${adminToApprove.isSuperAdmin ? 'approved' : 'disapproved'} successfully.`,
+        admin: adminToApprove
       });
   } catch (error) {
       res.status(500).json({ message: 'Error updating superadmin status.', error: error.message });

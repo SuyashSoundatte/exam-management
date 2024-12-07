@@ -42,7 +42,7 @@ router.get('/allAdmins', authenticateSuperAdmin, getAllAdmins);
 // Approve or Disapprove Admin (super admin only)
 router.patch('/approve/', authenticateSuperAdmin, approveAdmin);
 
-router.patch('/approveSuperAdmin/:adminId', authenticateSuperAdmin, approveSuperAdmin);
+router.patch('/approveSuperAdmin', authenticateSuperAdmin, approveSuperAdmin);
 
 // Delete Admin (super admin only)
 router.delete('/delete/:adminId', authenticateSuperAdmin, deleteAdmin);
