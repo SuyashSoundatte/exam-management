@@ -30,8 +30,8 @@ const StudentPage2 = () => {
   }, [slides.length]);
 
   return (
-    <div className="relative flex justify-center items-center h-full w-full p-4 lg:p-8 lg:bottom-3/4 lg:right-20 ">
-      <div className="relative w-full max-w-lg h-3/4 sm:h-3/4 md:h-[550px] lg:h-[650px] lg:w-[450px] overflow-hidden rounded-xl shadow-lg">
+    <div className="relative flex justify-center items-center h-full w-full p-4 lg:p-8 ">
+      <div className="relative w-full max-w-lg h-3/4 sm:h-3/4 md:h-[550px] lg:h-[650px] lg:w-[450px] overflow-hidden rounded-xl shadow-lg lg:bottom-3/4 lg:right-20">
         {slides.map((slide, index) => (
           <div
             key={index}
@@ -55,6 +55,12 @@ const StudentPage2 = () => {
             </div>
           </div>
         ))}
+      </div>
+      <div className="infoContent absolute top-full lg:top-60 h-full w-full flex items-center justify-center bg-black">
+                
+      </div>
+      <div className="pageFooter h-28 w-full absolute bg-pink-500 top-[200%] lg:top-[125%]">
+
       </div>
     </div>
   );

@@ -370,6 +370,7 @@ const Student = () => {
       </div>
       <div className="page2 h-screen w-full bg-[#F0F0F0]">
         <StudentPage2/>
+        
       </div>
     </div>
     
