@@ -40,7 +40,7 @@ router.post("/login", loginValidation, loginAdmin);
 router.get('/allAdmins', authenticateSuperAdmin, getAllAdmins);
 
 // Approve or Disapprove Admin (super admin only)
-router.patch('/approve/:adminId', authenticateSuperAdmin, approveAdmin);
+router.patch('/approve/', authenticateSuperAdmin, approveAdmin);
 
 router.patch('/approveSuperAdmin/:adminId', authenticateSuperAdmin, approveSuperAdmin);
 

@@ -153,19 +153,16 @@ const loginAdmin = async (req, res) => {
 };
 
 const approveAdmin = async (req, res) => {
-  const { adminId } = req.params;
-  const { approved } = req.body; // Expecting { approved: true/false, y/n, yes/no, Yes/No, YES/NO} const
+  const { username,approved } = req.body;
 
   try {
-      const adminToApprove = await Admin.findById(adminId);
+      const adminToApprove = await Admin.findOne({username});
       if (!adminToApprove) {
           return res.status(404).json({ message: 'Admin not found.' });
       }
 
-      // Normalize the approved input
       const normalizedApproval = String(approved).trim().toLowerCase();
 
-      // Determine approval status based on normalized input
       if (normalizedApproval === 'true' || normalizedApproval === 'yes' || normalizedApproval === 'y') {
           adminToApprove.isApproved = true;
       } else if (normalizedApproval === 'false' || normalizedApproval === 'no' || normalizedApproval === 'n') {

@@ -141,30 +141,27 @@ const loginValidation = (req, res, next) => {
 };
 const authenticateSuperAdmin = async (req, res, next) => {
   try {
-    // Extract the token from cookies
     const token = req.cookies?.token;
 
     if (!token) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    // Verify the token
     const decoded = jwt.verify(token, process.env.JWT_SEC);
 
-    // Fetch the admin user from the database
     const admin = await Admin.findById(decoded.id);
 
-    // Check if the admin exists and is a super admin
+
     if (!admin || !admin.isSuperAdmin) {
       return res.status(403).json({ message: "Access denied" });
     }
 
-    req.user = admin; // Attach the admin to the request
-    next(); // Move to the next middleware or route handler
+    req.user = admin;
+    next(); 
   } catch (error) {
     res.status(401).json({
       message: "Unauthorized",
-      error: error.message, // Provide error details for debugging
+      error: error.message,
     });
   }
 };
