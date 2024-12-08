@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import ScrollBar from "../components/scrollBar";
 
 const StudentPage2 = () => {
   const slides = [
@@ -56,8 +57,10 @@ const StudentPage2 = () => {
           </div>
         ))}
       </div>
-      <div className="infoContent absolute top-full lg:top-60 h-full w-full flex items-center justify-center bg-black">
-                
+      <div className="infoContent absolute top-full lg:top-60 h-full w-full flex bg-[#f0f0f0]">
+          <div className="scroller h-full w-full">
+            <ScrollBar />
+          </div>
       </div>
       <div className="pageFooter h-28 w-full absolute bg-pink-500 top-[200%] lg:top-[125%]">
 
