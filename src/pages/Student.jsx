@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import StudentPage2 from "./StudentPage2";
+import './style.css'
 
 const Student = () => {
   const [cities, setCities] = useState([]);
@@ -138,10 +139,10 @@ const Student = () => {
         </h1> */}
         <div className="left-part1 h-full w-full">
           <h1
-          className="md:text-6xl text-6xl font-bold mb-4">DKTE'S  <br /> ENTRANCE <br />EXAM</h1>
+          className="md:text-6xl text-6xl font-bold mb-4 font-[Archivo Black]">DKTE'S  <br /> ENTRANCE <br />EXAM</h1>
           <h3
-          className="sm:text-2xl text-3xl font-medium mb-2 sm:mb-10">Great Opportunity</h3>
-          <h5 className="md:w-3/5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam vero debitis laudantium repellendus a repellat, totam officiis nulla distinctio minus ut odit, harum adipisci possimus rem, eveniet quos amet impedit placeat soluta recusandae cum neque sequi! Rerum corporis enim voluptates ratione voluptatum perferendis. Repudiandae, doloribus ut iste cum consequatur nam temporibus iure sunt rerum sit rem veniam, maxime neque odit?</h5>
+          className="sm:text-2xl text-3xl font-medium mb-2 sm:mb-10 font-[Montserrat]">Unlocking a World <br /> of Opportunities</h3>
+          <h5 className="md:w-3/5 text-base font-medium font-[Montserrat]">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Debitis, laboriosam nihil. Accusantium eaque reprehenderit est saepe vero fugiat quas sapiente?</h5>
         </div>
         {/* <div className="left-part2 h-full w-1/2 bg-slate-600">
 
@@ -155,7 +156,7 @@ const Student = () => {
 
         <form
           onSubmit={handleSubmit}
-          className="form h-fit w-11/12 sm:w-2/3 bg-white px-6 py-8 rounded-lg mt-6 md:ml-28 md:mt-52  shadow-lg"
+          className="form h-fit w-11/12 sm:w-2/3 bg-white px-6 py-8 rounded-lg mt-6 md:ml-28 md:mt-52  shadow-lg "
         >
           {/* Name Fields */}
           <div className="inputField flex flex-col sm:flex-row gap-2">
