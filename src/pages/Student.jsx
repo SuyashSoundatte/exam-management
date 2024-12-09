@@ -133,7 +133,7 @@ const Student = () => {
       {/* page 1 */}
       <div className="page1 h-fit w-full bg-[#F0F0F0] flex flex-col md:flex-row mb-8">
       {/* Left Section */}
-      <div className="left h-full md:h-full w-full md:w-1/2 sm:flex items-center justify-center px-6 py-24 sm:px-24 sm:py-36">
+      <div className="left h-full md:h-full w-full md:w-1/2 sm:flex items-center justify-center px-6 py-24 sm:px-24 sm:py-52">
         {/* <h1 className="text-lg md:text-3xl font-bold text-gray-800">
           
         </h1> */}
@@ -153,10 +153,10 @@ const Student = () => {
       <div
         className="right h-fit md:h-full w-full md:w-1/2 flex justify-center"
       >
-
+        
         <form
           onSubmit={handleSubmit}
-          className="form h-fit w-11/12 sm:w-2/3 bg-white px-6 py-8 rounded-lg mt-6 md:ml-28 md:mt-52  shadow-lg "
+          className="form h-fit w-11/12 sm:w-[65%] bg-white px-6 py-8 rounded-lg mt-6 md:ml-[10%] md:mt-[30%]  shadow-lg "
         >
           {/* Name Fields */}
           <div className="inputField flex flex-col sm:flex-row gap-2">

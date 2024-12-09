@@ -16,15 +16,15 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline /> {/* Ensures consistent global styles */}
       <NavBar />
-      {/* <Routes>
+      <Routes>
         <Route path="/" element={<Student />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/result" element={<ViewResult />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
-      </Routes> */}
-      <AdminDashboard />
-      <SuperAdminDashboard />
+      </Routes>
+      {/* <AdminDashboard /> */}
+      {/* <SuperAdminDashboard /> */}
     </ThemeProvider>
   );
 };

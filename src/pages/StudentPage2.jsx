@@ -4,17 +4,17 @@ import ScrollBar from "../components/scrollBar";
 const StudentPage2 = () => {
   const slides = [
     {
-      image: "https://via.placeholder.com/300x300?text=Image+1", // Replace with your image URL
+      image: "./public/assets/dk1.webp", // Replace with your image URL
       title: "1.4 Lakh+",
       description: "Students awarded Scholarships since 2020",
     },
     {
-      image: "https://via.placeholder.com/300x300?text=Image+2", // Replace with your image URL
+      image: "./public/assets/dk3.webp", // Replace with your image URL
       title: "1700+",
       description: "Students awarded 100% Scholarship",
     },
     {
-      image: "https://via.placeholder.com/300x300?text=Image+3", // Replace with your image URL
+      image: "./public/assets/dk4.webp", // Replace with your image URL
       title: "26000+",
       description: "Students awarded 50% Scholarship",
     },
@@ -32,7 +32,7 @@ const StudentPage2 = () => {
 
   return (
     <div className="relative flex justify-center items-center h-full w-full p-4 lg:p-8 ">
-      <div className="relative w-full max-w-lg h-3/4 sm:h-3/4 md:h-[550px] lg:h-[650px] lg:w-[450px] overflow-hidden rounded-xl shadow-lg lg:bottom-3/4 lg:right-20">
+      <div className="relative w-full max-w-lg h-3/4 sm:h-3/4 md:h-[550px] lg:h-[650px] lg:w-[390px] overflow-hidden rounded-lg shadow-lg lg:bottom-[93%] lg:right-20">
         {slides.map((slide, index) => (
           <div
             key={index}
@@ -62,9 +62,32 @@ const StudentPage2 = () => {
             <ScrollBar />
           </div>
       </div>
-      <div className="pageFooter h-28 w-full absolute bg-pink-500 top-[200%] lg:top-[125%]">
+      {/* <div className=""> */}
+      
 
-      </div>
+<footer class="pageFooter w-full absolute top-[200%] lg:top-[125%] bg-white">
+    <div class="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
+      <span class="text-sm text-black- font-medium sm:text-center">© 2023 <a href="https://www.dkte.ac.in/" target="_blank" class="hover:underline">DKTE</a>. All Rights Reserved.
+    </span>
+    <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-black sm:mt-0">
+        <li>
+            <a href="#" class="hover:underline me-4 md:me-6">About</a>
+        </li>
+        <li>
+            <a href="#" class="hover:underline me-4 md:me-6">Privacy Policy</a>
+        </li>
+        <li>
+            <a href="#" class="hover:underline me-4 md:me-6">Licensing</a>
+        </li>
+        <li>
+            <a href="#" class="hover:underline">Contact</a>
+        </li>
+    </ul>
+    </div>
+</footer>
+
+
+      {/* </div> */}
     </div>
   );
 };
