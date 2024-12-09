@@ -46,7 +46,7 @@ import { useNavigate } from 'react-router-dom';
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
-    config.headers['Authorization'] = Bearer ${token};
+    config.headers['Authorization'] = `Bearer ${token}`;
   }
   return config;
 });
@@ -196,7 +196,7 @@ const SuperAdminDashboard = () => {
   const handleModifySuperAdminStatus = async () => {
     try {
       setLoading(true);
-      const response = await axios.patch(http://localhost:3000/admin/approveSuperAdmin/${username}, { isAdmin, isSuperAdmin });
+      const response = await axios.patch(`http://localhost:3000/admin/approveSuperAdmin/${username}`, { isAdmin, isSuperAdmin });
       setSuperAdmins(response.data || []);
       setSuperAdminDialogOpen(false);
     } catch (err) {
@@ -209,7 +209,7 @@ const SuperAdminDashboard = () => {
   const handleApproveAdmin = async (adminId) => {
     try {
       setLoading(true);
-      await axios.patch(http://localhost:3000/admin/approve/${adminId}, { approved: true });
+      await axios.patch(`http://localhost:3000/admin/approve/${adminId}`, { approved: true });
       setPendingAdmins(pendingAdmins.filter(admin => admin._id !== adminId));
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to approve admin');
