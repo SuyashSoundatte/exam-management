@@ -6,7 +6,7 @@ const Joi = require("joi");
 const jwt = require("jsonwebtoken");
 
 const adminAuth = async (req, res, next) => {
-  const token = req.cookies.token; 
+  const token = req.cookies.token;
   if (!token) {
     return res.status(401).json({ message: "Unauthorized" });
   }
@@ -23,8 +23,7 @@ const adminAuth = async (req, res, next) => {
     res.status(500).json({
       message: "Server error during authentication",
       error: error.message,
-    });     
-    
+    });
   }
 };
 
@@ -44,7 +43,7 @@ const collegeAuth = async (req, res, next) => {
     const { collegeName } = req.body;
 
     const college = await College.findOne({
-      collegeName: collegeName
+      collegeName: collegeName,
     });
 
     if (college) {
@@ -77,9 +76,10 @@ const cityAuth = async (req, res, next) => {
 
     const inputCityName = req.body.cityName.toLowerCase();
 
-   
-    const city = await City.findOne({ cityName: new RegExp(`^${inputCityName}$`, 'i') });
-    
+    const city = await City.findOne({
+      cityName: new RegExp(`^${inputCityName}$`, "i"),
+    });
+
     if (city) {
       return res.status(400).json({
         message: "City already exists",
@@ -94,7 +94,6 @@ const cityAuth = async (req, res, next) => {
     });
   }
 };
-
 
 const adminSchema = Joi.object({
   username: Joi.string().required(),
@@ -144,13 +143,12 @@ const authenticateSuperAdmin = async (req, res, next) => {
 
     const admin = await Admin.findById(decoded.id);
 
-
     if (!admin || !admin.isSuperAdmin) {
       return res.status(403).json({ message: "Access denied" });
     }
 
     req.user = admin;
-    next(); 
+    next();
   } catch (error) {
     res.status(401).json({
       message: "Unauthorized",
@@ -160,24 +158,23 @@ const authenticateSuperAdmin = async (req, res, next) => {
 };
 
 const examConfigSchema = Joi.object({
-    examTitle: Joi.string().required(),
-    examDate: Joi.date().required(),
-    description: Joi.string().optional(),
+  examTitle: Joi.string().required(),
+  examDate: Joi.date().required(),
+  description: Joi.string().optional(),
 });
 
-
 const announcementSchema = Joi.object({
-    title: Joi.string().required(),
-    content: Joi.string().required(),
-    examDate: Joi.date().required(),
+  title: Joi.string().required(),
+  content: Joi.string().required(),
+  examDate: Joi.date().required(),
 });
 
 const validateExamConfig = (req, res, next) => {
-    const { error } = examConfigSchema.validate(req.body);
-    if (error) {
-        return res.status(400).json({ message: error.details[0].message });
-    }
-    next();
+  const { error } = examConfigSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
+  next();
 };
 
 const validateAnnouncement = (req, res, next) => {
@@ -196,5 +193,5 @@ module.exports = {
   authenticateSuperAdmin,
   validateAnnouncement,
   validateExamConfig,
-  loginValidation
+  loginValidation,
 };
