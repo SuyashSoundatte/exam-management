@@ -18,6 +18,7 @@ function Login() {
           email,
           password: pass,
         }),
+        credentials: "include",
       });
 
       if (!response.ok) {

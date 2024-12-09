@@ -23,8 +23,6 @@ const App = () => {
         <Route path="/result" element={<ViewResult />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
       </Routes>
-      {/* <AdminDashboard /> */}
-      {/* <SuperAdminDashboard /> */}
     </ThemeProvider>
   );
 };
