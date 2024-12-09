@@ -26,7 +26,7 @@ const {
   loginValidation
 } = require('../middlewares/admin.middleware');
 
-// College and City Routes
+
 router.get('/verifyToken', adminAuth, (req, res) => {
   res.status(200).json({ isValid: true, message: 'Token is valid' });
 });
@@ -35,26 +35,26 @@ router.post("/addCity", adminAuth, cityAuth, addCity);
 router.get('/allColleges', getAllColleges);
 router.get('/allCities', getAllCities);
 
-// Admin Registration and Login
+
 router.post("/register", registerValidation, registerAdmin);
 router.post("/login", loginValidation, loginAdmin);
 
-// Get All Admins (only accessible to super admin)
+
 router.get('/allAdmins', authenticateSuperAdmin, getAllAdmins);
 
-// Approve or Disapprove Admin (super admin only)
+
 router.patch('/approve', authenticateSuperAdmin, approveAdmin);
 
 router.patch('/approveSuperAdmin', authenticateSuperAdmin, approveSuperAdmin);
 
-// Delete Admin (super admin only)
+
 router.delete('/delete', authenticateSuperAdmin, deleteAdmin);
 
-// Exam Config routes
+
 router.put('/examConfig', authenticateSuperAdmin, updateExamConfig);
 router.get('/examConfig', adminAuth, getExamConfig);
 
-// Announcement routes
+
 router.post('/announcements', authenticateSuperAdmin, createAnnouncement);
 router.get('/announcements', adminAuth, getAnnouncements);
 
