@@ -5,7 +5,7 @@ const { registerValidation, viewResultValidation } = require("../middlewares/stu
 const { adminAuth } = require("../middlewares/admin.middleware");
 
 router.post('/register', registerValidation, registerStudent);
-router.get('/viewResult', viewResultValidation, viewResult);
+router.post('/viewResult', viewResultValidation, viewResult);
 router.get("/allStudents",  getAllStudents);
 router.post("/submitMarks", updateStudentMarks);
 

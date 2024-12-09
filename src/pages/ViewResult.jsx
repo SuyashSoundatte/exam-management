@@ -2,18 +2,25 @@ import React, { useEffect, useState } from 'react';
 
 function ViewResult() {
   const [email, setEmail] = useState('');
+  const [seatNumber, setSeatNumber] = useState('');
   const [dob, setDob] = useState('');
   const [resultData, setResultData] = useState(null); // State to store the result data
 
   const handleResult = async () => {
     try {
+      console.log(dob);
+      const formattedDateOfBirth = new Date(dob)
+        .toLocaleDateString("en-GB")
+        .replace(/\//g, "-");
+  
+      setDob(formattedDateOfBirth);
       const response = await fetch('http://localhost:3000/student/viewResult', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email,
+          seatNumber ,
           dob,
         }),
       });
@@ -42,13 +49,13 @@ function ViewResult() {
 
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Email
+            Seat Number
           </label>
           <input
             type="text"
-            placeholder="Enter Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter Seat Number"
+            value={seatNumber}
+            onChange={(e) => setSeatNumber(e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500"
           />
         </div>
