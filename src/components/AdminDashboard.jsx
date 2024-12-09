@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import dayjs from "dayjs";
+import Cookies from 'js-cookie';
 import {
     Box,
     Button,
@@ -76,32 +77,56 @@ const AdminDashboard = () => {
     const fetchStudents = useCallback(async () => {
         try {
             setLoading(true);
-            const response = await axios.get(
+            const response = await fetch(
                 "http://localhost:3000/student/allStudents"
             );
-            setStudents(response.data.students || []);
+
+            if (!response.ok) {
+                throw new Error(
+                    (await response.json()).message ||
+                        "Failed to fetch students"
+                );
+            }
+
+            const data = await response.json();
+            setStudents(data.students || []); // Update the students state
         } catch (err) {
-            setError(err.response?.data?.message || "Failed to fetch students");
+            setError(err.message || "Failed to fetch students"); // Set the error message
         } finally {
-            setLoading(false);
+            setLoading(false); // Stop loading state
         }
     }, []);
 
     const fetchExams = useCallback(async () => {
         try {
             setLoading(true);
-            const response = await axios.get(
-                "http://localhost:3000/admin/examConfig"
+            const response = await fetch(
+                "http://localhost:3000/admin/examConfig",
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: "include",
+                }
             );
-            setExams(
-                Array.isArray(response.data) ? response.data : [response.data]
-            );
+
+            if (!response.ok) {
+                throw new Error(
+                    (await response.json()).message || "Failed to fetch exams"
+                );
+            }
+
+            const data = await response.json();
+            setExams(Array.isArray(data) ? data : [data]); // Ensure exams is an array
         } catch (err) {
-            setError(err.response?.data?.message || "Failed to fetch exams");
+            setError(err.message || "Failed to fetch exams"); // Set error message
         } finally {
-            setLoading(false);
+            setLoading(false); // Stop loading state
         }
     }, []);
+
+   
     useEffect(() => {
         let mounted = true;
 
@@ -126,12 +151,12 @@ const AdminDashboard = () => {
             }
         };
 
-        fetchData();
+      fetchData();
 
-        return () => {
-            mounted = false;
-        };
-    }, [activeSection, fetchStudents, fetchExams, navigate]);
+      return () => {
+          mounted = false;
+      };
+    }, [activeSection, fetchStudents, fetchExams, navigate, setError]);
 
     const handleCreateExam = async () => {
         try {
@@ -143,22 +168,37 @@ const AdminDashboard = () => {
             setLoading(true);
             const formattedDate = dayjs(examForm.examDate).format("YYYY-MM-DD");
 
-            const response = await axios.put(
+            const response = await fetch(
                 "http://localhost:3000/admin/examConfig",
                 {
-                    ...examForm,
-                    examDate: formattedDate,
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        ...examForm,
+                        examDate: formattedDate,
+                    }),
+                    credentials: "include"
                 }
             );
 
-            if (response.data) {
+            if (!response.ok) {
+                throw new Error("Failed to create exam");
+            }
+
+            alert("Exam updated successfully.")
+            const data = await response.json();
+
+
+            if (data) {
                 await fetchExams();
                 setDialogOpen(false);
                 setExamForm({ examTitle: "", examDate: null, description: "" });
                 setError("");
             }
         } catch (error) {
-            setError(error.response?.data?.message || "Failed to create exam");
+            setError(error.message || "Failed to create exam");
         } finally {
             setLoading(false);
         }
@@ -176,13 +216,15 @@ const AdminDashboard = () => {
     ];
 
     const studentColumns = [
-        { field: "studentId", headerName: "Student ID", flex: 1 },
-        { field: "name", headerName: "Name", flex: 1 },
+        { field: "seatNumber", headerName: "Seat Number", flex: 1 },
+        { field: "firstName", headerName: "FirstName", flex: 1 },
+        { field: "middleName", headerName: "MiddleName", flex: 1 },
+        { field: "lastName", headerName: "LastName", flex: 1 },
         { field: "email", headerName: "Email", flex: 1 },
         { field: "schoolName", headerName: "School Name", flex: 1 },
-        { field: "phoneNumber", headerName: "Phone Number", flex: 1 },
-        { field: "DOB", headerName: "DOB", flex: 1 },
-        // Add more columns as needed
+        { field: "mobileNumber", headerName: "Phone Number", flex: 1 },
+        { field: "whatsappNumber", headerName: "WA Number", flex: 1 },
+        { field: "dateOfBirth", headerName: "DOB", flex: 1 },
     ];
 
     const redTheme = createTheme({

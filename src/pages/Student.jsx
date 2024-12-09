@@ -84,28 +84,39 @@ const Student = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
+      const formattedDateOfBirth = new Date(formData.dateOfBirth)
+        .toLocaleDateString("en-GB")
+        .replace(/\//g, "-");
+  
+      const updatedFormData = {
+        ...formData,
+        dateOfBirth: formattedDateOfBirth,
+      };
+  
       const response = await fetch("http://localhost:3000/student/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(updatedFormData),
       });
-
+  
+      console.log(updatedFormData.dateOfBirth);
+  
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Error registering student");
       }
-
+  
       const data = await response.json();
       console.log("Registration Successful: ", data.message);
-      toast("Student Registered Successfully"); // Notify the user on success
-
+      alert("Student Registered Successfully");
+      toast("Student Registered Successfully"); 
+  
       // Reset the form
       setFormData({
         firstName: "",
@@ -127,7 +138,7 @@ const Student = () => {
       toast.error("Error: " + error.message); // Notify the user on error
     }
   };
-
+  
   return (
     <div className="main bg-[#f0f0f0] h-full w-full">
       {/* page 1 */}

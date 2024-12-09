@@ -49,4 +49,3 @@ get =>
 ('/viewResult', viewResultValidation, viewResult); //done
 ("/allStudents",  getAllStudents); //done
 
-

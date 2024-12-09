@@ -27,6 +27,9 @@ const {
 } = require('../middlewares/admin.middleware');
 
 // College and City Routes
+router.get('/verifyToken', adminAuth, (req, res) => {
+  res.status(200).json({ isValid: true, message: 'Token is valid' });
+});
 router.post('/addCollege', adminAuth, collegeAuth, addCollege);
 router.post("/addCity", adminAuth, cityAuth, addCity);
 router.get('/allColleges', getAllColleges);

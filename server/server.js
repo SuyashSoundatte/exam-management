@@ -22,7 +22,15 @@ app.use(session({
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow all origins
+    callback(null, true);
+  },
+  credentials: true, // Allow cookies to be sent and received
+}));
+
+
 
 
 app.use("/admin", adminRoutes);
