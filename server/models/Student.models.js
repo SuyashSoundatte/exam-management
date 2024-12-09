@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
     dateOfBirth: {
         type: String,
         required: true,
-        match:/^\d{4}-\d{2}-\d{2}$/,
+        match:/^\d{2}-\d{2}-\d{4}$/,
     },
     address: {
         type: String,

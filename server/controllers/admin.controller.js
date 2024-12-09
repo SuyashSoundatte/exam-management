@@ -13,23 +13,21 @@ const addCollege = async(req, res) => {
   try {
     const { collegeName } = req.body;
 
-    // Check if collegeName is provided and is not empty
     if (!collegeName) {
       return res.status(400).json({ message: "College name is required" });
     }
 
-    // Check if a college with the same name already exists
+
     const existingCollege = await College.findOne({ collegeName: collegeName });
     if (existingCollege) {
       return res.status(400).json({ message: "College already exists" });
     }
 
-    // Create a new college
     const college = new College({
       collegeName: collegeName,
     });
 
-    await college.save(); // Save the new college to the database
+    await college.save();
     return res.status(201).json({ message: "College added successfully!" });
   } catch (error) {
     console.log("Error: ", error);
@@ -153,19 +151,16 @@ const loginAdmin = async (req, res) => {
 };
 
 const approveAdmin = async (req, res) => {
-  const { adminId } = req.params;
-  const { approved } = req.body; // Expecting { approved: true/false, y/n, yes/no, Yes/No, YES/NO} const
+  const { username,approval } = req.body;
 
   try {
-      const adminToApprove = await Admin.findById(adminId);
+      const adminToApprove = await Admin.findOne({username});
       if (!adminToApprove) {
           return res.status(404).json({ message: 'Admin not found.' });
       }
 
-      // Normalize the approved input
-      const normalizedApproval = String(approved).trim().toLowerCase();
+      const normalizedApproval = String(approval).trim().toLowerCase();
 
-      // Determine approval status based on normalized input
       if (normalizedApproval === 'true' || normalizedApproval === 'yes' || normalizedApproval === 'y') {
           adminToApprove.isApproved = true;
       } else if (normalizedApproval === 'false' || normalizedApproval === 'no' || normalizedApproval === 'n') {
@@ -183,19 +178,16 @@ const approveAdmin = async (req, res) => {
 };
 
 const approveSuperAdmin = async (req, res) => {
-  const { adminId } = req.params;
-  const { superAdminApproval } = req.body;
+  const { username, superAdminApproval } = req.body;
 
   try {
-      const adminToApprove = await Admin.findById(adminId);
+      const adminToApprove = await Admin.findOne({username});
       if (!adminToApprove) {
           return res.status(404).json({ message: 'Admin not found.' });
       }
 
-      // Normalize the superAdminApproval input
       const normalizedSuperAdminApproval = String(superAdminApproval).trim().toLowerCase();
 
-      // Determine superadmin approval status based on normalized input
       if (normalizedSuperAdminApproval === 'true' || normalizedSuperAdminApproval === 'yes' || normalizedSuperAdminApproval === 'y') {
           adminToApprove.isSuperAdmin = true;
       } else if (normalizedSuperAdminApproval === 'false' || normalizedSuperAdminApproval === 'no' || normalizedSuperAdminApproval === 'n') {
@@ -207,8 +199,8 @@ const approveSuperAdmin = async (req, res) => {
       await adminToApprove.save();
 
       res.status(200).json({
-          message: `Superadmin ${adminToApprove.isSuperAdminApproved ? 'approved' : 'disapproved'} successfully.`,
-          admin: adminToApprove
+        message: `Superadmin ${adminToApprove.isSuperAdmin ? 'approved' : 'disapproved'} successfully.`,
+        admin: adminToApprove
       });
   } catch (error) {
       res.status(500).json({ message: 'Error updating superadmin status.', error: error.message });
@@ -226,15 +218,15 @@ const getAllAdmins = async (req, res) => {
 };
 
 const deleteAdmin = async (req, res) => {
-  const { adminId } = req.params;
+  const { username } = req.body;
 
   try {
-      const adminToDelete = await Admin.findById(adminId);
+      const adminToDelete = await Admin.findOne({username});
       if (!adminToDelete) {
           return res.status(404).json({ message: 'Admin not found.' });
       }
 
-      await Admin.deleteOne({ _id: adminId });
+      await Admin.deleteOne({username});
 
       res.status(200).json({ message: 'Admin deleted successfully.', admin: adminToDelete });
   } catch (error) {
@@ -258,7 +250,7 @@ const updateExamConfig = async (req, res) => {
   }
 };
 
-// Get Exam Config
+
 const getExamConfig = async (req, res) => {
   try {
     const config = await ExamConfig.findOne({});
@@ -268,7 +260,7 @@ const getExamConfig = async (req, res) => {
   }
 };
 
-// Create Announcement
+
 const createAnnouncement = async (req, res) => {
   try {
     const { title, content, examDate } = req.body;
@@ -287,7 +279,7 @@ const createAnnouncement = async (req, res) => {
   }
 };
 
-// Get Announcements
+
 const getAnnouncements = async (req, res) => {
   try {
     // Fetch all announcements

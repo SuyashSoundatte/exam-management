@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 function SignUp() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [pass, setPass] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [pass, setPass] = useState("");
 
   const handleSignUp = async () => {
     try {
-      const response = await fetch('http://localhost:3000/admin/register', {
-        method: 'POST',
+      const response = await fetch("http://localhost:3000/admin/register", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           username: name,
@@ -19,8 +19,9 @@ function SignUp() {
           password: pass,
         }),
       });
+      console.log(response);
       if (!response.ok) {
-        throw new Error('Failed to sign up');
+        throw new Error("Failed to sign up");
       }
       const data = await response.json();
       console.log(data);
@@ -34,7 +35,9 @@ function SignUp() {
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
         <div className="text-2xl font-bold mb-6 text-center">Sign Up</div>
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">User Name</label>
+          <label className="block text-sm font-medium text-gray-700">
+            User Name
+          </label>
           <input
             type="text"
             placeholder="Enter your name"
@@ -44,7 +47,9 @@ function SignUp() {
           />
         </div>
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Email</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Email
+          </label>
           <input
             type="email"
             placeholder="Enter your email"
@@ -54,7 +59,9 @@ function SignUp() {
           />
         </div>
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700">Password</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Password
+          </label>
           <input
             type="password"
             placeholder="Enter your password"
@@ -70,7 +77,7 @@ function SignUp() {
           Sign Up
         </button>
         <p className="text-sm font-medium text-gray-600 mt-4 text-center">
-          Already have an account?{' '}
+          Already have an account?{" "}
           <Link to="/login" className="text-red-500 hover:text-red-600">
             Login
           </Link>

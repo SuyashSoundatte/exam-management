@@ -9,6 +9,7 @@ import AdminDashboard from "./components/AdminDashboard";
 import { Routes, Route } from "react-router-dom";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import theme from "./Utils/theme"; // Import your MUI custom theme here
+import SuperAdminDashboard from "./components/SuperAdminDashboard";
 
 const App = () => {
   return (
@@ -22,7 +23,8 @@ const App = () => {
         <Route path="/result" element={<ViewResult />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
       </Routes> */}
-     <AdminDashboard /> 
+      <AdminDashboard />
+      <SuperAdminDashboard />
     </ThemeProvider>
   );
 };

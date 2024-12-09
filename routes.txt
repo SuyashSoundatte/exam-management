@@ -1,32 +1,32 @@
 /
 /admin
 post =>
-('/addCollege', adminAuth, collegeAuth, addCollege);
-("/addCity", adminAuth, cityAuth, addCity);
+('/addCollege', adminAuth, collegeAuth, addCollege); //done
+("/addCity", adminAuth, cityAuth, addCity); //done
 
 get =>
-('/allColleges', getAllColleges);
-('/allCities', getAllCities);
+('/allColleges', getAllColleges); //done
+('/allCities', getAllCities); //done
 
 post =>
-("/register", registerValidation, registerAdmin);
-("/login", loginValidation, loginAdmin);
+("/register", registerValidation, registerAdmin); //done
+("/login", loginValidation, loginAdmin); //done
 
 get =>
-('/allAdmins', authenticateSuperAdmin, getAllAdmins);
+('/allAdmins', authenticateSuperAdmin, getAllAdmins); //done
 
 patch =>
-('/approve/:adminId', authenticateSuperAdmin, approveAdmin);
-('/approveSuperAdmin/:adminId', authenticateSuperAdmin, approveSuperAdmin);
+('/approve', authenticateSuperAdmin, approveAdmin); //done
+('/approveSuperAdmin', authenticateSuperAdmin, approveSuperAdmin); //done
 
 delete =>
-('/delete/:adminId', authenticateSuperAdmin, deleteAdmin);
+('/delete', authenticateSuperAdmin, deleteAdmin); //done
 
 put =>
-('/examConfig', authenticateSuperAdmin, updateExamConfig);
+('/examConfig', authenticateSuperAdmin, updateExamConfig); //done
 
 get =>
-('/examConfig', adminAuth, getExamConfig);
+('/examConfig', adminAuth, getExamConfig); //done
 
 post =>
 ('/announcements', authenticateSuperAdmin, createAnnouncement);
@@ -40,13 +40,13 @@ get =>
 
 
 
-/student
+/student (3/4)
 post =>
-('/register', registerValidation, registerStudent);
-('/viewResult', viewResultValidation, viewResult);
+('/register', registerValidation, registerStudent); //done
 ("/submitMarks", updateStudentMarks);
 
 get =>
-("/allStudents",  getAllStudents);
+('/viewResult', viewResultValidation, viewResult); //done
+("/allStudents",  getAllStudents); //done
 
 
