@@ -21,7 +21,10 @@ function SignUp() {
       });
       console.log(response);
       if (!response.ok) {
+        alert("Something went wrong!!");
+        console.log("error to create!");
         throw new Error("Failed to sign up");
+        
       }
       const data = await response.json();
       console.log(data);
