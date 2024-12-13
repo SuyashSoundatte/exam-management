@@ -6,8 +6,7 @@ const Joi = require("joi");
 const jwt = require("jsonwebtoken");
 
 const adminAuth = async (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1];
-
+  const token = req.cookies.token;
   if (!token) {
     return res.status(401).json({ message: "Unauthorized" });
   }
@@ -15,17 +14,8 @@ const adminAuth = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SEC);
     const admin = await Admin.findById(decoded.id);
-
     if (!admin || !admin.isApproved) {
       return res.status(403).json({ message: "You do not have admin access" });
-    }
-
-    // (Optional) Check if session has expired (if session management implemented)
-    const sessionExpiry = admin.sessionExpiry; // Assuming there's a sessionExpiry field in Admin model
-    if (sessionExpiry && new Date() > sessionExpiry) {
-      return res
-        .status(403)
-        .json({ message: "Session has expired. Please log in again." });
     }
 
     next();
@@ -43,7 +33,7 @@ const collegeSchema = Joi.object({
 
 const collegeAuth = async (req, res, next) => {
   try {
-    const { error } = collegeSchema.validate(req.body); // Validate the request body
+    const { error } = collegeSchema.validate(req.body);
     if (error) {
       return res.status(400).json({
         message: error.details[0].message,
@@ -51,18 +41,18 @@ const collegeAuth = async (req, res, next) => {
     }
 
     const { collegeName } = req.body;
-    // Check if a college with the same name already exists (case-insensitive)
+
     const college = await College.findOne({
-      collegeName: collegeName
+      collegeName: collegeName,
     });
 
     if (college) {
       return res.status(400).json({
-        message: `College ${college.req.body} already exists`,
+        message: `College ${college.collegeName} already exists`,
       });
     }
 
-    next(); // Proceed to the next middleware if no error
+    next();
   } catch (error) {
     res.status(500).json({
       message: "Server error during authentication",
@@ -70,9 +60,6 @@ const collegeAuth = async (req, res, next) => {
     });
   }
 };
-
-
-
 
 const citySchema = Joi.object({
   cityName: Joi.string().required(),
@@ -87,15 +74,12 @@ const cityAuth = async (req, res, next) => {
       });
     }
 
-    // Normalize the city name to lowercase before checking
     const inputCityName = req.body.cityName.toLowerCase();
 
-    // Find the city using case-insensitive search
-    /*
-    Case-insensitive search using RegExp: This allows MongoDB to search for the city name regardless of case or slight variations in spelling.
-    */
-    const city = await City.findOne({ cityName: new RegExp(`^${inputCityName}$`, 'i') });
-    
+    const city = await City.findOne({
+      cityName: new RegExp(`^${inputCityName}$`, "i"),
+    });
+
     if (city) {
       return res.status(400).json({
         message: "City already exists",
@@ -110,7 +94,6 @@ const cityAuth = async (req, res, next) => {
     });
   }
 };
-
 
 const adminSchema = Joi.object({
   username: Joi.string().required(),
@@ -148,49 +131,50 @@ const loginValidation = (req, res, next) => {
 
   next();
 };
-
 const authenticateSuperAdmin = async (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1];
-
-  if (!token) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
-
   try {
+    const token = req.cookies?.token;
+
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
     const decoded = jwt.verify(token, process.env.JWT_SEC);
+
     const admin = await Admin.findById(decoded.id);
 
     if (!admin || !admin.isSuperAdmin) {
       return res.status(403).json({ message: "Access denied" });
     }
 
-    req.user = admin; // Attach the admin to the request
+    req.user = admin;
     next();
   } catch (error) {
-    res.status(401).json({ message: "Unauthorized" });
+    res.status(401).json({
+      message: "Unauthorized",
+      error: error.message,
+    });
   }
 };
 
-// ExamConfig validation schema
 const examConfigSchema = Joi.object({
-    examTitle: Joi.string().required(),
-    examDate: Joi.date().required(),
-    description: Joi.string().optional(),
+  examTitle: Joi.string().required(),
+  examDate: Joi.date().required(),
+  description: Joi.string().optional(),
 });
 
-// Announcement validation schema
 const announcementSchema = Joi.object({
-    title: Joi.string().required(),
-    content: Joi.string().required(),
-    examDate: Joi.date().required(),
+  title: Joi.string().required(),
+  content: Joi.string().required(),
+  examDate: Joi.date().required(),
 });
 
 const validateExamConfig = (req, res, next) => {
-    const { error } = examConfigSchema.validate(req.body);
-    if (error) {
-        return res.status(400).json({ message: error.details[0].message });
-    }
-    next();
+  const { error } = examConfigSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
+  next();
 };
 
 const validateAnnouncement = (req, res, next) => {
@@ -209,5 +193,5 @@ module.exports = {
   authenticateSuperAdmin,
   validateAnnouncement,
   validateExamConfig,
-  loginValidation
+  loginValidation,
 };

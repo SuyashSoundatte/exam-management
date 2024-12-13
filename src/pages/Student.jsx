@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import StudentPage2 from "./StudentPage2";
+import './style.css'
 
 const Student = () => {
   const [cities, setCities] = useState([]);
@@ -18,7 +20,7 @@ const Student = () => {
     email: "",
     schoolName: "",
     board: "",
-    medium: ""
+    medium: "",
   });
 
   useEffect(() => {
@@ -45,12 +47,15 @@ const Student = () => {
 
     const fetchColleges = async () => {
       try {
-        const response = await fetch("http://localhost:3000/admin/allColleges", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          "http://localhost:3000/admin/allColleges",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Failed to fetch colleges");
@@ -79,28 +84,39 @@ const Student = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
+      const formattedDateOfBirth = new Date(formData.dateOfBirth)
+        .toLocaleDateString("en-GB")
+        .replace(/\//g, "-");
+  
+      const updatedFormData = {
+        ...formData,
+        dateOfBirth: formattedDateOfBirth,
+      };
+  
       const response = await fetch("http://localhost:3000/student/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(updatedFormData),
       });
-
+  
+      console.log(updatedFormData.dateOfBirth);
+  
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Error registering student');
+        throw new Error(errorData.message || "Error registering student");
       }
-
+  
       const data = await response.json();
       console.log("Registration Successful: ", data.message);
-      toast("Student Registered Successfully"); // Notify the user on success
-
+      alert("Student Registered Successfully");
+      toast("Student Registered Successfully"); 
+  
       // Reset the form
       setFormData({
         firstName: "",
@@ -115,129 +131,262 @@ const Student = () => {
         email: "",
         schoolName: "",
         board: "",
-        medium: ""
+        medium: "",
       });
-
     } catch (error) {
       console.error("Error during registration: ", error.message);
       toast.error("Error: " + error.message); // Notify the user on error
     }
   };
-
+  
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: "600px", margin: "0 auto" }}>
-      <h2>User Registration Form</h2>
+    <div className="main bg-[#f0f0f0] h-full w-full">
+      {/* page 1 */}
+      <div className="page1 h-fit w-full bg-[#F0F0F0] flex flex-col md:flex-row mb-8">
+      {/* Left Section */}
+      <div className="left h-full md:h-full w-full md:w-1/2 sm:flex items-center justify-center px-6 py-24 sm:px-24 sm:py-52">
+        {/* <h1 className="text-lg md:text-3xl font-bold text-gray-800">
+          
+        </h1> */}
+        <div className="left-part1 h-full w-full">
+          <h1
+          className="md:text-6xl text-6xl font-bold mb-4 font-[Archivo Black]">DKTE'S  <br /> ENTRANCE <br />EXAM</h1>
+          <h3
+          className="sm:text-2xl text-3xl font-medium mb-2 sm:mb-10 font-[Montserrat]">Unlocking a World <br /> of Opportunities</h3>
+          <h5 className="md:w-3/5 text-base font-medium font-[Montserrat]">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Debitis, laboriosam nihil. Accusantium eaque reprehenderit est saepe vero fugiat quas sapiente?</h5>
+        </div>
+        {/* <div className="left-part2 h-full w-1/2 bg-slate-600">
 
-      {/* First Name */}
-      <div className="form-group">
-        <label>First Name:</label>
-        <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required />
+        </div> */}
       </div>
-
-      {/* Middle Name */}
-      <div className="form-group">
-        <label>Middle Name:</label>
-        <input type="text" name="middleName" value={formData.middleName} onChange={handleChange} />
+  
+      {/* Right Section */}
+      <div
+        className="right h-fit md:h-full w-full md:w-1/2 flex justify-center"
+      >
+        
+        <form
+          onSubmit={handleSubmit}
+          className="form h-fit w-11/12 sm:w-[65%] bg-white px-6 py-8 rounded-lg mt-6 md:ml-[10%] md:mt-[30%]  shadow-lg "
+        >
+          {/* Name Fields */}
+          <div className="inputField flex flex-col sm:flex-row gap-2">
+            {/* First Name */}
+            <div className="form-group mb-4 w-full">
+              <input
+                placeholder="First Name"
+                type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
+              />
+            </div>
+  
+            {/* Middle Name */}
+            <div className="form-group mb-4 w-full">
+              <input
+                placeholder="Middle Name"
+                type="text"
+                name="middleName"
+                value={formData.middleName}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
+              />
+            </div>
+  
+            {/* Last Name */}
+            <div className="form-group mb-4 w-full">
+              <input
+                placeholder="Last Name"
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
+              />
+            </div>
+          </div>
+  
+          {/* Select Fields */}
+          <div className="inputField flex flex-col sm:flex-row gap-2">
+            {/* Gender */}
+            <div className="form-group mb-4 w-full">
+              <select
+                name="gender"
+                value={formData.gender}
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
+              >
+                <option value="">Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+  
+            {/* Date of Birth */}
+            <div className="form-group mb-4 w-full">
+              <input
+                type="date"
+                name="dateOfBirth"
+                value={formData.dateOfBirth}
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
+              />
+            </div>
+  
+            {/* City or Village */}
+            <div className="form-group mb-4 w-full">
+              <select
+                name="cityOrVillage"
+                value={formData.cityOrVillage}
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
+              >
+                <option value="">City</option>
+                {cities.map((city) => (
+                  <option key={city._id} value={city.cityName}>
+                    {city.cityName}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+  
+          {/* Address */}
+          <div className="form-group mb-4">
+            <input
+              placeholder="Address"
+              type="text"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
+            />
+          </div>
+  
+          {/* Contact Fields */}
+          <div className="inputField flex flex-col sm:flex-row gap-2">
+            {/* Mobile Number */}
+            <div className="form-group mb-4 w-full">
+              <input
+                placeholder="Mobile Number"
+                type="text"
+                name="mobileNumber"
+                pattern="\d{10}"
+                value={formData.mobileNumber}
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
+              />
+            </div>
+  
+            {/* WhatsApp Number */}
+            <div className="form-group mb-4 w-full">
+              <input
+                placeholder="WhatsApp Number"
+                type="text"
+                name="whatsappNumber"
+                pattern="\d{10}"
+                value={formData.whatsappNumber}
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
+              />
+            </div>
+          </div>
+  
+          {/* Email */}
+          <div className="form-group mb-4">
+            <input
+              placeholder="Email"
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
+            />
+          </div>
+  
+          {/* Academic Details */}
+          <div className="inputField flex flex-col sm:flex-row gap-2">
+            {/* College Name */}
+            <div className="form-group mb-4 w-full">
+              <select
+                name="schoolName"
+                value={formData.schoolName}
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
+              >
+                <option value="">College</option>
+                {schools.map((school) => (
+                  <option key={school._id} value={school.collegeName}>
+                    {school.collegeName}
+                  </option>
+                ))}
+              </select>
+            </div>
+  
+            {/* Board */}
+            <div className="form-group mb-4 w-full">
+              <select
+                name="board"
+                value={formData.board}
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
+              >
+                <option value="">Board</option>
+                <option value="SSC">SSC</option>
+                <option value="CBSE">CBSE</option>
+                <option value="ICSE">ICSE</option>
+                <option value="OLYMPIAD">OLYMPIAD</option>
+              </select>
+            </div>
+  
+            {/* Medium */}
+            <div className="form-group mb-4 w-full">
+              <select
+                name="medium"
+                value={formData.medium}
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
+              >
+                <option value="">Medium</option>
+                <option value="Marathi">Marathi</option>
+                <option value="Semi-English">Semi-English</option>
+                <option value="English">English</option>
+              </select>
+            </div>
+          </div>
+  
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="w-full bg-red-500 text-white font-medium py-2 rounded-lg hover:bg-red-600"
+          >
+            Submit
+          </button>
+        </form>
       </div>
-
-      {/* Last Name */}
-      <div className="form-group">
-        <label>Last Name:</label>
-        <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} required />
       </div>
-
-      {/* Gender */}
-      <div className="form-group">
-        <label>Gender:</label>
-        <select name="gender" value={formData.gender} onChange={handleChange} required>
-          <option value="">Select</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-          <option value="Other">Other</option>
-        </select>
+      <div className="page2 h-screen w-full bg-[#F0F0F0]">
+        <StudentPage2/>
+        
       </div>
-
-      {/* Date of Birth */}
-      <div className="form-group">
-        <label>Date of Birth (YYYY-MM-DD):</label>
-        <input type="date" name="dateOfBirth" value={formData.dateOfBirth} onChange={handleChange} required />
-      </div>
-
-      {/* Address */}
-      <div className="form-group">
-        <label>Address:</label>
-        <input type="text" name="address" value={formData.address} onChange={handleChange} required />
-      </div>
-
-      {/* City or Village */}
-      <div className="form-group">
-        <label>City or Village:</label>
-        <select name="cityOrVillage" value={formData.cityOrVillage} onChange={handleChange} required>
-          <option value="">Select</option>
-          {cities.map((city) => (
-            <option key={city._id} value={city.cityName}>{city.cityName}</option>
-          ))}
-        </select>
-      </div>
-
-      {/* Mobile Number */}
-      <div className="form-group">
-        <label>Mobile Number:</label>
-        <input type="text" name="mobileNumber" pattern="\d{10}" value={formData.mobileNumber} onChange={handleChange} required />
-      </div>
-
-      {/* WhatsApp Number */}
-      <div className="form-group">
-        <label>WhatsApp Number:</label>
-        <input type="text" name="whatsappNumber" pattern="\d{10}" value={formData.whatsappNumber} onChange={handleChange} required />
-      </div>
-
-      {/* Email */}
-      <div className="form-group">
-        <label>Email:</label>
-        <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-      </div>
-
-      {/* College Name */}
-      <div className="form-group">
-        <label>College Name:</label>
-        <select name="schoolName" value={formData.schoolName} onChange={handleChange} required>
-          <option value="">Select</option>
-          {schools.map((school) => (
-            <option key={school._id} value={school.collegeName}>
-              {school.collegeName}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Board */}
-      <div className="form-group">
-        <label>Board:</label>
-        <select name="board" value={formData.board} onChange={handleChange} required>
-          <option value="">Select</option>
-          <option value="SSC">SSC</option>
-          <option value="CBSE">CBSE</option>
-          <option value="ICSE">ICSE</option>
-          <option value="OLYMPIAD">OLYMPIAD</option>
-        </select>
-      </div>
-
-      {/* Medium */}
-      <div className="form-group">
-        <label>Medium:</label>
-        <select name="medium" value={formData.medium} onChange={handleChange} required>
-          <option value="">Select</option>
-          <option value="Marathi">Marathi</option>
-          <option value="Semi-English">Semi-English</option>
-          <option value="English">English</option>
-        </select>
-      </div>
-
-      <button type="submit">Submit</button>
-      <ToastContainer />
-    </form>
-  );
+    </div>
+    
+  );  
 };
 
 export default Student;

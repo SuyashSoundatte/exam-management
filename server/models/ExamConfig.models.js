@@ -1,4 +1,3 @@
-// ExamConfig Model for centralized configuration
 const mongoose = require('mongoose');
 
 const examConfigSchema = new mongoose.Schema({

@@ -1,0 +1,51 @@
+/
+/admin
+post =>
+('/addCollege', adminAuth, collegeAuth, addCollege); //done
+("/addCity", adminAuth, cityAuth, addCity); //done
+
+get =>
+('/allColleges', getAllColleges); //done
+('/allCities', getAllCities); //done
+
+post =>
+("/register", registerValidation, registerAdmin); //done
+("/login", loginValidation, loginAdmin); //done
+
+get =>
+('/allAdmins', authenticateSuperAdmin, getAllAdmins); //done
+
+patch =>
+('/approve', authenticateSuperAdmin, approveAdmin); //done
+('/approveSuperAdmin', authenticateSuperAdmin, approveSuperAdmin); //done
+
+delete =>
+('/delete', authenticateSuperAdmin, deleteAdmin); //done
+
+put =>
+('/examConfig', authenticateSuperAdmin, updateExamConfig); //done
+
+get =>
+('/examConfig', adminAuth, getExamConfig); //done
+
+post =>
+('/announcements', authenticateSuperAdmin, createAnnouncement);
+
+get =>
+('/announcements', adminAuth, getAnnouncements);
+
+
+
+
+
+
+
+/student (3/4)
+post =>
+('/register', registerValidation, registerStudent); //done
+("/submitMarks", updateStudentMarks);
+
+get =>
+('/viewResult', viewResultValidation, viewResult); //done
+("/allStudents",  getAllStudents); //done
+
