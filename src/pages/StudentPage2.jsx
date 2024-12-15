@@ -4,7 +4,7 @@ import ScrollBar from "../components/scrollBar";
 const StudentPage2 = () => {
   const slides = [
     {
-      image: "./public/assets/dk1.webp",
+      image: "./public/assets/dk1.webp", 
       title: "1.4 Lakh+",
       description: "Students awarded Scholarships since 2020",
     },
@@ -14,7 +14,7 @@ const StudentPage2 = () => {
       description: "Students awarded 100% Scholarship",
     },
     {
-      image: "./public/assets/dk4.webp",
+      image: "./public/assets/dk4.webp", 
       title: "26000+",
       description: "Students awarded 50% Scholarship",
     },
@@ -62,24 +62,26 @@ const StudentPage2 = () => {
             <ScrollBar />
           </div>
       </div>
-      
+     
       
 
-<footer classname="pageFooter w-full absolute top-[200%] lg:top-[125%] bg-white">
-    <div classname="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
-      <span classname="text-sm text-black- font-medium sm:text-center">© 2023 <a href="https://www.dkte.ac.in/" target="_blank" classname="hover:underline">DKTE</a>. All Rights Reserved.
+<footer className="pageFooter w-full absolute top-[200%] lg:top-[125%] bg-white">
+    <div className="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
+      <span className="text-sm text-black- font-medium sm:text-center">© 2023 <a href="https://www.dkte.ac.in/" target="_blank" className="hover:underline">DKTE</a>. All Rights Reserved.
     </span>
-    <ul classname="flex flex-wrap items-center mt-3 text-sm font-medium text-black sm:mt-0">
+    <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-black sm:mt-0">
         <li>
-            <a href="#" classname="hover:underline me-4 md:me-6">About</a>
+            <a href="#" className="hover:underline me-4 md:me-6">About</a>
         </li>
         <li>
-            <a href="#" classname="hover:underline me-4 md:me-6">Privacy Policy</a>
+            <a href="#" className="hover:underline me-4 md:me-6">Privacy Policy</a>
         </li>
         <li>
-            <a href="#" classname="hover:underline me-4 md:me-6">Licensing</a>
+            <a href="#" className="hover:underline me-4 md:me-6">Licensing</a>
         </li>
-        
+        <li>
+            <a href="#" className="hover:underline">Contact</a>
+        </li>
     </ul>
     </div>
 </footer>
