@@ -1,0 +1,42 @@
+
+# Ignore all node modules
+node_modules/
+
+# Ignore build and distribution directories
+dist/
+build/
+
+# Logs
+logs/
+*.log
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Ignore compiled files
+*.min.js
+*.min.css
+*.bundle.js
+
+# Ignore coverage reports
+coverage/
+
+# Ignore package lock and yarn files
+package-lock.json
+yarn.lock
+
+# Ignore Docker files and configurations
+.dockerignore
+docker-compose.yml
+
+# Ignore prettier configuration itself
+.prettierrc
+.prettierignore
+
+# Ignore other configuration files
+*.config.js
+*.config.
