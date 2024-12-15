@@ -56,10 +56,7 @@ router.get("/examConfig", adminAuth, getExamConfig);
 router.post("/announcements", authenticateSuperAdmin, createAnnouncement);
 router.get("/announcements", adminAuth, getAnnouncements);
 
-
 //TODO: Create the controllers
-// router.post("/submitMarks", adminAuth, updateStudentMarks); //using seat number
-
-
+// router.post("/submitMarks", adminAuth, updateStudentMarks); //using seat number, maybe with subject?
 
 module.exports = router;
