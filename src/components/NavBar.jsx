@@ -1,11 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import ContactPopup from "./Contact";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  // Function to open the popup
+  const openPopup = () => {
+    setIsPopupOpen(true);
+  };
+
+  // Function to close the popup
+  const closePopup = () => {
+    setIsPopupOpen(false);
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -28,19 +41,19 @@ const Navbar = () => {
               <span className="text-red-600">DKTE</span>
               <span className="text-gray-800">COLLEGE</span>
               <div className="text-sm text-gray-500 font-light">
-              DKTE COLLEGE ENTRANCE TEST
+                DKTE COLLEGE ENTRANCE TEST
               </div>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link
-              to="/result"
-              className="text-gray-700 hover:text-red-600 transition-colors px-3 py-2 text-sm font-medium"
+            <button
+              onClick={openPopup}
+              className="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md text-sm font-medium transition-colors"
             >
-              RESULT
-            </Link>
+              CONTACT
+            </button>
             {isLoggedIn ? (
               <>
                 <Link
@@ -99,13 +112,23 @@ const Navbar = () => {
       {isMenuOpen && (
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <Link
+            {/* <Link
               to="/result"
               className="text-gray-700 hover:text-red-600 block px-3 py-2 text-base font-medium"
               onClick={() => setIsMenuOpen(false)}
             >
               RESULT
-            </Link>
+            </Link> */}
+            <button
+                  onClick={() => {
+                    openPopup();
+                    setIsMenuOpen(false);
+                  }}
+                  className="text-gray-700 hover:text-red-600 block px-3 py-2 text-base font-medium w-full text-left"
+                >
+                  CONTACT
+            </button>
+             
             {isLoggedIn ? (
               <>
                 <Link
@@ -137,6 +160,9 @@ const Navbar = () => {
           </div>
         </div>
       )}
+
+      {/* Contact Popup */}
+      {isPopupOpen && <ContactPopup closePopup={closePopup} />}
     </nav>
   );
 };
