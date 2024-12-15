@@ -7,6 +7,7 @@ const cors = require('cors');
 const cookieParser = require("cookie-parser");
 
 
+
 const adminRoutes = require("./routes/admin.routes");
 const studentRoutes = require("./routes/student.routes");
 
