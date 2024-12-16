@@ -241,10 +241,7 @@ const AdminDashboard = () => {
     return (
         <ThemeProvider theme={redTheme}>
             <Box sx={{ display: "flex" }}>
-                <AppBar
-                    position="fixed"
-                    sx={{ zIndex: theme.zIndex.drawer + 1 }}
-                >
+                <AppBar position="fixed" sx={{ zIndex: theme.zIndex.drawer + 1 }}>
                     <Toolbar>
                         <IconButton
                             color="inherit"
@@ -254,7 +251,7 @@ const AdminDashboard = () => {
                         >
                             <MenuIcon />
                         </IconButton>
-                        <Typography variant="h6" noWrap component="div">
+                        <Typography variant="h6" noWrap>
                             Admin Dashboard
                         </Typography>
                     </Toolbar>
@@ -276,57 +273,29 @@ const AdminDashboard = () => {
                     <Toolbar />
                     <Box sx={{ overflow: "auto" }}>
                         <List>
-                            <ListItem
-                                button
-                                selected={activeSection === "exams"}
-                                onClick={() => setActiveSection("exams")}
-                            >
-                                <ListItemIcon>
-                                    <AssignmentIcon />
-                                </ListItemIcon>
+                            <ListItem button selected={activeSection === "exams"} onClick={() => setActiveSection("exams")}>
+                                <ListItemIcon><AssignmentIcon /></ListItemIcon>
                                 <ListItemText primary="Exams" />
                             </ListItem>
-                            <ListItem
-                                button
-                                selected={activeSection === "students"}
-                                onClick={() => setActiveSection("students")}
-                            >
-                                <ListItemIcon>
-                                    <SchoolIcon />
-                                </ListItemIcon>
+                            <ListItem button selected={activeSection === "students"} onClick={() => setActiveSection("students")}>
+                                <ListItemIcon><SchoolIcon /></ListItemIcon>
                                 <ListItemText primary="Students" />
                             </ListItem>
                         </List>
                         <Divider />
                         <List>
                             <ListItem button onClick={handleLogout}>
-                                <ListItemIcon>
-                                    <LogoutIcon />
-                                </ListItemIcon>
+                                <ListItemIcon><LogoutIcon /></ListItemIcon>
                                 <ListItemText primary="Logout" />
                             </ListItem>
                         </List>
                     </Box>
                 </Drawer>
 
-                <Box
-                    component="main"
-                    sx={{
-                        flexGrow: 1,
-                        p: 3,
-                        width: { sm: `calc(100% - ${drawerWidth}px)` },
-                        ml: { sm: `${drawerWidth}px` },
-                    }}
-                >
+                <Box component="main" sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, ml: { sm: `${drawerWidth}px` } }}>
                     <Toolbar />
-
                     {activeSection === "exams" && (
-                        <Button
-                            variant="contained"
-                            onClick={() => setDialogOpen(true)}
-                            sx={{ mb: 2 }}
-                            startIcon={<AssignmentIcon />}
-                        >
+                        <Button variant="contained" onClick={() => setDialogOpen(true)} sx={{ mb: 2 }} startIcon={<AssignmentIcon />}>
                             Create New Exam
                         </Button>
                     )}
@@ -334,11 +303,7 @@ const AdminDashboard = () => {
                     <Box sx={{ height: "calc(100vh - 180px)", width: "100%" }}>
                         <DataGrid
                             rows={activeSection === "exams" ? exams : students}
-                            columns={
-                                activeSection === "exams"
-                                    ? examColumns
-                                    : studentColumns
-                            }
+                            columns={activeSection === "exams" ? examColumns : studentColumns}
                             pageSize={5}
                             rowsPerPageOptions={[5]}
                             getRowId={(row) => row._id || row.studentId}
@@ -347,96 +312,53 @@ const AdminDashboard = () => {
                                 boxShadow: 2,
                                 border: 2,
                                 borderColor: "primary.light",
-                                "& .MuiDataGrid-cell:hover": {
-                                    color: "primary.main",
-                                },
+                                "& .MuiDataGrid-cell:hover": { color: "primary.main" },
                             }}
                         />
                     </Box>
 
-                    <Dialog
-                        open={dialogOpen}
-                        onClose={() => setDialogOpen(false)}
-                    >
+                    <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
                         <DialogTitle>Create New Exam</DialogTitle>
                         <DialogContent>
-                            <Box sx={{ mt: 2 }}>
+                            <Box sx={{ display: "flex", flexDirection: "column" }}>
                                 <TextField
-                                    fullWidth
                                     label="Exam Title"
                                     value={examForm.examTitle}
-                                    onChange={(e) =>
-                                        setExamForm({
-                                            ...examForm,
-                                            examTitle: e.target.value,
-                                        })
-                                    }
-                                    required
+                                    onChange={(e) => setExamForm({ ...examForm, examTitle: e.target.value })}
+                                    fullWidth
+                                    margin="normal"
                                 />
-                                <LocalizationProvider
-                                    dateAdapter={AdapterDayjs}
-                                >
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker
                                         label="Exam Date"
                                         value={examForm.examDate}
-                                        onChange={(newValue) =>
-                                            setExamForm({
-                                                ...examForm,
-                                                examDate: newValue,
-                                            })
-                                        }
-                                        renderInput={(params) => (
-                                            <TextField {...params} fullWidth />
-                                        )}
+                                        onChange={(date) => setExamForm({ ...examForm, examDate: date })}
+                                        fullWidth
+                                        margin="normal"
                                     />
                                 </LocalizationProvider>
                                 <TextField
-                                    fullWidth
                                     label="Description"
                                     value={examForm.description}
-                                    onChange={(e) =>
-                                        setExamForm({
-                                            ...examForm,
-                                            description: e.target.value,
-                                        })
-                                    }
-                                    required
-                                    multiline
-                                    rows={4}
+                                    onChange={(e) => setExamForm({ ...examForm, description: e.target.value })}
+                                    fullWidth
+                                    margin="normal"
                                 />
                             </Box>
                         </DialogContent>
                         <DialogActions>
-                            <Button
-                                onClick={() => setDialogOpen(false)}
-                                color="primary"
-                            >
-                                Cancel
-                            </Button>
-                            <Button
-                                onClick={handleCreateExam}
-                                color="primary"
-                                disabled={loading}
-                            >
-                                {loading ? (
-                                    <CircularProgress
-                                        size={24}
-                                        sx={{ color: "white" }}
-                                    />
-                                ) : (
-                                    "Create"
-                                )}
-                            </Button>
+                            <Button onClick={() => setDialogOpen(false)} color="primary">Cancel</Button>
+                            <Button onClick={handleCreateExam} color="primary">Save</Button>
                         </DialogActions>
                     </Dialog>
 
-                    <Snackbar
-                        open={!!error}
-                        autoHideDuration={6000}
-                        onClose={() => setError("")}
-                    >
-                        <Alert severity="error">{error}</Alert>
-                    </Snackbar>
+                    {error && (
+                        <Snackbar open={Boolean(error)} autoHideDuration={6000} onClose={() => setError("")}>
+                            <Alert onClose={() => setError("")} severity="error">
+                                {error}
+                            </Alert>
+                        </Snackbar>
+                    )}
                 </Box>
             </Box>
         </ThemeProvider>
