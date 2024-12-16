@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import dayjs from "dayjs";
-import Cookies from 'js-cookie';
 import {
     Box,
     Button,
@@ -12,7 +11,6 @@ import {
     DialogActions,
     TextField,
     Typography,
-    CircularProgress,
     Snackbar,
     Alert,
     Drawer,
@@ -40,18 +38,17 @@ import { useNavigate } from "react-router-dom";
 // Setup axios interceptors
 axios.interceptors.request.use((config) => {
     // Ensure requests include cookies
-    config.withCredentials = true; // This enables sending cookies with the request
+    config.withCredentials = true;
     return config;
 });
 
 axios.interceptors.response.use(
-    (response) => response, // Return the response as is if successful
+    (response) => response,  
     (error) => {
         if (error.response?.status === 401) {
-            // Handle unauthorized error by redirecting to the login page
             window.location.href = "/login";
         }
-        return Promise.reject(error); // Forward the error for further handling
+        return Promise.reject(error);  
     }
 );
 
@@ -89,11 +86,11 @@ const AdminDashboard = () => {
             }
 
             const data = await response.json();
-            setStudents(data.students || []); // Update the students state
+            setStudents(data.students || []);  
         } catch (err) {
-            setError(err.message || "Failed to fetch students"); // Set the error message
+            setError(err.message || "Failed to fetch students");  
         } finally {
-            setLoading(false); // Stop loading state
+            setLoading(false);  
         }
     }, []);
 
@@ -118,11 +115,11 @@ const AdminDashboard = () => {
             }
 
             const data = await response.json();
-            setExams(Array.isArray(data) ? data : [data]); // Ensure exams is an array
+            setExams(Array.isArray(data) ? data : [data]); 
         } catch (err) {
-            setError(err.message || "Failed to fetch exams"); // Set error message
+            setError(err.message || "Failed to fetch exams"); 
         } finally {
-            setLoading(false); // Stop loading state
+            setLoading(false);  
         }
     }, []);
 
@@ -142,7 +139,6 @@ const AdminDashboard = () => {
             } catch (err) {
                 if (mounted) {
                     if (err.response?.status === 401) {
-                        // Redirect to login if the user is unauthorized
                         navigate("/login");
                     } else {
                         setError("Failed to fetch data");

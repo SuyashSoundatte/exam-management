@@ -11,7 +11,7 @@ const cookieParser = require("cookie-parser");
 const adminRoutes = require("./routes/admin.routes");
 const studentRoutes = require("./routes/student.routes");
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3000;
 
 app.use(cookieParser());
 app.use(session({

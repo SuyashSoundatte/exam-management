@@ -3,6 +3,7 @@ import { FaDownload, FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
 import toast, { Toaster } from 'react-hot-toast';
 import html2pdf from 'html2pdf.js';
 import { useNavigate } from 'react-router-dom';
+import { IoMdClose } from "react-icons/io";
 
 const ExamHallTicket = () => {
   const [showDialog, setShowDialog] = useState(true);
@@ -13,7 +14,8 @@ const ExamHallTicket = () => {
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const navigate = useNavigate();
   const [logoBase64, setLogoBase64] = useState("");
-const [profile, setProfile] = useState('')
+  const [profile, setProfile] = useState('');
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     setIsLoggedIn(!!token);
@@ -49,13 +51,9 @@ const [profile, setProfile] = useState('')
       }
     };
 
-
-
     fetchProfileAsBase64();
     fetchLogoAsBase64();
   }, []);
-
-
 
   const handleVerification = async (e) => {
     e.preventDefault();
@@ -98,7 +96,7 @@ const [profile, setProfile] = useState('')
     const element = document.getElementById('hall-ticket');
     const opts = {
       filename: `hall-ticket-${studentData.hallTicketNo}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
+      image: { type: 'jpeg', quality: 1 },
       html2canvas: { scale: 2 },
       jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
     };
@@ -113,13 +111,6 @@ const [profile, setProfile] = useState('')
     );
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    setIsLoggedIn(false);
-    setStudentData(null);
-    navigate('/login');
-  };
-
   return (
     <div className="min-h-screen bg-gray-100">
       <Toaster position="top-right" />
@@ -127,8 +118,14 @@ const [profile, setProfile] = useState('')
       {/* Verification Dialog */}
       {showDialog && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-lg shadow-xl w-96">
+          <div className="bg-white p-8 rounded-lg shadow-xl w-96 relative">
+            <IoMdClose
+              className="absolute top-4 right-4 text-gray-600 text-2xl cursor-pointer hover:text-gray-800"
+              onClick={() => navigate('/')}
+              title="Close"
+            />
             <h2 className="text-xl font-bold mb-4 text-gray-800">View Hall Ticket</h2>
+            
             <form onSubmit={handleVerification}>
               <div className="space-y-4">
                 <div>
@@ -164,28 +161,7 @@ const [profile, setProfile] = useState('')
       )}
 
       {/* Logout Dialog */}
-      {showLogoutDialog && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-lg shadow-xl w-96">
-            <h2 className="text-xl font-bold mb-4 text-gray-800">Confirm Logout</h2>
-            <p className="mb-4 text-gray-600">Are you sure you want to logout?</p>
-            <div className="flex justify-end space-x-4">
-              <button
-                onClick={() => setShowLogoutDialog(false)}
-                className="bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleLogout}
-                className="bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      
 
       {/* Hall Ticket Content */}
       <div className={`pt-28 pb-8 px-4 ${showDialog || showLogoutDialog ? 'blur-sm' : ''}`}>
@@ -329,7 +305,7 @@ const [profile, setProfile] = useState('')
                   </div>
                   <div className="text-[10px] text-gray-400 text-center">
                     <p>This hall ticket is electronically generated and valid only with official seal</p>
-                    <p>© {new Date().getFullYear()} DKTE College. All rights reserved.</p>
+                    <p>© {new Date().getFullYear()} DKTE College. All rights   reserved.</p>
                   </div>
                 </div>
               </div>
