@@ -26,7 +26,7 @@ import {
     Divider,
     useTheme,
     useMediaQuery,
-    CircularProgress,
+    CircularProgress
 } from '@mui/material';
 import {
     Menu as MenuIcon,
