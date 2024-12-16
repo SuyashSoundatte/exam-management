@@ -61,7 +61,7 @@ const App = () => {
                         element={
                             <AdminContext.Consumer>
                                 {({ isSuperAdmin }) =>
-                                    isSuperAdmin ? (
+                                    !isSuperAdmin ? (
                                         <SuperAdminDashboard />
                                     ) : (
                                         <AdminDashboard />
