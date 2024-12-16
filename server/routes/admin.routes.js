@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const {exportToCSV} = require("../config/csvConvertor");
+const {exportToExcel} = require("../config/excelConvertor");
 const {
     addCollege,
     addCity,
@@ -63,6 +63,6 @@ router.get("/announcements", adminAuth, getAnnouncements);
 //TODO: Create the controllers
 // router.post("/submitMarks", adminAuth, updateStudentMarks); //using seat number, maybe with subject?
 
-router.get("/exportToCSV", adminAuth, exportToCSV);
+router.get("/exportToExcel", adminAuth, exportToExcel);
 
 module.exports = router;

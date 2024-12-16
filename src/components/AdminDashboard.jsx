@@ -3,7 +3,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import Cookies from 'js-cookie';
-import ExportButton from './ExportCsv';
+import ExportButton from './ExportExcel';
 import {
     Box,
     Button,
@@ -40,6 +40,7 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useNavigate } from 'react-router-dom';
 import { AdminContext } from '../contexts/AdminContext';
+import { exportToExcel } from '../../server/config/excelConvertor';
 // Setup axios interceptors
 axios.interceptors.request.use((config) => {
     // Ensure requests include cookies
@@ -409,6 +410,16 @@ const AdminDashboard = () => {
                         </Button>
                     )}
 
+                    {activeSection === 'students' && (
+                        <Button
+                            variant="contained"
+                            onClick={() => exportToExcel()}
+                            sx={{ mb: 2 }}
+                            startIcon={<AssignmentIcon />}
+                        >
+                            <ExportButton />
+                        </Button>
+                    )}
                     <Box sx={{ height: 'calc(100vh - 180px)', width: '100%' }}>
                         <DataGrid
                             rows={
