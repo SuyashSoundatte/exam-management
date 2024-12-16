@@ -67,7 +67,7 @@ const userSchema = new mongoose.Schema({
         type: String, 
         default: null 
     },
-});
+}, {timestamps: true});
 
 const User = mongoose.model('Student', userSchema);
 

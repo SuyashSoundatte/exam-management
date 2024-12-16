@@ -16,6 +16,7 @@ const {
     approveSuperAdmin,
     getAllColleges,
     getAllCities,
+    getDataByYear,
 } = require("../controllers/admin.controller");
 
 const {
@@ -44,6 +45,8 @@ router.get("/isSuperAdmin", authenticateSuperAdmin, (req, res) => {
         isSuperAdmin: true,
     });
 });
+
+router.get('/getDataByYear', adminAuth, getDataByYear);
 
 router.patch("/approve", authenticateSuperAdmin, approveAdmin);
 
