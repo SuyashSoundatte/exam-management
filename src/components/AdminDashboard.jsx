@@ -3,6 +3,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import dayjs from "dayjs";
 import Cookies from 'js-cookie';
+import ExportButton from "./ExportCsv";
 import {
     Box,
     Button,
@@ -273,6 +274,10 @@ const AdminDashboard = () => {
                     <Toolbar />
                     <Box sx={{ overflow: "auto" }}>
                         <List>
+                            {/* <ListItem button selected={activeSection === "exams"} onClick={() => setActiveSection("exams")}>
+                                <ListItemIcon><AssignmentIcon /></ListItemIcon>
+                                <ListItemText primary="Export CSV" />
+                            </ListItem> */}
                             <ListItem button selected={activeSection === "exams"} onClick={() => setActiveSection("exams")}>
                                 <ListItemIcon><AssignmentIcon /></ListItemIcon>
                                 <ListItemText primary="Exams" />
@@ -299,7 +304,11 @@ const AdminDashboard = () => {
                             Create New Exam
                         </Button>
                     )}
-
+                    {activeSection === "students" && (
+                        <Button variant="contained" sx={{ mb: 2 }} startIcon={<AssignmentIcon />}>
+                            <ExportButton />
+                        </Button>
+                    )}
                     <Box sx={{ height: "calc(100vh - 180px)", width: "100%" }}>
                         <DataGrid
                             rows={activeSection === "exams" ? exams : students}

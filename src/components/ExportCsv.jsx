@@ -1,45 +1,40 @@
 import React from "react";
 
-const ExportButton = ({ fileName = "data.csv", buttonText = "Export to CSV", className = "btn btn-export", tableId }) => {
-  const exportToCsv = () => {
-    let rows = document.querySelectorAll('#${tableId} tr');
-    if (rows.length === 0) {
-      alert("No data available to export!");
-      return;
-    }
-
-    let data = [];
-    for (let i = 0; i < rows.length; i++) {
-      let row = [], col = rows[i].querySelectorAll("td, th");
-      for (let j = 0; j < col.length; j++) {
-        row.push(escapeCsvValue(col[j].innerText));
-      }
-      data.push(row.join(","));
-    }
-
-    downloadCsv(data.join("\n"), fileName);
-  };
-
-  const escapeCsvValue = (value) => {
-    if (value.includes(",") || value.includes('"') || value.includes("\n")) {
-      value = value.replace(/"/g, '""');
-      return "${value}"; 
-    }
-    return value;
-  };
-
-  const downloadCsv = (csv, fileName) => {
+const ExportButton = ({ buttonText = "Export to CSV", className = "btn btn-export" }) => {
+  const exportToCsv = async () => {
     try {
-      let csvFile = new Blob([csv], { type: "text/csv" });
-      let downloadLink = document.createElement("a");
-      downloadLink.href = window.URL.createObjectURL(csvFile);
-      downloadLink.download = fileName;
-      downloadLink.style.display = "none";
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
+      const response = await fetch("http://localhost:3000/admin/exportToCSV", {
+        method: "GET",
+        headers: {
+          "Accept": "text/csv", // Specify that we expect CSV data
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+
+        // Ensure the blob is treated as a CSV file
+        const csvFile = new Blob([blob], { type: "text/csv;charset=utf-8;" });
+
+        const downloadLink = document.createElement("a");
+        const url = window.URL.createObjectURL(csvFile);
+
+        downloadLink.href = url;
+        downloadLink.download = "data.csv";
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+
+        // Clean up
+        document.body.removeChild(downloadLink);
+        window.URL.revokeObjectURL(url);
+      } else {
+        alert("Failed to export data. Please check the server response.");
+      }
     } catch (error) {
-      console.error("Error downloading the file:", error);
+      console.error("Error exporting CSV:", error);
+      alert("An error occurred while exporting data.");
     }
   };
 
