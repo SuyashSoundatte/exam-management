@@ -50,10 +50,19 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-8">
             <button
               onClick={openPopup}
-              className="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md text-sm font-medium transition-colors"
+              className="text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-300 bg-gray-200 uppercase transition-colors"
+
             >
               CONTACT
             </button>
+
+            <Link
+              to="/student/getHallTicket"
+              className="text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-300 bg-gray-200 uppercase transition-colors"
+            >
+              HallTicket
+            </Link>
+
             {isLoggedIn ? (
               <>
                 <Link
@@ -119,18 +128,29 @@ const Navbar = () => {
             >
               RESULT
             </Link> */}
-            <button
-                  onClick={() => {
-                    openPopup();
-                    setIsMenuOpen(false);
-                  }}
-                  className="text-gray-700 hover:text-red-600 block px-3 py-2 text-base font-medium w-full text-left"
+
+              <Link
+                  to="/student/getHallTicket"
+                  className="text-gray-700 hover:text-red-600 block px-3 py-2 text-base uppercase font-medium"
+                  onClick={() => setIsMenuOpen(false)}
                 >
-                  CONTACT
+                  HallTicket
+                </Link>
+
+            <button
+              onClick={() => {
+                openPopup();
+                setIsMenuOpen(false);
+              }}
+              className="text-gray-700 hover:text-red-600 block px-3 py-2 text-base font-medium w-full text-left"
+            >
+              CONTACT
             </button>
-             
+
             {isLoggedIn ? (
               <>
+                
+
                 <Link
                   to="/admin/dashboard"
                   className="text-gray-700 hover:text-red-600 block px-3 py-2 text-base font-medium"
