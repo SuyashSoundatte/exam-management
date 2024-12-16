@@ -317,6 +317,28 @@ const getAnnouncements = async (req, res) => {
   }
 };
 
+const getDataByYear = async (req, res)=>{
+  const { year } = req.body;
+  console.log(year);
+  if (!year || isNaN(year)) {
+    return res.status(400).json({ message: 'Invalid or missing year' });
+  }
+
+  try {
+    const students = await Student.find({
+      createdAt: {
+        $gte: new Date(`${year}-01-01T00:00:00.000Z`),
+        $lt: new Date(`${year}-12-31T23:59:59.999Z`),
+      },
+    });
+
+    res.status(200).json(students);
+  } catch (error) {
+    console.error('Error fetching students:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+} 
+
 
 module.exports = {
   addCollege,
@@ -332,5 +354,6 @@ module.exports = {
   getAllCities,
   getAllColleges,
   getAnnouncements,
-  approveSuperAdmin
+  approveSuperAdmin,
+  getDataByYear
 }
