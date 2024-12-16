@@ -1,0 +1,12 @@
+"firstName","middleName","lastName","gender","dateOfBirth","address","cityOrVillage","mobileNumber","whatsappNumber","email","schoolName","board","medium","seatNumber","result"
+"John","D.","Doe","Male","20-07-2004","123 Main St","Springfield","1234567890","0987654321","johndoe@example.com","Springfield High","CBSE","English","24exam1","88.50"
+"Rahul","Kumar","Sharma","Male","15-08-2005","123, MG Road, Pune","Pune","9876543210","9876543210","rahul.sharma@example.com","Modern High School","CBSE","English","24exam2",
+"Shreyash","Sanjay","Galgale","Male","12-10-2004","House no. 4046","ich","9850541839","4545454545","ss@gmail.com","DKTE","SSC","Marathi","24exam3",
+"Sahil","Ramjan","Makandar","Male","21-01-2003","House no. 4046","miraj","9850541839","7878787878","sahil@gmail.com","DKTE","CBSE","Semi-English","24exam4",
+"Mehfooz","Maqsood","Kudchikar","Male","26-06-2004","House no. 4046","ich","9850541839","5252525252","mefooz@gmail.com","DKTE","SSC","English","24exam5",
+"Moin","Firoj","Shaikh","Male","05-04-2004","nagarpalika","sangli","5212563456","5425632518","ms@gmail.com","DKTE2","CBSE","English","24exam6",
+"ss","jj","kk","Male","30-11-2023","something","ich","4545454545","4545454545","ssss@gmail.com","DKTE","SSC","Marathi","24exam7",
+"Moinx","Mahavir","Shaikh","Male","12-12-2004","sahayadri nagar tagor colony vishrambag sangli","miraj","9322760640","9322760640","moinfiroj21x3@gmail.com","DKTE","SSC","Marathi","24exam8",
+"Shreyash","Sanjay","Galgale","Male","20-12-2024","House no. 4046","sangli","9850541839","9850541839","sg@gmail.com","DKTE","SSC","Marathi","24exam9",
+"sahil","ramjan","makandar","Male","23-01-2005","xyz","miraj","9999888822","9999888822","test123@gmail.com","DKTE","SSC","Marathi","24exam10",
+"sahil","ramjan","makandar","Male","23-01-2005","xyz","miraj","9999888822","9999888822","test124@gmail.com","DKTE","SSC","Marathi","24exam11",
