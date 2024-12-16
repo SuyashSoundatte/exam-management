@@ -3,7 +3,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import Cookies from 'js-cookie';
-import ExportButton from "./ExportCsv";
+import ExportButton from './ExportCsv';
 import {
     Box,
     Button,
@@ -26,6 +26,7 @@ import {
     Divider,
     useTheme,
     useMediaQuery,
+    CircularProgress,
 } from '@mui/material';
 import {
     Menu as MenuIcon,
@@ -47,7 +48,7 @@ axios.interceptors.request.use((config) => {
 });
 
 axios.interceptors.response.use(
-    (response) => response,  
+    (response) => response,
     (error) => {
         if (error.response?.status === 401) {
             // Handle unauthorized error by redirecting to the login page
@@ -58,7 +59,7 @@ axios.interceptors.response.use(
 );
 
 const AdminDashboard = () => {
-    const {isSuperAdmin} = useContext(AdminContext)
+    const { isSuperAdmin } = useContext(AdminContext);
     const navigate = useNavigate();
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -93,11 +94,11 @@ const AdminDashboard = () => {
             }
 
             const data = await response.json();
-            setStudents(data.students || []);  
+            setStudents(data.students || []);
         } catch (err) {
             setError(err.message || 'Failed to fetch students'); // Set the error message
         } finally {
-            setLoading(false);  
+            setLoading(false);
         }
     }, []);
 
@@ -122,7 +123,7 @@ const AdminDashboard = () => {
             }
 
             const data = await response.json();
-            setExams(Array.isArray(data) ? data : [data]); 
+            setExams(Array.isArray(data) ? data : [data]);
         } catch (err) {
             setError(err.message || 'Failed to fetch exams'); // Set error message
         } finally {
@@ -259,27 +260,37 @@ const AdminDashboard = () => {
         { field: 'whatsappNumber', headerName: 'WA Number', flex: 1 },
         { field: 'dateOfBirth', headerName: 'DOB', flex: 1 },
     ];
-    
+
     const adminColumns = [
         { field: 'username', headerName: 'Username', flex: 1 },
-        { field: 'isSuperAdmin', headerName: 'Super Admin', flex: 1, renderCell: (params) => (params.row.isSuperAdmin ? 'Yes' : 'No') },
-        { field: 'isApproved', headerName: 'Admin', flex: 1, renderCell: (params) => (params.row.isAdmin ? 'Yes' : 'No') },
+        {
+            field: 'isSuperAdmin',
+            headerName: 'Super Admin',
+            flex: 1,
+            renderCell: (params) => (params.row.isSuperAdmin ? 'Yes' : 'No'),
+        },
+        {
+            field: 'isApproved',
+            headerName: 'Admin',
+            flex: 1,
+            renderCell: (params) => (params.row.isAdmin ? 'Yes' : 'No'),
+        },
         { field: 'email', headerName: 'Email', flex: 1 },
         {
-          field: 'actions',
-          headerName: 'Actions',
-          flex: 1,
-          renderCell: (params) => (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => handleApproveAdmin(params.row._id)}
-            >
-              Approve
-            </Button>
-          ),
+            field: 'actions',
+            headerName: 'Actions',
+            flex: 1,
+            renderCell: (params) => (
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleApproveAdmin(params.row._id)}
+                >
+                    Approve
+                </Button>
+            ),
         },
-      ];
+    ];
 
     const redTheme = createTheme({
         palette: {
@@ -351,29 +362,40 @@ const AdminDashboard = () => {
                                 <ListItemText primary="Students" />
                             </ListItem>
 
-                            {isSuperAdmin && (<ListItem
-                                button
-                                selected={activeSection === 'admins'}
-                                onClick={() => setActiveSection('admins')}
-                            >
-                                <ListItemIcon>
-                                    <PersonAddIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Approve Admins" />
-                            </ListItem>)}
-                            
+                            {isSuperAdmin && (
+                                <ListItem
+                                    button
+                                    selected={activeSection === 'admins'}
+                                    onClick={() => setActiveSection('admins')}
+                                >
+                                    <ListItemIcon>
+                                        <PersonAddIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Approve Admins" />
+                                </ListItem>
+                            )}
                         </List>
                         <Divider />
                         <List>
                             <ListItem button onClick={handleLogout}>
-                                <ListItemIcon><LogoutIcon /></ListItemIcon>
+                                <ListItemIcon>
+                                    <LogoutIcon />
+                                </ListItemIcon>
                                 <ListItemText primary="Logout" />
                             </ListItem>
                         </List>
                     </Box>
                 </Drawer>
 
-                <Box component="main" sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, ml: { sm: `${drawerWidth}px` } }}>
+                <Box
+                    component="main"
+                    sx={{
+                        flexGrow: 1,
+                        p: 3,
+                        width: { sm: `calc(100% - ${drawerWidth}px)` },
+                        ml: { sm: `${drawerWidth}px` },
+                    }}
+                >
                     <Toolbar />
 
                     {activeSection === 'exams' && (
@@ -390,22 +412,24 @@ const AdminDashboard = () => {
                     <Box sx={{ height: 'calc(100vh - 180px)', width: '100%' }}>
                         <DataGrid
                             rows={
-                                activeSection === 'exams' 
-                                    ? exams 
-                                    : activeSection === 'admins' 
-                                    ? admins 
-                                    : students
+                                activeSection === 'exams'
+                                    ? exams
+                                    : activeSection === 'admins'
+                                      ? admins
+                                      : students
                             }
                             columns={
-                                activeSection === 'exams' 
-                                    ? examColumns 
-                                    : activeSection === 'admins' 
-                                    ? adminColumns 
-                                    : studentColumns
+                                activeSection === 'exams'
+                                    ? examColumns
+                                    : activeSection === 'admins'
+                                      ? adminColumns
+                                      : studentColumns
                             }
                             pageSize={5}
                             rowsPerPageOptions={[5]}
-                            getRowId={(row) => row._id || row.studentId || row.adminId}
+                            getRowId={(row) =>
+                                row._id || row.studentId || row.adminId
+                            }
                             loading={loading}
                             sx={{
                                 boxShadow: 2,
@@ -418,23 +442,42 @@ const AdminDashboard = () => {
                         />
                     </Box>
 
-
-                    <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+                    <Dialog
+                        open={dialogOpen}
+                        onClose={() => setDialogOpen(false)}
+                    >
                         <DialogTitle>Create New Exam</DialogTitle>
                         <DialogContent>
-                            <Box sx={{ display: "flex", flexDirection: "column" }}>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                }}
+                            >
                                 <TextField
                                     label="Exam Title"
                                     value={examForm.examTitle}
-                                    onChange={(e) => setExamForm({ ...examForm, examTitle: e.target.value })}
+                                    onChange={(e) =>
+                                        setExamForm({
+                                            ...examForm,
+                                            examTitle: e.target.value,
+                                        })
+                                    }
                                     fullWidth
                                     margin="normal"
                                 />
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <LocalizationProvider
+                                    dateAdapter={AdapterDayjs}
+                                >
                                     <DatePicker
                                         label="Exam Date"
                                         value={examForm.examDate}
-                                        onChange={(date) => setExamForm({ ...examForm, examDate: date })}
+                                        onChange={(date) =>
+                                            setExamForm({
+                                                ...examForm,
+                                                examDate: date,
+                                            })
+                                        }
                                         fullWidth
                                         margin="normal"
                                     />
@@ -442,7 +485,12 @@ const AdminDashboard = () => {
                                 <TextField
                                     label="Description"
                                     value={examForm.description}
-                                    onChange={(e) => setExamForm({ ...examForm, description: e.target.value })}
+                                    onChange={(e) =>
+                                        setExamForm({
+                                            ...examForm,
+                                            description: e.target.value,
+                                        })
+                                    }
                                     fullWidth
                                     margin="normal"
                                 />
@@ -473,8 +521,15 @@ const AdminDashboard = () => {
                     </Dialog>
 
                     {error && (
-                        <Snackbar open={Boolean(error)} autoHideDuration={6000} onClose={() => setError("")}>
-                            <Alert onClose={() => setError("")} severity="error">
+                        <Snackbar
+                            open={Boolean(error)}
+                            autoHideDuration={6000}
+                            onClose={() => setError('')}
+                        >
+                            <Alert
+                                onClose={() => setError('')}
+                                severity="error"
+                            >
                                 {error}
                             </Alert>
                         </Snackbar>
