@@ -11,7 +11,7 @@ import { ThemeProvider, CssBaseline } from '@mui/material';
 import theme from './Utils/theme'; // Import your MUI custom theme here
 import SuperAdminDashboard from './components/SuperAdminDashboard';
 import { AdminProvider, AdminContext } from './contexts/AdminContext';
-
+import ExamHallTicket from './components/ExamHallTicket';
 
 const App = () => {
     const [isSuperAdmin, setIsSuperAdmin] = useState(false);
@@ -57,7 +57,10 @@ const App = () => {
                     <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<SignUp />} />
                     <Route path="/result" element={<ViewResult />} />
-                    <Route path="/student/getHallTicket" element={<ExamHallTicket />} />
+                    <Route
+                        path="/student/getHallTicket"
+                        element={<ExamHallTicket />}
+                    />
                     <Route
                         path="/admin/dashboard"
                         element={<AdminDashboard />}
