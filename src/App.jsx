@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
-import "./App.css";
-import Student from "./pages/Student";
-import NavBar from "./components/NavBar";
-import Login from "./components/Login";
-import SignUp from "./components/SignUp";
-import ViewResult from "./pages/ViewResult";
-import AdminDashboard from "./components/AdminDashboard";
-import { Routes, Route } from "react-router-dom";
-import { ThemeProvider, CssBaseline } from "@mui/material";
-import theme from "./Utils/theme"; // Import your MUI custom theme here
-import SuperAdminDashboard from "./components/SuperAdminDashboard";
-import { AdminProvider, AdminContext } from "./contexts/AdminContext";
+import React, { useState, useEffect } from 'react';
+import './App.css';
+import Student from './pages/Student';
+import NavBar from './components/NavBar';
+import Login from './components/Login';
+import SignUp from './components/SignUp';
+import ViewResult from './pages/ViewResult';
+import AdminDashboard from './components/AdminDashboard';
+import { Routes, Route } from 'react-router-dom';
+import { ThemeProvider, CssBaseline } from '@mui/material';
+import theme from './Utils/theme'; // Import your MUI custom theme here
+import SuperAdminDashboard from './components/SuperAdminDashboard';
+import { AdminProvider, AdminContext } from './contexts/AdminContext';
 
 const App = () => {
     const [isSuperAdmin, setIsSuperAdmin] = useState(false);
@@ -18,26 +18,26 @@ const App = () => {
     const fetchIsSuperAdmin = async () => {
         try {
             const response = await fetch(
-                "http://localhost:3000/admin/isSuperAdmin",
+                'http://localhost:3000/admin/isSuperAdmin',
                 {
-                    method: "GET",
+                    method: 'GET',
                     headers: {
-                        "Content-Type": "application/json",
+                        'Content-Type': 'application/json',
                     },
-                    credentials: "include",
-                }
+                    credentials: 'include',
+                },
             );
 
             if (!response.ok) {
                 throw new Error(
-                    (await response.json()).message || "Failed to fetch role"
+                    (await response.json()).message || 'Failed to fetch role',
                 );
             }
 
             const data = await response.json();
             setIsSuperAdmin(data.isSuperAdmin || false);
         } catch (err) {
-            console.error("Error fetching super admin role:", err.message);
+            console.error('Error fetching super admin role:', err.message);
             setIsSuperAdmin(false);
         }
     };
@@ -47,7 +47,7 @@ const App = () => {
     }, []);
 
     return (
-        <AdminProvider>
+        <AdminProvider value={{ isSuperAdmin }}>
             <ThemeProvider theme={theme}>
                 <CssBaseline /> {/* Ensures consistent global styles */}
                 <NavBar />
@@ -58,17 +58,7 @@ const App = () => {
                     <Route path="/result" element={<ViewResult />} />
                     <Route
                         path="/admin/dashboard"
-                        element={
-                            <AdminContext.Consumer>
-                                {({ isSuperAdmin }) =>
-                                    isSuperAdmin ? (
-                                        <SuperAdminDashboard />
-                                    ) : (
-                                        <AdminDashboard />
-                                    )
-                                }
-                            </AdminContext.Consumer>
-                        }
+                        element={<AdminDashboard />}
                     />
                 </Routes>
             </ThemeProvider>
