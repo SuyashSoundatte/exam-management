@@ -22,6 +22,7 @@
     "express-session": "^1.18.1",
     "fs": "^0.0.1-security",
     "joi": "^17.13.3",
+    "json2csv": "^6.0.0-alpha.2",
     "jsonwebtoken": "^9.0.2",
     "jspdf": "^2.5.2",
     "mongoose": "^8.7.2",
