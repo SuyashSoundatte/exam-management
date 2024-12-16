@@ -6,7 +6,7 @@ const { registerValidation, viewResultValidation } = require("../middlewares/stu
 const { adminAuth } = require("../middlewares/admin.middleware");
 
 const formLimiter = rateLimit({
-  max: 5,
+  max: 115,
   windowMs: 60 * 60 * 1000,
   message: {
     status: 429,

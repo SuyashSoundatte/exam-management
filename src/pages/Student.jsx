@@ -1,12 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import StudentPage2 from "./StudentPage2";
+import SuccessWindow from "../components/successfullyWindow";
 import './style.css'
 
 const Student = () => {
   const [cities, setCities] = useState([]);
   const [schools, setSchools] = useState([]);
   const [error, setError] = useState(null);
+  const [isSuccessWindow, setSuccessWindow] = useState(false);
+
+  const openSuccessWindow = ()=> {
+    setSuccessWindow(true);
+  };
+
+  const closeSuccessWindow = () => { 
+    setSuccessWindow(false);
+  };
+
   const [formData, setFormData] = useState({
     firstName: "",
     middleName: "",
@@ -111,11 +122,13 @@ const Student = () => {
         const errorData = await response.json();
         throw new Error(errorData.message || "Error registering student");
       }
-  
+      
       const data = await response.json();
       console.log("Registration Successful: ", data.message);
-      alert("Student Registered Successfully");
+      // alert("Student Registered Successfully");
       toast("Student Registered Successfully"); 
+      
+      openSuccessWindow();
   
       // Reset the form
       setFormData({
@@ -134,7 +147,7 @@ const Student = () => {
         medium: "",
       });
     } catch (error) {
-      console.error("Error during registration: ", error.message);
+      console.error("Error during registration: ", error.message);  
       toast.error("Error: " + error.message); // Notify the user on error
     }
   };
@@ -372,6 +385,9 @@ const Student = () => {
   
           {/* Submit Button */}
           <button
+            onClick={ () =>{
+              handleSubmit();
+            }}
             type="submit"
             className="w-full bg-red-500 text-white font-medium py-2 rounded-lg hover:bg-red-600"
           >
@@ -382,8 +398,13 @@ const Student = () => {
       </div>
       <div className="page2 h-screen w-full bg-[#F0F0F0]">
         <StudentPage2/>
-        
       </div>
+      {isSuccessWindow && (
+      <SuccessWindow 
+        closeSuccessWindow={closeSuccessWindow} 
+      />
+      )}
+
     </div>
     
   );  
