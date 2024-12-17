@@ -17,6 +17,7 @@ const {
     getAllColleges,
     getAllCities,
     getDataByYear,
+    createExam
 } = require("../controllers/admin.controller");
 
 const {
@@ -56,6 +57,7 @@ router.delete("/delete", authenticateSuperAdmin, deleteAdmin);
 
 router.put("/examConfig", authenticateSuperAdmin, updateExamConfig);
 router.get("/examConfig", adminAuth, getExamConfig);
+router.post("/createExam", adminAuth, createExam);
 
 router.post("/announcements", authenticateSuperAdmin, createAnnouncement);
 router.get("/announcements", adminAuth, getAnnouncements);
