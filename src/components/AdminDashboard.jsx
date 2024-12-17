@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { AdminPanelSettings } from '@mui/icons-material';
+import Signup from './Signup'; // Import the Signup component
+
 import axios from 'axios';
 import dayjs from 'dayjs';
 import Cookies from 'js-cookie';
@@ -11,6 +14,7 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions,
+    CircularProgress,
     TextField,
     Typography,
     Snackbar,
@@ -59,6 +63,7 @@ axios.interceptors.response.use(
     },
 );
 
+
 const AdminDashboard = () => {
     const { isSuperAdmin } = useContext(AdminContext);
     const navigate = useNavigate();
@@ -83,15 +88,10 @@ const AdminDashboard = () => {
     const fetchStudents = useCallback(async () => {
         try {
             setLoading(true);
-            const response = await fetch(
-                'http://localhost:3000/student/allStudents',
-            );
+            const response = await fetch('http://localhost:3000/student/allStudents');
 
             if (!response.ok) {
-                throw new Error(
-                    (await response.json()).message ||
-                        'Failed to fetch students',
-                );
+                throw new Error((await response.json()).message || 'Failed to fetch students');
             }
 
             const data = await response.json();
@@ -106,21 +106,16 @@ const AdminDashboard = () => {
     const fetchExams = useCallback(async () => {
         try {
             setLoading(true);
-            const response = await fetch(
-                'http://localhost:3000/admin/examConfig',
-                {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'include',
+            const response = await fetch('http://localhost:3000/admin/examConfig', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
                 },
-            );
+                credentials: 'include',
+            });
 
             if (!response.ok) {
-                throw new Error(
-                    (await response.json()).message || 'Failed to fetch exams',
-                );
+                throw new Error((await response.json()).message || 'Failed to fetch exams');
             }
 
             const data = await response.json();
@@ -135,27 +130,22 @@ const AdminDashboard = () => {
     const fetchAdmins = useCallback(async () => {
         try {
             setLoading(true);
-            const response = await fetch(
-                'http://localhost:3000/admin/allAdmins',
-                {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'include',
+            const response = await fetch('http://localhost:3000/admin/allAdmins', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
                 },
-            );
+                credentials: 'include',
+            });
 
             if (!response.ok) {
-                throw new Error(
-                    (await response.json()).message || 'Failed to fetch exams',
-                );
+                throw new Error((await response.json()).message || 'Failed to fetch admins');
             }
 
             const data = await response.json();
             setAdmins(Array.isArray(data) ? data : [data]); // Ensure admins is an array
         } catch (err) {
-            setError(err.message || 'Failed to fetch exams'); // Set error message
+            setError(err.message || 'Failed to fetch admins'); // Set error message
         } finally {
             setLoading(false); // Stop loading state
         }
@@ -192,7 +182,7 @@ const AdminDashboard = () => {
         return () => {
             mounted = false;
         };
-    }, [activeSection, fetchStudents, fetchExams, navigate, setError]);
+    }, [activeSection, fetchStudents, fetchExams, fetchAdmins, navigate]);
 
     const handleCreateExam = async () => {
         try {
@@ -204,20 +194,17 @@ const AdminDashboard = () => {
             setLoading(true);
             const formattedDate = dayjs(examForm.examDate).format('YYYY-MM-DD');
 
-            const response = await fetch(
-                'http://localhost:3000/admin/examConfig',
-                {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        ...examForm,
-                        examDate: formattedDate,
-                    }),
-                    credentials: 'include',
+            const response = await fetch('http://localhost:3000/admin/examConfig', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
                 },
-            );
+                body: JSON.stringify({
+                    ...examForm,
+                    examDate: formattedDate,
+                }),
+                credentials: 'include',
+            });
 
             if (!response.ok) {
                 throw new Error('Failed to create exam');
@@ -278,20 +265,20 @@ const AdminDashboard = () => {
         },
         { field: 'email', headerName: 'Email', flex: 1 },
         {
-            field: 'actions',
-            headerName: 'Actions',
-            flex: 1,
-            renderCell: (params) => (
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => handleApproveAdmin(params.row._id)}
-                >
-                    Approve
-                </Button>
-            ),
+          field: 'actions',
+          headerName: 'Actions',
+          flex: 1,
+          renderCell: (params) => (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => handleApproveAdmin(params.row._id)}
+            >
+              Approve
+            </Button>
+          ),
         },
-    ];
+      ];
 
     const redTheme = createTheme({
         palette: {
@@ -304,19 +291,17 @@ const AdminDashboard = () => {
         },
     });
 
+     
     return (
         <ThemeProvider theme={redTheme}>
             <Box sx={{ display: 'flex' }}>
-                <AppBar
-                    position="fixed"
-                    sx={{ zIndex: theme.zIndex.drawer + 1 }}
-                >
+                <AppBar position="fixed" sx={{ zIndex: theme.zIndex.drawer + 1 }}>
                     <Toolbar>
                         <IconButton
                             color="inherit"
                             edge="start"
                             onClick={() => setSidebarOpen(!sidebarOpen)}
-                            sx={{ mr: 2, display: { sm: 'none' } }}
+                            sx={{ mr: 3, display: { sm: 'none' } }}
                         >
                             <MenuIcon />
                         </IconButton>
@@ -362,7 +347,16 @@ const AdminDashboard = () => {
                                 </ListItemIcon>
                                 <ListItemText primary="Students" />
                             </ListItem>
-
+                            <ListItem
+                                button
+                                selected={activeSection === 'createUser'}
+                                onClick={() => setActiveSection('createUser')}
+                            >
+                                <ListItemIcon>
+                                    <PersonAddIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Create User" />
+                            </ListItem>
                             {isSuperAdmin && (
                                 <ListItem
                                     button
@@ -370,9 +364,9 @@ const AdminDashboard = () => {
                                     onClick={() => setActiveSection('admins')}
                                 >
                                     <ListItemIcon>
-                                        <PersonAddIcon />
+                                        <AdminPanelSettings />
                                     </ListItemIcon>
-                                    <ListItemText primary="Approve Admins" />
+                                    <ListItemText primary="Admins" />
                                 </ListItem>
                             )}
                         </List>
@@ -388,15 +382,7 @@ const AdminDashboard = () => {
                     </Box>
                 </Drawer>
 
-                <Box
-                    component="main"
-                    sx={{
-                        flexGrow: 1,
-                        p: 3,
-                        width: { sm: `calc(100% - ${drawerWidth}px)` },
-                        ml: { sm: `${drawerWidth}px` },
-                    }}
-                >
+                <Box component="main" sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}>
                     <Toolbar />
 
                     {activeSection === 'exams' && (
@@ -508,22 +494,12 @@ const AdminDashboard = () => {
                             </Box>
                         </DialogContent>
                         <DialogActions>
-                            <Button
-                                onClick={() => setDialogOpen(false)}
-                                color="primary"
-                            >
+                            <Button onClick={() => setDialogOpen(false)} color="primary">
                                 Cancel
                             </Button>
-                            <Button
-                                onClick={handleCreateExam}
-                                color="primary"
-                                disabled={loading}
-                            >
+                            <Button onClick={handleCreateExam} color="primary" disabled={loading}>
                                 {loading ? (
-                                    <CircularProgress
-                                        size={24}
-                                        sx={{ color: 'white' }}
-                                    />
+                                    <CircularProgress size={24} sx={{ color: 'white' }} />
                                 ) : (
                                     'Create'
                                 )}
@@ -545,11 +521,7 @@ const AdminDashboard = () => {
                             </Alert>
                         </Snackbar>
                     )}
-                    <Snackbar
-                        open={!!error}
-                        autoHideDuration={6000}
-                        onClose={() => setError('')}
-                    >
+                    <Snackbar open={!!error} autoHideDuration={6000} onClose={() => setError('')}>
                         <Alert severity="error">{error}</Alert>
                     </Snackbar>
                 </Box>
@@ -557,5 +529,6 @@ const AdminDashboard = () => {
         </ThemeProvider>
     );
 };
+
 
 export default AdminDashboard;

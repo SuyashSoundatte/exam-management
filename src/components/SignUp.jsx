@@ -31,9 +31,9 @@ function SignUp() {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
-        <div className="text-2xl font-bold mb-6 text-center">Sign Up</div>
+    <div className="h-screen flex items-start justify-center pt-20">
+      <div className="bg-gray-100 p-8 rounded-lg shadow-lg w-full max-w-sm">
+        <div className="text-2xl font-bold mb-6 text-center">Create New User</div>
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">
             User Name
@@ -76,12 +76,7 @@ function SignUp() {
         >
           Sign Up
         </button>
-        <p className="text-sm font-medium text-gray-600 mt-4 text-center">
-          Already have an account?{" "}
-          <Link to="/login" className="text-red-500 hover:text-red-600">
-            Login
-          </Link>
-        </p>
+        
       </div>
     </div>
   );
