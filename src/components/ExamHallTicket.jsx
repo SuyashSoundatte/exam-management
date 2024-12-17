@@ -73,7 +73,9 @@ const ExamHallTicket = () => {
                 body: JSON.stringify({ email, dob }),
             }
         );
-
+        if(!response.ok){
+          throw new Error("Invalid student details");
+        }
         const data = await response.json();
         setStudentData(data);
         setShowDialog(false);
@@ -82,8 +84,6 @@ const ExamHallTicket = () => {
     } catch (err) {
       setError(err.message);
       toast.error(err.message);
-    } finally {
-      setLoading(false);
     }
   };
 
