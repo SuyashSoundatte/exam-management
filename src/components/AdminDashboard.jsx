@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { AdminPanelSettings } from '@mui/icons-material';
+import Signup from './Signup'; // Import the Signup component
+
 import axios from 'axios';
 import dayjs from 'dayjs';
 import Cookies from 'js-cookie';
@@ -58,8 +61,9 @@ axios.interceptors.response.use(
     },
 );
 
+
 const AdminDashboard = () => {
-    const {isSuperAdmin} = useContext(AdminContext)
+    const { isSuperAdmin } = useContext(AdminContext);
     const navigate = useNavigate();
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -82,48 +86,38 @@ const AdminDashboard = () => {
     const fetchStudents = useCallback(async () => {
         try {
             setLoading(true);
-            const response = await fetch(
-                'http://localhost:3000/student/allStudents',
-            );
+            const response = await fetch('http://localhost:3000/student/allStudents');
 
             if (!response.ok) {
-                throw new Error(
-                    (await response.json()).message ||
-                        'Failed to fetch students',
-                );
+                throw new Error((await response.json()).message || 'Failed to fetch students');
             }
 
             const data = await response.json();
-            setStudents(data.students || []);  
+            setStudents(data.students || []);
         } catch (err) {
             setError(err.message || 'Failed to fetch students'); // Set the error message
         } finally {
-            setLoading(false);  
+            setLoading(false);
         }
     }, []);
 
     const fetchExams = useCallback(async () => {
         try {
             setLoading(true);
-            const response = await fetch(
-                'http://localhost:3000/admin/examConfig',
-                {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'include',
+            const response = await fetch('http://localhost:3000/admin/examConfig', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
                 },
-            );
+                credentials: 'include',
+            });
 
             if (!response.ok) {
-                throw new Error(
-                    (await response.json()).message || 'Failed to fetch exams',
-                );
+                throw new Error((await response.json()).message || 'Failed to fetch exams');
             }
 
             const data = await response.json();
-            setExams(Array.isArray(data) ? data : [data]); 
+            setExams(Array.isArray(data) ? data : [data]);
         } catch (err) {
             setError(err.message || 'Failed to fetch exams'); // Set error message
         } finally {
@@ -134,27 +128,22 @@ const AdminDashboard = () => {
     const fetchAdmins = useCallback(async () => {
         try {
             setLoading(true);
-            const response = await fetch(
-                'http://localhost:3000/admin/allAdmins',
-                {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'include',
+            const response = await fetch('http://localhost:3000/admin/allAdmins', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
                 },
-            );
+                credentials: 'include',
+            });
 
             if (!response.ok) {
-                throw new Error(
-                    (await response.json()).message || 'Failed to fetch exams',
-                );
+                throw new Error((await response.json()).message || 'Failed to fetch admins');
             }
 
             const data = await response.json();
             setAdmins(Array.isArray(data) ? data : [data]); // Ensure admins is an array
         } catch (err) {
-            setError(err.message || 'Failed to fetch exams'); // Set error message
+            setError(err.message || 'Failed to fetch admins'); // Set error message
         } finally {
             setLoading(false); // Stop loading state
         }
@@ -191,7 +180,7 @@ const AdminDashboard = () => {
         return () => {
             mounted = false;
         };
-    }, [activeSection, fetchStudents, fetchExams, navigate, setError]);
+    }, [activeSection, fetchStudents, fetchExams, fetchAdmins, navigate]);
 
     const handleCreateExam = async () => {
         try {
@@ -203,20 +192,17 @@ const AdminDashboard = () => {
             setLoading(true);
             const formattedDate = dayjs(examForm.examDate).format('YYYY-MM-DD');
 
-            const response = await fetch(
-                'http://localhost:3000/admin/examConfig',
-                {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        ...examForm,
-                        examDate: formattedDate,
-                    }),
-                    credentials: 'include',
+            const response = await fetch('http://localhost:3000/admin/examConfig', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
                 },
-            );
+                body: JSON.stringify({
+                    ...examForm,
+                    examDate: formattedDate,
+                }),
+                credentials: 'include',
+            });
 
             if (!response.ok) {
                 throw new Error('Failed to create exam');
@@ -260,27 +246,24 @@ const AdminDashboard = () => {
         { field: 'whatsappNumber', headerName: 'WA Number', flex: 1 },
         { field: 'dateOfBirth', headerName: 'DOB', flex: 1 },
     ];
-    
+
     const adminColumns = [
         { field: 'username', headerName: 'Username', flex: 1 },
-        { field: 'isSuperAdmin', headerName: 'Super Admin', flex: 1, renderCell: (params) => (params.row.isSuperAdmin ? 'Yes' : 'No') },
-        { field: 'isApproved', headerName: 'Admin', flex: 1, renderCell: (params) => (params.row.isAdmin ? 'Yes' : 'No') },
-        { field: 'email', headerName: 'Email', flex: 1 },
         {
-          field: 'actions',
-          headerName: 'Actions',
-          flex: 1,
-          renderCell: (params) => (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => handleApproveAdmin(params.row._id)}
-            >
-              Approve
-            </Button>
-          ),
+            field: 'isSuperAdmin',
+            headerName: 'Super Admin',
+            flex: 1,
+            renderCell: (params) => (params.row.isSuperAdmin ? 'Yes' : 'No'),
         },
-      ];
+        {
+            field: 'isApproved',
+            headerName: 'Admin',
+            flex: 1,
+            renderCell: (params) => (params.row.isAdmin ? 'Yes' : 'No'),
+        },
+        { field: 'email', headerName: 'Email', flex: 1 },
+         
+    ];
 
     const redTheme = createTheme({
         palette: {
@@ -293,19 +276,17 @@ const AdminDashboard = () => {
         },
     });
 
+     
     return (
         <ThemeProvider theme={redTheme}>
             <Box sx={{ display: 'flex' }}>
-                <AppBar
-                    position="fixed"
-                    sx={{ zIndex: theme.zIndex.drawer + 1 }}
-                >
+                <AppBar position="fixed" sx={{ zIndex: theme.zIndex.drawer + 1 }}>
                     <Toolbar>
                         <IconButton
                             color="inherit"
                             edge="start"
                             onClick={() => setSidebarOpen(!sidebarOpen)}
-                            sx={{ mr: 2, display: { sm: 'none' } }}
+                            sx={{ mr: 3, display: { sm: 'none' } }}
                         >
                             <MenuIcon />
                         </IconButton>
@@ -351,30 +332,42 @@ const AdminDashboard = () => {
                                 </ListItemIcon>
                                 <ListItemText primary="Students" />
                             </ListItem>
-
-                            {isSuperAdmin && (<ListItem
+                            <ListItem
                                 button
-                                selected={activeSection === 'admins'}
-                                onClick={() => setActiveSection('admins')}
+                                selected={activeSection === 'createUser'}
+                                onClick={() => setActiveSection('createUser')}
                             >
                                 <ListItemIcon>
                                     <PersonAddIcon />
                                 </ListItemIcon>
-                                <ListItemText primary="Approve Admins" />
-                            </ListItem>)}
-                            
+                                <ListItemText primary="Create User" />
+                            </ListItem>
+                            {isSuperAdmin && (
+                                <ListItem
+                                    button
+                                    selected={activeSection === 'admins'}
+                                    onClick={() => setActiveSection('admins')}
+                                >
+                                    <ListItemIcon>
+                                        <AdminPanelSettings />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Admins" />
+                                </ListItem>
+                            )}
                         </List>
                         <Divider />
                         <List>
                             <ListItem button onClick={handleLogout}>
-                                <ListItemIcon><LogoutIcon /></ListItemIcon>
+                                <ListItemIcon>
+                                    <LogoutIcon />
+                                </ListItemIcon>
                                 <ListItemText primary="Logout" />
                             </ListItem>
                         </List>
                     </Box>
                 </Drawer>
 
-                <Box component="main" sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, ml: { sm: `${drawerWidth}px` } }}>
+                <Box component="main" sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}>
                     <Toolbar />
 
                     {activeSection === 'exams' && (
@@ -388,42 +381,45 @@ const AdminDashboard = () => {
                         </Button>
                     )}
 
-                    <Box sx={{ height: 'calc(100vh - 180px)', width: '100%' }}>
-                        <DataGrid
-                            rows={
-                                activeSection === 'exams' 
-                                    ? exams 
-                                    : activeSection === 'admins' 
-                                    ? admins 
-                                    : students
-                            }
-                            columns={
-                                activeSection === 'exams' 
-                                    ? examColumns 
-                                    : activeSection === 'admins' 
-                                    ? adminColumns 
-                                    : studentColumns
-                            }
-                            pageSize={5}
-                            rowsPerPageOptions={[5]}
-                            getRowId={(row) => row._id || row.studentId || row.adminId}
-                            loading={loading}
-                            sx={{
-                                boxShadow: 2,
-                                border: 2,
-                                borderColor: 'primary.light',
-                                '& .MuiDataGrid-cell:hover': {
-                                    color: 'primary.main',
-                                },
-                            }}
-                        />
-                    </Box>
+                    {activeSection === 'createUser' && <Signup />}
 
+                    {activeSection !== 'createUser' && (
+                        <Box sx={{ height: 'calc(100vh - 180px)', width: '100%' }}>
+                            <DataGrid
+                                rows={
+                                    activeSection === 'exams'
+                                        ? exams
+                                        : activeSection === 'admins'
+                                        ? admins
+                                        : students
+                                }
+                                columns={
+                                    activeSection === 'exams'
+                                        ? examColumns
+                                        : activeSection === 'admins'
+                                        ? adminColumns
+                                        : studentColumns
+                                }
+                                pageSize={5}
+                                rowsPerPageOptions={[5]}
+                                getRowId={(row) => row._id || row.studentId || row.adminId}
+                                loading={loading}
+                                sx={{
+                                    boxShadow: 2,
+                                    border: 2,
+                                    borderColor: 'primary.light',
+                                    '& .MuiDataGrid-cell:hover': {
+                                        color: 'primary.main',
+                                    },
+                                }}
+                            />
+                        </Box>
+                    )}
 
                     <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
                         <DialogTitle>Create New Exam</DialogTitle>
                         <DialogContent>
-                            <Box sx={{ display: "flex", flexDirection: "column" }}>
+                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                                 <TextField
                                     label="Exam Title"
                                     value={examForm.examTitle}
@@ -450,22 +446,12 @@ const AdminDashboard = () => {
                             </Box>
                         </DialogContent>
                         <DialogActions>
-                            <Button
-                                onClick={() => setDialogOpen(false)}
-                                color="primary"
-                            >
+                            <Button onClick={() => setDialogOpen(false)} color="primary">
                                 Cancel
                             </Button>
-                            <Button
-                                onClick={handleCreateExam}
-                                color="primary"
-                                disabled={loading}
-                            >
+                            <Button onClick={handleCreateExam} color="primary" disabled={loading}>
                                 {loading ? (
-                                    <CircularProgress
-                                        size={24}
-                                        sx={{ color: 'white' }}
-                                    />
+                                    <CircularProgress size={24} sx={{ color: 'white' }} />
                                 ) : (
                                     'Create'
                                 )}
@@ -474,17 +460,13 @@ const AdminDashboard = () => {
                     </Dialog>
 
                     {error && (
-                        <Snackbar open={Boolean(error)} autoHideDuration={6000} onClose={() => setError("")}>
-                            <Alert onClose={() => setError("")} severity="error">
+                        <Snackbar open={Boolean(error)} autoHideDuration={6000} onClose={() => setError('')}>
+                            <Alert onClose={() => setError('')} severity="error">
                                 {error}
                             </Alert>
                         </Snackbar>
                     )}
-                    <Snackbar
-                        open={!!error}
-                        autoHideDuration={6000}
-                        onClose={() => setError('')}
-                    >
+                    <Snackbar open={!!error} autoHideDuration={6000} onClose={() => setError('')}>
                         <Alert severity="error">{error}</Alert>
                     </Snackbar>
                 </Box>
@@ -492,5 +474,6 @@ const AdminDashboard = () => {
         </ThemeProvider>
     );
 };
+
 
 export default AdminDashboard;
