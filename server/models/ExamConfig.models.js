@@ -9,6 +9,10 @@ const examConfigSchema = new mongoose.Schema({
       type: String, 
       required: true 
     },
+    examTime: {
+      type: String,
+      required: true
+    },
     description: { 
       type: String 
     },
