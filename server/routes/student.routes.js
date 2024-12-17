@@ -1,7 +1,7 @@
 const express = require('express');
 const rateLimit = require("express-rate-limit");
 const router = express.Router();
-const { registerStudent, viewResult, getAllStudents, updateStudentMarks, generateHallTicket } = require('../controllers/student.controller');
+const { registerStudent, viewResult, getAllStudents, updateStudentMarks, generateHallTicket, getHallTicketInfo } = require('../controllers/student.controller');
 const { registerValidation, viewResultValidation } = require("../middlewares/student.middleware");
 const { adminAuth } = require("../middlewares/admin.middleware");
 
@@ -37,5 +37,5 @@ router.get('/viewResult', resultLimiter, viewResultValidation, viewResult);
 router.get("/allStudents",  getAllStudents);
 // router.get("/getHallTicket", hallTicketValidation)
 router.get("/getHallTicket", hallTicketLimiter, generateHallTicket)
-
+router.post("/getHallTicketInfo", getHallTicketInfo)
 module.exports = router;
