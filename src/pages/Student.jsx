@@ -120,15 +120,16 @@ const Student = () => {
   
       if (!response.ok) {
         const errorData = await response.json();
+        alert("Can not Register !!")
         throw new Error(errorData.message || "Error registering student");
       }
       
       const data = await response.json();
       console.log("Registration Successful: ", data.message);
-      // alert("Student Registered Successfully");
+      alert("Student Registered Successfully");
       toast("Student Registered Successfully"); 
       
-      openSuccessWindow();
+      // openSuccessWindow();
   
       // Reset the form
       setFormData({
