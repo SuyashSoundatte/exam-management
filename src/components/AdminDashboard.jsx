@@ -384,6 +384,17 @@ const AdminDashboard = () => {
                         </Button>
                     )}
 
+                    {activeSection === 'students' && (
+                        <Button
+                            variant="contained"
+                            // onClick={() => setDialogOpen(true)}
+                            sx={{ mb: 2 }}
+                            startIcon={<AssignmentIcon />}
+                        >
+                            <ExportButton />
+                        </Button>
+                    )}
+
                     {activeSection === 'createUser' && <Signup />}
 
                     {activeSection !== 'createUser' && (
