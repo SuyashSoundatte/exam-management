@@ -6,7 +6,7 @@ import Signup from './SignUp'; // Import the Signup component
 import axios from 'axios';
 import dayjs from 'dayjs';
 import Cookies from 'js-cookie';
-// import ExportButton from "./ExportCsv";
+import ExportButton from "./ExportExcel";
 import {
     Box,
     Button,
@@ -143,6 +143,7 @@ const AdminDashboard = () => {
             }
 
             const data = await response.json();
+            console.log(data);
             setAdmins(Array.isArray(data) ? data : [data]); // Ensure admins is an array
         } catch (err) {
             setError(err.message || 'Failed to fetch admins'); // Set error message
@@ -261,7 +262,7 @@ const AdminDashboard = () => {
             field: 'isApproved',
             headerName: 'Admin',
             flex: 1,
-            renderCell: (params) => (params.row.isAdmin ? 'Yes' : 'No'),
+            renderCell: (params) => (params.row.isApproved ? 'Yes' : 'No'),
         },
         { field: 'email', headerName: 'Email', flex: 1 },
         
