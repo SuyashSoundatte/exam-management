@@ -7,6 +7,7 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import Cookies from 'js-cookie';
 import ExportButton from './ExportExcel';
+// import {} from "../"
 import {
     Box,
     Button,
@@ -30,7 +31,7 @@ import {
     Divider,
     useTheme,
     useMediaQuery,
-    CircularProgress
+    
 } from '@mui/material';
 import {
     Menu as MenuIcon,
@@ -44,7 +45,7 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useNavigate } from 'react-router-dom';
 import { AdminContext } from '../contexts/AdminContext';
-import { exportToExcel } from '../../server/config/excelConvertor';
+// import { exportToExcel } from '../../server/config/excelConvertor';
 // Setup axios interceptors
 axios.interceptors.request.use((config) => {
     // Ensure requests include cookies
@@ -264,20 +265,7 @@ const AdminDashboard = () => {
             renderCell: (params) => (params.row.isAdmin ? 'Yes' : 'No'),
         },
         { field: 'email', headerName: 'Email', flex: 1 },
-        {
-          field: 'actions',
-          headerName: 'Actions',
-          flex: 1,
-          renderCell: (params) => (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => handleApproveAdmin(params.row._id)}
-            >
-              Approve
-            </Button>
-          ),
-        },
+        
       ];
 
     const redTheme = createTheme({
@@ -399,7 +387,7 @@ const AdminDashboard = () => {
                     {activeSection === 'students' && (
                         <Button
                             variant="contained"
-                            onClick={() => exportToExcel()}
+                            // onClick={}
                             sx={{ mb: 2 }}
                             startIcon={<AssignmentIcon />}
                         >

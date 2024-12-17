@@ -1,11 +1,9 @@
-// const mongoose = require('mongoose');
 const XLSX = require('xlsx');
-const fs = require('fs');
-const User = require("../models/Student.models"); 
+const User = require('../models/Student.models');
 
-const exportToExcel = async (req, res) => {
+const   exportToExcel = async (req, res) => {
   try {
-    const users = await User.find({}); 
+    const users = await User.find({});
 
     if (users.length === 0) {
       console.log('No data found in the Student collection.');
@@ -35,7 +33,6 @@ const exportToExcel = async (req, res) => {
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.json_to_sheet(formattedData);
 
-
     XLSX.utils.book_append_sheet(workbook, worksheet, "StudentData");
 
     const excelBuffer = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" });
@@ -56,5 +53,4 @@ const exportToExcel = async (req, res) => {
   }
 };
 
-
-module.exports = { exportToExcel };
+module.exports = {exportToExcel} ;
