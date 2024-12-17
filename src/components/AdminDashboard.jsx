@@ -30,7 +30,6 @@ import {
     Divider,
     useTheme,
     useMediaQuery,
-    
 } from '@mui/material';
 import {
     Menu as MenuIcon,
@@ -44,7 +43,6 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useNavigate } from 'react-router-dom';
 import { AdminContext } from '../contexts/AdminContext';
-// import { exportToExcel } from '../../server/config/excelConvertor';
 // Setup axios interceptors
 axios.interceptors.request.use((config) => {
     // Ensure requests include cookies
@@ -53,7 +51,7 @@ axios.interceptors.request.use((config) => {
 });
 
 axios.interceptors.response.use(
-    (response) => response,
+    (response) => response,  
     (error) => {
         if (error.response?.status === 401) {
             // Handle unauthorized error by redirecting to the login page
@@ -265,8 +263,8 @@ const AdminDashboard = () => {
             renderCell: (params) => (params.row.isApproved ? 'Yes' : 'No'),
         },
         { field: 'email', headerName: 'Email', flex: 1 },
-        
-      ];
+         
+    ];
 
     const redTheme = createTheme({
         palette: {
@@ -384,85 +382,57 @@ const AdminDashboard = () => {
                         </Button>
                     )}
 
-                    {activeSection === 'students' && (
-                        <Button
-                            variant="contained"
-                            // onClick={}
-                            sx={{ mb: 2 }}
-                            startIcon={<AssignmentIcon />}
-                        >
-                            <ExportButton />
-                        </Button>
-                    )}
-                    <Box sx={{ height: 'calc(100vh - 180px)', width: '100%' }}>
-                        <DataGrid
-                            rows={
-                                activeSection === 'exams'
-                                    ? exams
-                                    : activeSection === 'admins'
-                                      ? admins
-                                      : students
-                            }
-                            columns={
-                                activeSection === 'exams'
-                                    ? examColumns
-                                    : activeSection === 'admins'
-                                      ? adminColumns
-                                      : studentColumns
-                            }
-                            pageSize={5}
-                            rowsPerPageOptions={[5]}
-                            getRowId={(row) =>
-                                row._id || row.studentId || row.adminId
-                            }
-                            loading={loading}
-                            sx={{
-                                boxShadow: 2,
-                                border: 2,
-                                borderColor: 'primary.light',
-                                '& .MuiDataGrid-cell:hover': {
-                                    color: 'primary.main',
-                                },
-                            }}
-                        />
-                    </Box>
+                    {activeSection === 'createUser' && <Signup />}
 
-                    <Dialog
-                        open={dialogOpen}
-                        onClose={() => setDialogOpen(false)}
-                    >
+                    {activeSection !== 'createUser' && (
+                        <Box sx={{ height: 'calc(100vh - 180px)', width: '100%' }}>
+                            <DataGrid
+                                rows={
+                                    activeSection === 'exams'
+                                        ? exams
+                                        : activeSection === 'admins'
+                                        ? admins
+                                        : students
+                                }
+                                columns={
+                                    activeSection === 'exams'
+                                        ? examColumns
+                                        : activeSection === 'admins'
+                                        ? adminColumns
+                                        : studentColumns
+                                }
+                                pageSize={5}
+                                rowsPerPageOptions={[5]}
+                                getRowId={(row) => row._id || row.studentId || row.adminId}
+                                loading={loading}
+                                sx={{
+                                    boxShadow: 2,
+                                    border: 2,
+                                    borderColor: 'primary.light',
+                                    '& .MuiDataGrid-cell:hover': {
+                                        color: 'primary.main',
+                                    },
+                                }}
+                            />
+                        </Box>
+                    )}
+
+                    <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
                         <DialogTitle>Create New Exam</DialogTitle>
                         <DialogContent>
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                }}
-                            >
+                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                                 <TextField
                                     label="Exam Title"
                                     value={examForm.examTitle}
-                                    onChange={(e) =>
-                                        setExamForm({
-                                            ...examForm,
-                                            examTitle: e.target.value,
-                                        })
-                                    }
+                                    onChange={(e) => setExamForm({ ...examForm, examTitle: e.target.value })}
                                     fullWidth
                                     margin="normal"
                                 />
-                                <LocalizationProvider
-                                    dateAdapter={AdapterDayjs}
-                                >
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker
                                         label="Exam Date"
                                         value={examForm.examDate}
-                                        onChange={(date) =>
-                                            setExamForm({
-                                                ...examForm,
-                                                examDate: date,
-                                            })
-                                        }
+                                        onChange={(date) => setExamForm({ ...examForm, examDate: date })}
                                         fullWidth
                                         margin="normal"
                                     />
@@ -470,12 +440,7 @@ const AdminDashboard = () => {
                                 <TextField
                                     label="Description"
                                     value={examForm.description}
-                                    onChange={(e) =>
-                                        setExamForm({
-                                            ...examForm,
-                                            description: e.target.value,
-                                        })
-                                    }
+                                    onChange={(e) => setExamForm({ ...examForm, description: e.target.value })}
                                     fullWidth
                                     margin="normal"
                                 />
@@ -496,15 +461,8 @@ const AdminDashboard = () => {
                     </Dialog>
 
                     {error && (
-                        <Snackbar
-                            open={Boolean(error)}
-                            autoHideDuration={6000}
-                            onClose={() => setError('')}
-                        >
-                            <Alert
-                                onClose={() => setError('')}
-                                severity="error"
-                            >
+                        <Snackbar open={Boolean(error)} autoHideDuration={6000} onClose={() => setError('')}>
+                            <Alert onClose={() => setError('')} severity="error">
                                 {error}
                             </Alert>
                         </Snackbar>
