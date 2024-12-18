@@ -12,6 +12,7 @@ import theme from './Utils/theme'; // Import your MUI custom theme here
 import SuperAdminDashboard from './components/SuperAdminDashboard';
 import { AdminProvider, AdminContext } from './contexts/AdminContext';
 import ExamHallTicket from './components/ExamHallTicket';
+import SearchCity from './components/SearchCity';
 
 const App = () => {
     const [isSuperAdmin, setIsSuperAdmin] = useState(false);
@@ -68,6 +69,7 @@ const App = () => {
                 </Routes>
             </ThemeProvider>
         </AdminProvider>
+        // <SearchCity/>
     );
 };
 

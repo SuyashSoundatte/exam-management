@@ -36,36 +36,64 @@ const addCollege = async(req, res) => {
 };
 
 const getAllColleges= async (req, res)=>{
+  const { query } = req.query;
   try {
-    const schools = await College.find({});
-    return res.status(200).json({schools});
+    let searchFilter = {};
+
+    if (query) {
+      const normalizedQuery = query.replace(/\./g, "").toLowerCase(); // Remove dots & lowercase
+      searchFilter = {
+        collegeName: { $regex: normalizedQuery, $options: "i" }, // Case-insensitive regex search
+      };
+    }
+
+    // Fetch schools based on the search filter
+    const schools = await College.find(searchFilter).limit(50); // Limit results to 50
+    return res.status(200).json({ schools });
   } catch (error) {
-    console.log("Error: ", error);
-    return res.status(500).json({ message: "Internal server error!" });
+    console.error("Error fetching schools:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 }
 
 const getAllCities= async (req, res)=>{
+  const { query } = req.query;
+
   try {
-    const cities = await City.find({});
-    return res.status(200).json(cities);
+    let searchFilter = {};
+
+    if (query) {
+      const normalizedQuery = query.replace(/\./g, "").toLowerCase();
+      searchFilter = {
+        cityName: { $regex: normalizedQuery, $options: "i" },
+      };
+    }
+
+    const cities = await City.find(searchFilter).limit(50);
+    return res.status(200).json({ cities }); // Return 'cities' as an array
   } catch (error) {
-    console.log("Error: ", error);
-    return res.status(500).json({ message: "Internal server error!" });
+    console.error("Error fetching cities:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 }
 
 const addCity = async (req, res)=>{
+  const { cityName } = req.body;
+
   try {
-    const { cityName } = req.body;
-    const city = new City({
-      cityName: cityName,
-    });
-    await city.save();
-    return res.status(201).json({ message: "City added successfully!" });
+    const existingCity = await City.findOne({ cityName: { $regex: new RegExp(`^${cityName}$`, 'i') } });
+
+    if (existingCity) {
+      return res.status(400).json({ message: "City already exists" });
+    }
+
+    const newCity = new City({ cityName });
+    await newCity.save();
+
+    return res.status(201).json({ message: "City added successfully", city: newCity });
   } catch (error) {
-    console.log("Error: ", error);
-    return res.status(500).json({ message: "Internal server error!" });
+    console.error("Error adding city:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 }
 
@@ -319,7 +347,6 @@ const getAnnouncements = async (req, res) => {
 
 const getDataByYear = async (req, res)=>{
   const { year } = req.body;
-  console.log(year);
   if (!year || isNaN(year)) {
     return res.status(400).json({ message: 'Invalid or missing year' });
   }

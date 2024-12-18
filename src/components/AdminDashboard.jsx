@@ -2,11 +2,14 @@ import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { AdminPanelSettings } from '@mui/icons-material';
 import Signup from './SignUp'; // Import the Signup component
+import SearchCity from './SearchCity';
+import SearchCollege from './SearchCollege';
+
 
 import axios from 'axios';
 import dayjs from 'dayjs';
 import Cookies from 'js-cookie';
-import ExportButton from "./ExportExcel";
+// import ExportButton from "./ExportCsv";
 import {
     Box,
     Button,
@@ -30,6 +33,7 @@ import {
     Divider,
     useTheme,
     useMediaQuery,
+    
 } from '@mui/material';
 import {
     Menu as MenuIcon,
@@ -43,6 +47,7 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useNavigate } from 'react-router-dom';
 import { AdminContext } from '../contexts/AdminContext';
+// import { exportToExcel } from '../../server/config/excelConvertor';
 // Setup axios interceptors
 axios.interceptors.request.use((config) => {
     // Ensure requests include cookies
@@ -51,7 +56,7 @@ axios.interceptors.request.use((config) => {
 });
 
 axios.interceptors.response.use(
-    (response) => response,  
+    (response) => response,
     (error) => {
         if (error.response?.status === 401) {
             // Handle unauthorized error by redirecting to the login page
@@ -141,7 +146,6 @@ const AdminDashboard = () => {
             }
 
             const data = await response.json();
-            console.log(data);
             setAdmins(Array.isArray(data) ? data : [data]); // Ensure admins is an array
         } catch (err) {
             setError(err.message || 'Failed to fetch admins'); // Set error message
@@ -189,12 +193,12 @@ const AdminDashboard = () => {
                 setError('Please fill all required fields');
                 return;
             }
-    
+
             setLoading(true);
             const formattedDate = dayjs(examForm.examDate).format('YYYY-MM-DD');
-    
-            const response = await fetch('http://localhost:3000/admin/createExam', {
-                method: 'POST',
+
+            const response = await fetch('http://localhost:3000/admin/examConfig', {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -204,28 +208,26 @@ const AdminDashboard = () => {
                 }),
                 credentials: 'include',
             });
-    
+
             if (!response.ok) {
                 throw new Error('Failed to create exam');
             }
-    
-            const newExam = await response.json(); // Assuming the response returns the created exam object
 
-            console.log(newExam)
-            // Update the exams state with the new exam
-            setExams((prevExams) => [...prevExams, newExam]);
-    
-            // Close the dialog and reset the form
-            setDialogOpen(false);
-            setExamForm({ examTitle: '', examDate: null, description: '' });
-            setError('');
+            alert('Exam updated successfully.');
+            const data = await response.json();
+
+            if (data) {
+                await fetchExams();
+                setDialogOpen(false);
+                setExamForm({ examTitle: '', examDate: null, description: '' });
+                setError('');
+            }
         } catch (error) {
             setError(error.message || 'Failed to create exam');
         } finally {
             setLoading(false);
         }
     };
-    
 
     const handleLogout = () => {
         localStorage.removeItem('token');
@@ -262,11 +264,11 @@ const AdminDashboard = () => {
             field: 'isApproved',
             headerName: 'Admin',
             flex: 1,
-            renderCell: (params) => (params.row.isApproved ? 'Yes' : 'No'),
+            renderCell: (params) => (params.row.isAdmin ? 'Yes' : 'No'),
         },
         { field: 'email', headerName: 'Email', flex: 1 },
-         
-    ];
+        
+      ];
 
     const redTheme = createTheme({
         palette: {
@@ -387,65 +389,82 @@ const AdminDashboard = () => {
                     {activeSection === 'students' && (
                         <Button
                             variant="contained"
-                            // onClick={() => setDialogOpen(true)}
+                            // onClick={}
                             sx={{ mb: 2 }}
                             startIcon={<AssignmentIcon />}
                         >
                             <ExportButton />
                         </Button>
                     )}
+                    <Box sx={{ height: 'calc(100vh - 180px)', width: '100%' }}>
+                        <DataGrid
+                            rows={
+                                activeSection === 'exams'
+                                    ? exams
+                                    : activeSection === 'admins'
+                                      ? admins
+                                      : students
+                            }
+                            columns={
+                                activeSection === 'exams'
+                                    ? examColumns
+                                    : activeSection === 'admins'
+                                      ? adminColumns
+                                      : studentColumns
+                            }
+                            pageSize={5}
+                            rowsPerPageOptions={[5]}
+                            getRowId={(row) =>
+                                row._id || row.studentId || row.adminId
+                            }
+                            loading={loading}
+                            sx={{
+                                boxShadow: 2,
+                                border: 2,
+                                borderColor: 'primary.light',
+                                '& .MuiDataGrid-cell:hover': {
+                                    color: 'primary.main',
+                                },
+                            }}
+                        />
+                    </Box>
 
-                    {activeSection === 'createUser' && <Signup />}
-
-                    {activeSection !== 'createUser' && (
-                        <Box sx={{ height: 'calc(100vh - 180px)', width: '100%' }}>
-                            <DataGrid
-                                rows={
-                                    activeSection === 'exams'
-                                        ? exams
-                                        : activeSection === 'admins'
-                                        ? admins
-                                        : students
-                                }
-                                columns={
-                                    activeSection === 'exams'
-                                        ? examColumns
-                                        : activeSection === 'admins'
-                                        ? adminColumns
-                                        : studentColumns
-                                }
-                                pageSize={5}
-                                rowsPerPageOptions={[5]}
-                                getRowId={(row) => row._id || row.studentId || row.adminId}
-                                loading={loading}
-                                sx={{
-                                    boxShadow: 2,
-                                    border: 2,
-                                    borderColor: 'primary.light',
-                                    '& .MuiDataGrid-cell:hover': {
-                                        color: 'primary.main',
-                                    },
-                                }}
-                            />
-                        </Box>
-                    )}
-
-                    <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+                    <Dialog
+                        open={dialogOpen}
+                        onClose={() => setDialogOpen(false)}
+                    >
                         <DialogTitle>Create New Exam</DialogTitle>
                         <DialogContent>
-                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                }}
+                            >
                                 <TextField
                                     label="Exam Title"
                                     value={examForm.examTitle}
-                                    onChange={(e) => setExamForm({ ...examForm, examTitle: e.target.value })}
+                                    onChange={(e) =>
+                                        setExamForm({
+                                            ...examForm,
+                                            examTitle: e.target.value,
+                                        })
+                                    }
                                     fullWidth
                                     margin="normal"
                                 />
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <LocalizationProvider
+                                    dateAdapter={AdapterDayjs}
+                                >
                                     <DatePicker
                                         label="Exam Date"
                                         value={examForm.examDate}
-                                        onChange={(date) => setExamForm({ ...examForm, examDate: date })}
+                                        onChange={(date) =>
+                                            setExamForm({
+                                                ...examForm,
+                                                examDate: date,
+                                            })
+                                        }
                                         fullWidth
                                         margin="normal"
                                     />
@@ -453,7 +472,12 @@ const AdminDashboard = () => {
                                 <TextField
                                     label="Description"
                                     value={examForm.description}
-                                    onChange={(e) => setExamForm({ ...examForm, description: e.target.value })}
+                                    onChange={(e) =>
+                                        setExamForm({
+                                            ...examForm,
+                                            description: e.target.value,
+                                        })
+                                    }
                                     fullWidth
                                     margin="normal"
                                 />
@@ -474,8 +498,15 @@ const AdminDashboard = () => {
                     </Dialog>
 
                     {error && (
-                        <Snackbar open={Boolean(error)} autoHideDuration={6000} onClose={() => setError('')}>
-                            <Alert onClose={() => setError('')} severity="error">
+                        <Snackbar
+                            open={Boolean(error)}
+                            autoHideDuration={6000}
+                            onClose={() => setError('')}
+                        >
+                            <Alert
+                                onClose={() => setError('')}
+                                severity="error"
+                            >
                                 {error}
                             </Alert>
                         </Snackbar>
