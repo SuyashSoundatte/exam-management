@@ -91,6 +91,11 @@ const registerAdmin = async (req, res) => {
 
         await newAdmin.save();
 
+        let sub = `Exam-Management access approval`
+        let text = `${username} you approval from superadmin confirmed! this is your email: ${email} password: ${password}`
+
+        sendEmail(email, sub, text);
+
         res.status(201).json({
             message: 'Admin registered successfully, approvel pending by super admin',
             admin: newAdmin,
