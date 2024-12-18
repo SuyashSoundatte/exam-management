@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { AdminPanelSettings } from '@mui/icons-material';
-import Signup from './Signup'; // Import the Signup component
+import Signup from './SignUp'; // Import the Signup component
 
 import axios from 'axios';
 import dayjs from 'dayjs';

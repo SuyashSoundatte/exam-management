@@ -4,6 +4,9 @@ const { allocateSeats } = require('../config/seatAllocator');
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const { jsPDF } = require('jspdf');
+
+const sendEmail = require("../config/sendEmail");
+
 const registerStudent = async (req, res) => {
     try {
         const {
@@ -58,6 +61,10 @@ const registerStudent = async (req, res) => {
         await allocateSeats([newStudent]);
 
         await newStudent.save();
+        let sub = `Dkte Entrance Exam`
+        let text = `${firstName} ${middleName} ${lastName} your registration to exam successfully`
+
+        sendEmail(email, sub, text);
 
         res.status(201).json({
             message: 'Student registered successfully for the exam',
@@ -70,6 +77,7 @@ const registerStudent = async (req, res) => {
         });
     }
 };
+
 const viewResult = async (req, res) => {
     const { seatNumber, dob } = req.body;
 
