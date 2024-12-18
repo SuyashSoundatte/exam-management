@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import StudentPage2 from "./StudentPage2";
-import SuccessWindow from "../components/successfullyWindow";
+// import SuccessWindow from "../components/successfullyWindow";
 import './style.css'
 
 const Student = () => {
   const [cities, setCities] = useState([]);
   const [schools, setSchools] = useState([]);
   const [error, setError] = useState(null);
-  const [isSuccessWindow, setSuccessWindow] = useState(false);
+  // const [isSuccessWindow, setSuccessWindow] = useState(false);
 
-  const openSuccessWindow = ()=> {
-    setSuccessWindow(true);
-  };
+  // const openSuccessWindow = ()=> {
+  //   setSuccessWindow(true);
+  // };
 
-  const closeSuccessWindow = () => { 
-    setSuccessWindow(false);
-  };
+  // const closeSuccessWindow = () => { 
+  //   setSuccessWindow(false);
+  // };
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -98,40 +98,33 @@ const Student = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
+    // Manually format date to dd-mm-yyyy
+    const formattedDateOfBirth = new Date(formData.dateOfBirth)
+      .toLocaleDateString("en-GB")  // This will give dd/mm/yyyy format
+      .replace(/\//g, "-");  // Replace slashes with dashes to match dd-mm-yyyy
+  
+    const updatedFormData = {
+      ...formData,
+      dateOfBirth: formattedDateOfBirth,  // Set the formatted date of birth
+    };
+  
     try {
-      const formattedDateOfBirth = new Date(formData.dateOfBirth)
-        .toLocaleDateString("en-GB")
-        .replace(/\//g, "-");
-  
-      const updatedFormData = {
-        ...formData,
-        dateOfBirth: formattedDateOfBirth,
-      };
-  
       const response = await fetch("http://localhost:3000/student/register", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedFormData),
       });
-  
-      console.log(updatedFormData.dateOfBirth);
   
       if (!response.ok) {
         const errorData = await response.json();
         alert("Can not Register !!")
         throw new Error(errorData.message || "Error registering student");
       }
-      
-      const data = await response.json();
-      console.log("Registration Successful: ", data.message);
-      alert("Student Registered Successfully");
-      toast("Student Registered Successfully"); 
-      
-      // openSuccessWindow();
   
-      // Reset the form
+      const data = await response.json();
+      toast.success("Student Registered Successfully");
+  
+      // Reset form
       setFormData({
         firstName: "",
         middleName: "",
@@ -147,11 +140,13 @@ const Student = () => {
         board: "",
         medium: "",
       });
-    } catch (error) {
-      console.error("Error during registration: ", error.message);  
-      toast.error("Error: " + error.message); // Notify the user on error
+    } catch (err) {
+      console.error("Registration Error:", err.message);
+      toast.error(`Error: ${err.message}`);
     }
   };
+  
+  
   
   return (
     <div className="main bg-[#f0f0f0] h-full w-full">
@@ -400,11 +395,6 @@ const Student = () => {
       <div className="page2 h-screen w-full bg-[#F0F0F0]">
         <StudentPage2/>
       </div>
-      {isSuccessWindow && (
-      <SuccessWindow 
-        closeSuccessWindow={closeSuccessWindow} 
-      />
-      )}
 
     </div>
     

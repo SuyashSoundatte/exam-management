@@ -22,7 +22,7 @@ const SearchCity = () => {
     setCityNotFound(false); // Reset cityNotFound state before searching
 
     try {
-      const response = await fetch(`http://localhost:3000/admin/allCities?=${term}`);git
+      const response = await fetch(`http://localhost:3000/admin/allCities?=${term}`);
       if (!response.ok) {
         throw new Error('Failed to fetch cities');
       }

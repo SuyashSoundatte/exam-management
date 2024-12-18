@@ -1,82 +1,16 @@
-
-const userSchema = new mongoose.Schema({
-    firstName: {
-        type: String,
-        required: true,
-    },
-    middleName: {
-        type: String,
-    },
-    lastName: {
-        type: String,
-        required: true,
-    },
-    gender: {
-        type: String,
-        enum: ['Male', 'Female', 'Other'],
-        required: true,
-    },
-    dateOfBirth: {
-        type: String,
-        required: true,
-        match:/^\d{2}-\d{2}-\d{4}$/,
-    },
-    address: {
-        type: String,
-        required: true,
-    },
-    cityOrVillage: {
-        type: String,
-        required: true,
-    },
-    mobileNumber: {
-        type: String,
-        required: true,
-        match: /^\d{10}$/
-    },
-    whatsappNumber: {
-        type: String,
-        required: true,
-        match: /^\d{10}$/
-    },
-    email:{
-        type:String,
-        required:true,
-        unique:true
-    },
-    schoolName: {
-        type: String,
-        required: true,
-    },
-    board: {
-        type: String,
-        enum: ['SSC', 'CBSE', 'ICSE', 'OLYMPIAD'],
-        required: true,
-    },
-    medium: {
-        type: String,
-        enum:['Marathi', 'Semi-English', 'English'],
-        required: true,
-    },
-    seatNumber:{
-        type: String,
-        unique: true 
-    },
-    result:{ 
-        type: String, 
-        default: null 
-    },
-});
-
-
-const getAllStudents = async (req, res) => {
-  try {
-    const students = await Student.find();
-    res.status(200).json({ students });
-  } catch (error) {
-    console.log("Error: ", error);
-    return res.status(500).json({ message: "Internal server error!" });
-  }
-};
-
-
+<div className="form-group mb-4 w-full">
+              <select
+                name="cityOrVillage"
+                value={formData.cityOrVillage}
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
+              >
+                <option value="">City</option>
+                {cities.map((city) => (
+                  <option key={city._id} value={city.cityName}>
+                    {city.cityName}
+                  </option>
+                ))}
+              </select>
+            </div>   
