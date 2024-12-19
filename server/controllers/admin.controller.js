@@ -398,8 +398,21 @@ const createExam = async (req, res) => {
 };
 
 
+const updateStudentMarks = (req, res)=>{
+  const { studentId, marks } = req.body;
 
-
+  Student.findByIdAndUpdate(studentId, { marks }, { new: true })
+    .then(updatedStudent => {
+      if (!updatedStudent) {
+        return res.status(404).json({ message: 'Student not found' });
+      }
+      res.json(updatedStudent);
+    })
+    .catch(error => {
+      console.error('Error updating student marks:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    });
+}
 
 
 module.exports = {
@@ -418,5 +431,6 @@ module.exports = {
   getAnnouncements,
   approveSuperAdmin,
   getDataByYear,
-  createExam
+  createExam,
+  updateStudentMarks
 }
