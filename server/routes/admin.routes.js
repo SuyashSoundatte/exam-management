@@ -17,6 +17,7 @@ const {
     getAllColleges,
     getAllCities,
     getDataByYear,
+    getStudentByExamTitle,
 } = require("../controllers/admin.controller");
 
 const {
@@ -47,6 +48,7 @@ router.get("/isSuperAdmin", authenticateSuperAdmin, (req, res) => {
 });
 
 router.get('/getDataByYear', adminAuth, getDataByYear);
+router.get('/getStudentByExamTitle', adminAuth, getStudentByExamTitle);
 
 router.patch("/approve", authenticateSuperAdmin, approveAdmin);
 
