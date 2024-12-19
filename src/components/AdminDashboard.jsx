@@ -6,7 +6,7 @@ import Signup from './SignUp'; // Import the Signup component
 import axios from 'axios';
 import dayjs from 'dayjs';
 import Cookies from 'js-cookie';
-import ExportButton from "./ExportExcel";
+// import ExportButton from "./ExportCsv";
 import {
     Box,
     Button,
@@ -190,12 +190,12 @@ const AdminDashboard = () => {
                 setError('Please fill all required fields');
                 return;
             }
-    
+
             setLoading(true);
             const formattedDate = dayjs(examForm.examDate).format('YYYY-MM-DD');
-    
-            const response = await fetch('http://localhost:3000/admin/createExam', {
-                method: 'POST',
+
+            const response = await fetch('http://localhost:3000/admin/examConfig', {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -205,28 +205,26 @@ const AdminDashboard = () => {
                 }),
                 credentials: 'include',
             });
-    
+
             if (!response.ok) {
                 throw new Error('Failed to create exam');
             }
-    
-            const newExam = await response.json(); // Assuming the response returns the created exam object
 
-            console.log(newExam)
-            // Update the exams state with the new exam
-            setExams((prevExams) => [...prevExams, newExam]);
-    
-            // Close the dialog and reset the form
-            setDialogOpen(false);
-            setExamForm({ examTitle: '', examDate: null, description: '' });
-            setError('');
+            alert('Exam updated successfully.');
+            const data = await response.json();
+
+            if (data) {
+                await fetchExams();
+                setDialogOpen(false);
+                setExamForm({ examTitle: '', examDate: null, description: '' });
+                setError('');
+            }
         } catch (error) {
             setError(error.message || 'Failed to create exam');
         } finally {
             setLoading(false);
         }
     };
-    
 
     const handleLogout = () => {
         localStorage.removeItem('token');

@@ -14,20 +14,20 @@ const   exportToExcel = async (req, res) => {
 
     const formattedData = users.map(user => ({
       firstName: user.firstName,
-      // middleName: user.middleName,
-      // lastName: user.lastName,
-      // gender: user.gender,
-      // dateOfBirth: user.dateOfBirth,
-      // address: user.address,
-      // cityOrVillage: user.cityOrVillage,
-      // mobileNumber: user.mobileNumber,
+      middleName: user.middleName,
+      lastName: user.lastName,
+      gender: user.gender,
+      dateOfBirth: user.dateOfBirth,
+      address: user.address,
+      cityOrVillage: user.cityOrVillage,
+      mobileNumber: user.mobileNumber,
       whatsappNumber: user.whatsappNumber,
-      // email: user.email,
-      // schoolName: user.schoolName,
-      // board: user.board,
-      // medium: user.medium,
-      // seatNumber: user.seatNumber,
-      // result: user.result
+      email: user.email,
+      schoolName: user.schoolName,
+      board: user.board,
+      medium: user.medium,
+      seatNumber: user.seatNumber,
+      result: user.result
     }));
 
     const workbook = XLSX.utils.book_new();

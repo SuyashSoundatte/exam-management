@@ -253,7 +253,7 @@ const updateExamConfig = async (req, res) => {
 
 const getExamConfig = async (req, res) => {
   try {
-    const config = await ExamConfig.find({});
+    const config = await ExamConfig.findOne({});
     res.status(200).json(config);
   } catch (error) {
     res.status(500).json({ message: 'Error retrieving exam configuration.', error: error.message });
@@ -339,36 +339,6 @@ const getDataByYear = async (req, res)=>{
   }
 } 
 
-const createExam = async (req, res) => {
-  try {
-    const { examTitle, examDate, examTime, description } = req.body;
-
-    if (!examTitle || !examDate || !examTime) {
-      return res.status(400).json({ message: 'Exam Title, Exam Date, and Exam Time are required.' });
-    }
-    const newExamConfig = new ExamConfig({
-      examTitle,
-      examDate,
-      examTime,
-      description: description || '', 
-    });
-
-    await newExamConfig.save();
-
-    res.status(201).json({
-      message: 'Exam created successfully!',
-      config: newExamConfig,
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Error creating exam. Please try again later.' });
-  }
-};
-
-
-
-
-
 
 module.exports = {
   addCollege,
@@ -385,6 +355,5 @@ module.exports = {
   getAllColleges,
   getAnnouncements,
   approveSuperAdmin,
-  getDataByYear,
-  createExam
+  getDataByYear
 }
