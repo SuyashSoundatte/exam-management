@@ -4,6 +4,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import html2pdf from 'html2pdf.js';
 import { useNavigate } from 'react-router-dom';
 import { IoMdClose } from "react-icons/io";
+import { toPng } from 'html-to-image';
 
 const ExamHallTicket = () => {
   const [showDialog, setShowDialog] = useState(true);
@@ -78,8 +79,8 @@ const ExamHallTicket = () => {
         }
         const data = await response.json();
         setStudentData(data);
-        setShowDialog(false);
         toast.success('Verification successful!');
+        handleDownloadPDF();
      
     } catch (err) {
       setError(err.message);
@@ -87,25 +88,71 @@ const ExamHallTicket = () => {
     }
   };
 
+  // const handleDownloadPDF = () => {
+  //   const element = document.getElementById('hall-ticket');
+  //   const opts = {
+  //     filename: `hall-ticket-${studentData.seatNumber}.pdf`,
+  //     image: { type: 'jpeg', quality: 1 },
+  //     html2canvas: { scale: 2 },
+  //     jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+  //   };
+
+  //   toast.promise(
+  //     html2pdf().set(opts).from(element).save(),
+  //     {
+  //       loading: 'Generating PDF...',
+  //       success: 'Hall ticket downloaded successfully!',
+  //       error: 'Failed to download hall ticket'
+  //     }
+  //   );
+  // };
+
+  
   const handleDownloadPDF = () => {
     const element = document.getElementById('hall-ticket');
-    const opts = {
-      filename: `hall-ticket-${studentData.seatNumber}.pdf`,
-      image: { type: 'jpeg', quality: 1 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-    };
-
+  
     toast.promise(
-      html2pdf().set(opts).from(element).save(),
+      toPng(element, {
+        quality: 1,
+        pixelRatio: 2, // Similar to scale in html2canvas
+      })
+        .then(dataUrl => {
+          // Create an image element to display the generated image
+          const img = new Image();
+          img.src = dataUrl;
+          
+          // Create a modal or container to show the image
+          const modal = document.createElement('div');
+          modal.style.position = 'fixed';
+          modal.style.top = '0';
+          modal.style.left = '0';
+          modal.style.width = '100%';
+          modal.style.height = '100%';
+          modal.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+          modal.style.display = 'flex';
+          modal.style.justifyContent = 'center';
+          modal.style.alignItems = 'center';
+          modal.style.zIndex = '1000';
+  
+          // Add click event to close modal
+          modal.onclick = () => modal.remove();
+  
+          // Style the image
+          img.style.maxWidth = '90%';
+          img.style.maxHeight = '90%';
+          img.style.objectFit = 'contain';
+  
+          modal.appendChild(img);
+          document.body.appendChild(modal);
+        }),
       {
-        loading: 'Generating PDF...',
-        success: 'Hall ticket downloaded successfully!',
-        error: 'Failed to download hall ticket'
+        loading: 'Generating image...',
+        success: 'Hall ticket image generated!',
+        error: 'Failed to generate image'
       }
     );
   };
-
+  
   return (
     <div className="min-h-screen bg-gray-100">
       <Toaster position="top-right" />
