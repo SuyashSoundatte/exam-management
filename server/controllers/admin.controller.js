@@ -371,49 +371,44 @@ const getDataByYear = async (req, res)=>{
   }
 } 
 
-const createExam = async (req, res) => {
+
+const getStudentsByExamTitle = async (req, res) => {
+  const { examTitle } = req.query;
+
   try {
-    const { examTitle, examDate, examTime, description } = req.body;
+      const exam = await ExamConfig.findOne({ examTitle });
 
-    if (!examTitle || !examDate || !examTime) {
-      return res.status(400).json({ message: 'Exam Title, Exam Date, and Exam Time are required.' });
-    }
-    const newExamConfig = new ExamConfig({
-      examTitle,
-      examDate,
-      examTime,
-      description: description || '', 
-    });
+      if (!exam) {
+          return res.status(404).json({
+              success: false,
+              message: `Exam with title "${examTitle}" not found.`,
+          });
+      }
 
-    await newExamConfig.save();
+      const students = await User.find({ exam: exam._id }).select(
+          'firstName lastName email mobileNumber gender schoolName'
+      );
 
-    res.status(201).json({
-      message: 'Exam created successfully!',
-      config: newExamConfig,
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Error creating exam. Please try again later.' });
+      if (students.length === 0) {
+          return res.status(404).json({
+              success: false,
+              message: `No students found for the exam "${examTitle}".`,
+          });
+      }
+
+      res.status(200).json({
+          success: true,
+          examTitle: examTitle,
+          students,
+      });
+  } catch (error) {
+      console.error('Error fetching students by exam title:', error);
+      res.status(500).json({
+          success: false,
+          message: 'Server error while fetching students.',
+      });
   }
 };
-
-
-const updateStudentMarks = (req, res)=>{
-  const { studentId, marks } = req.body;
-
-  Student.findByIdAndUpdate(studentId, { marks }, { new: true })
-    .then(updatedStudent => {
-      if (!updatedStudent) {
-        return res.status(404).json({ message: 'Student not found' });
-      }
-      res.json(updatedStudent);
-    })
-    .catch(error => {
-      console.error('Error updating student marks:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    });
-}
-
 
 module.exports = {
   addCollege,
@@ -431,6 +426,5 @@ module.exports = {
   getAnnouncements,
   approveSuperAdmin,
   getDataByYear,
-  createExam,
-  updateStudentMarks
+  getStudentsByExamTitle
 }
