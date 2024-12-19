@@ -16,11 +16,7 @@ const announcementSchema = new mongoose.Schema({
   createdBy: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: "Admin" 
-  },
-  createdAt: { 
-    type: Date, 
-    default: Date.now()
-  },
+  }
 }, {timestamps: true});
 
 const Announcement = mongoose.model("Announcement", announcementSchema);
