@@ -426,5 +426,5 @@ module.exports = {
   getAnnouncements,
   approveSuperAdmin,
   getDataByYear,
-  getStudentByExamTitle
+  getStudentsByExamTitle
 }
