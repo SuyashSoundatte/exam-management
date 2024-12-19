@@ -318,7 +318,7 @@ const getAnnouncements = async (req, res) => {
 };
 
 const getDataByYear = async (req, res)=>{
-  const { year } = req.body;
+  const { year } = req.query;
   console.log(year);
   if (!year || isNaN(year)) {
     return res.status(400).json({ message: 'Invalid or missing year' });

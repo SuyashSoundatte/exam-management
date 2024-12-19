@@ -33,7 +33,7 @@ function SignUp() {
   return (
     <div className="h-screen flex items-start justify-center pt-20">
       <div className="bg-gray-100 p-8 rounded-lg shadow-lg w-full max-w-sm">
-        <div className="text-2xl font-bold mb-6 text-center">Create New User</div>
+        <div className="text-2xl font-bold mb-6 text-center">Create New Admin</div>
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">
             User Name
@@ -74,7 +74,7 @@ function SignUp() {
           onClick={handleSignUp}
           className="w-full py-2 px-4 bg-red-500 text-white font-bold rounded-md hover:bg-red-600 focus:outline-none"
         >
-          Sign Up
+          Create  Admin
         </button>
         
       </div>
