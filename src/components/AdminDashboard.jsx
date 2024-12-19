@@ -6,7 +6,8 @@ import Signup from './SignUp'; // Import the Signup component
 import axios from 'axios';
 import dayjs from 'dayjs';
 import Cookies from 'js-cookie';
-// import ExportButton from "./ExportCsv";
+import ExportButton from "./ExportExcel";
+import UpdateStudentMarks from './UpdateStudentsMarks';
 import {
     Box,
     Button,
@@ -44,6 +45,7 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useNavigate } from 'react-router-dom';
 import { AdminContext } from '../contexts/AdminContext';
+import { header } from 'server/reply';
 // import { exportToExcel } from '../../server/config/excelConvertor';
 // Setup axios interceptors
 axios.interceptors.request.use((config) => {
@@ -70,6 +72,18 @@ const AdminDashboard = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const drawerWidth = 240;
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    
+      // Function to open the popup
+      const openPopup = () => {
+        setIsPopupOpen(true);
+      };
+    
+      // Function to close the popup
+      const closePopup = () => {
+        setIsPopupOpen(false);
+      };
+    
 
     const [sidebarOpen, setSidebarOpen] = useState(!isMobile);
     const [students, setStudents] = useState([]);
@@ -247,6 +261,7 @@ const AdminDashboard = () => {
         { field: 'mobileNumber', headerName: 'Phone Number', flex: 1 },
         { field: 'whatsappNumber', headerName: 'WA Number', flex: 1 },
         { field: 'dateOfBirth', headerName: 'DOB', flex: 1 },
+        { field :'result', headerName : 'Marks', flex: 1}
     ];
 
     const adminColumns = [
@@ -385,6 +400,19 @@ const AdminDashboard = () => {
 
                     {activeSection === 'students' && (
                         <Button
+                        variant="contained"
+                        onClick={() => {
+                            openPopup();
+                          }}
+                        sx={{ mb: 2, mr:4}}
+                        startIcon={<AssignmentIcon />}
+                    >
+                        Enter Marks
+                    </Button>
+                    )}
+
+                    {activeSection === 'students' && (
+                        <Button
                             variant="contained"
                             // onClick={}
                             sx={{ mb: 2 }}
@@ -513,6 +541,7 @@ const AdminDashboard = () => {
                     </Snackbar>
                 </Box>
             </Box>
+            {isPopupOpen && <UpdateStudentMarks closePopup={closePopup} />}
         </ThemeProvider>
     );
 };

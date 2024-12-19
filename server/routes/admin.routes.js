@@ -61,7 +61,7 @@ router.post("/announcements", authenticateSuperAdmin, createAnnouncement);
 router.get("/announcements", adminAuth, getAnnouncements);
 
 //TODO: Create the controllers
-// router.post("/submitMarks", adminAuth, updateStudentMarks); //using seat number, maybe with subject?
+router.post("/submitMarks", adminAuth, updateStudentMarks); //using seat number, maybe with subject?
 
 router.get("/exportToExcel", adminAuth, exportToExcel);
 
