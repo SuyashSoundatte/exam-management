@@ -59,43 +59,38 @@ const ExamHallTicket = () => {
     e.preventDefault();
     setLoading(true);
     const email = e.target.email.value;
-    const dob = e.target.dob.value;
-
+    let dob = e.target.dob.value;
+    const [year, month, day] = dob.split("-"); 
+     dob = `${day}-${month}-${year}`;
+     console.log("dob : ", dob);
     try {
-      // Sample verification logic
-      if (email === 'neerajsurnis@gmail.com' && dob === '2004-01-04') {
-        // Mock student data
-        const sampleData = {
-          serialNo: '2024-NS-123',
-          hallTicketNo: '24EXAM1',
-          registrationNo: 'REG2024001',
-          name: 'Neeraj Surnis',
-          course: 'B.Tech Computer Science',
-          testCenter: 'DKTE College',
-          testDate: '2024-01-15',
-          reportingTime: '09:00 AM',
-          examTime: '10:00 AM - 01:00 PM',
-          roomNo: '301',
-          seatNo: 'A-123'
-        };
-        setStudentData(sampleData);
+        const response = await fetch("http://localhost:3000/student/getHallTicketInfo", 
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email, dob }),
+            }
+        );
+        if(!response.ok){
+          throw new Error("Invalid student details");
+        }
+        const data = await response.json();
+        setStudentData(data);
         setShowDialog(false);
         toast.success('Verification successful!');
-      } else {
-        throw new Error('Invalid credentials');
-      }
+     
     } catch (err) {
       setError(err.message);
       toast.error(err.message);
-    } finally {
-      setLoading(false);
     }
   };
 
   const handleDownloadPDF = () => {
     const element = document.getElementById('hall-ticket');
     const opts = {
-      filename: `hall-ticket-${studentData.hallTicketNo}.pdf`,
+      filename: `hall-ticket-${studentData.seatNumber}.pdf`,
       image: { type: 'jpeg', quality: 1 },
       html2canvas: { scale: 2 },
       jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
@@ -232,12 +227,11 @@ const ExamHallTicket = () => {
                   <div className="mb-6 bg-gray-50 p-4 rounded-lg">
                     <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b">Student Details</h3>
                     <div className="grid grid-cols-2 gap-4">
-                      <p className="text-sm"><span className="font-semibold">Hall Ticket No:</span> {studentData.hallTicketNo}</p>
-                      <p className="text-sm"><span className="font-semibold">Registration No:</span> {studentData.registrationNo}</p>
-                      <p className="text-sm"><span className="font-semibold">Student Name:</span> {studentData.name}</p>
+                      <p className="text-sm"><span className="font-semibold">Seat Number:</span> {studentData.seatNumber}</p>
+                      {/* <p className="text-sm"><span className="font-semibold">Registration No:</span> {studentData.registrationNo}</p> */}
+                      <p className="text-sm"><span className="font-semibold">Student Name:</span> {studentData.studentName}</p>
                       <p className="text-sm"><span className="font-semibold">Course:</span> {studentData.course}</p>
                       <p className="text-sm"><span className="font-semibold">Test Center:</span> {studentData.testCenter}</p>
-                      <p className="text-sm"><span className="font-semibold">Test Date:</span> {studentData.testDate}</p>
                     </div>
                   </div>
 
@@ -245,10 +239,11 @@ const ExamHallTicket = () => {
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b">Examination Details</h3>
                     <div className="grid grid-cols-2 gap-4">
-                      <p className="text-sm"><span className="font-semibold">Reporting Time:</span> {studentData.reportingTime}</p>
+                    <p className="text-sm"><span className="font-semibold">Exam Date:</span> {studentData.examDate}</p>
+                      {/* <p className="text-sm"><span className="font-semibold">Reporting Time:</span> {studentData.reportingTime}</p> */}
                       <p className="text-sm"><span className="font-semibold">Exam Time:</span> {studentData.examTime}</p>
-                      <p className="text-sm"><span className="font-semibold">Room No:</span> {studentData.roomNo}</p>
-                      <p className="text-sm"><span className="font-semibold">Seat No:</span> {studentData.seatNo}</p>
+                      {/* <p className="text-sm"><span className="font-semibold">Room No:</span> {studentData.roomNo}</p> */}
+                      {/* <p className="text-sm"><span className="font-semibold">Seat No:</span> {studentData.seatNo}</p> */}
                     </div>
                   </div>
                 </div>
@@ -256,13 +251,11 @@ const ExamHallTicket = () => {
                 {/* Photo and QR Section */}
                 <div className="flex flex-col items-center gap-4">
                   <div className="w-32 h-40  flex items-center justify-center border">
-                    <span >
-                      <img src={profile} alt=""  className='h-[150px]'  />
-                    </span>
+                    <span className='text-gray-500'>Photo</span>
                   </div>
-                  <div className="w-32 h-32 bg-gray-200 flex items-center justify-center border">
+                  {/* <div className="w-32 h-32 bg-gray-200 flex items-center justify-center border">
                     <span className="text-gray-500">QR Code</span>
-                  </div>
+                  </div> */}
                 </div>
               </div>
 

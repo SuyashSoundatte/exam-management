@@ -212,10 +212,45 @@ const generateHallTicket = async (req, res) => {
         res.status(500).send('An error occurred');
     }
 };
+
+const getHallTicketInfo = async (req, res) => {
+    try {
+        const { email, dob } = req.body;
+        const student = await Student.findOne({email, dateOfBirth: dob });
+        if (!student) {
+            return res.status(400).json({
+                message: 'invalid student details',
+            });
+        }
+
+        const { seatNumber, firstName, middleName, lastName } = student;
+        const testCenter = 'DKTE College';
+        const course = 'B.Tech Computer Science';
+        const studentName = `${firstName} ${middleName} ${lastName}`;
+        const exam = await ExamConfig.findOne();
+        const { examTitle, examDate } = exam;
+        const examTime = '10:00 AM';
+        
+        return res.status(200).json({
+            seatNumber,
+            studentName,
+            course,
+            testCenter,
+            examTitle,
+            examDate,
+            examTime,
+        });
+    } catch (err) {
+        return res.status(500).json({
+            message: 'Internal server error',
+        });
+    }
+};
 module.exports = {
     registerStudent,
     viewResult,
     getAllStudents,
     updateStudentMarks,
     generateHallTicket,
+    getHallTicketInfo,
 };

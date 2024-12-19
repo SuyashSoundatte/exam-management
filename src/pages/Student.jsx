@@ -117,6 +117,7 @@ const Student = () => {
   
       if (!response.ok) {
         const errorData = await response.json();
+        alert("Can not Register !!")
         throw new Error(errorData.message || "Error registering student");
       }
   
