@@ -426,6 +426,32 @@ const updateStudentMarks = (req, res)=>{
     });
 }
 
+const createExam = async (req, res) => {
+  try {
+    const { examTitle, examDate, examTime, description } = req.body;
+
+    if (!examTitle || !examDate || !examTime) {
+      return res.status(400).json({ message: 'Exam Title, Exam Date, and Exam Time are required.' });
+    }
+    const newExamConfig = new ExamConfig({
+      examTitle,
+      examDate,
+      examTime,
+      description: description || '', 
+    });
+
+    await newExamConfig.save();
+
+    res.status(201).json({
+      message: 'Exam created successfully!',
+      config: newExamConfig,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error creating exam. Please try again later.' });
+  }
+};
+
 module.exports = {
   addCollege,
   addCity,
@@ -443,5 +469,6 @@ module.exports = {
   approveSuperAdmin,
   getDataByYear,
   getStudentsByExamTitle,
-  updateStudentMarks
+  updateStudentMarks,
+  createExam
 }
