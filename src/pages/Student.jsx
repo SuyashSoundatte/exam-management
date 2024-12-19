@@ -258,6 +258,7 @@ const Student = () => {
                 required
                 className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
               >
+                <option value="">City</option>
                 <option value="">Miraj</option>
                 <option value="Male">Sangli</option>
                 <option value="Female">Dubai</option>

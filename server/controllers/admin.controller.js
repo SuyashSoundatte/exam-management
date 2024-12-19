@@ -399,9 +399,9 @@ const createExam = async (req, res) => {
 
 
 const updateStudentMarks = (req, res)=>{
-  const { studentId, marks } = req.body;
+  const { studentId, result } = req.body;
 
-  Student.findByIdAndUpdate(studentId, { marks }, { new: true })
+  Student.findByIdAndUpdate(studentId, { result }, { new: true })
     .then(updatedStudent => {
       if (!updatedStudent) {
         return res.status(404).json({ message: 'Student not found' });
