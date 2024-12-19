@@ -44,6 +44,7 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useNavigate } from 'react-router-dom';
 import { AdminContext } from '../contexts/AdminContext';
+import { data } from 'autoprefixer';
 // import { exportToExcel } from '../../server/config/excelConvertor';
 // Setup axios interceptors
 axios.interceptors.request.use((config) => {
@@ -86,22 +87,35 @@ const AdminDashboard = () => {
     });
 
     const fetchStudents = useCallback(async () => {
-        try {
-            setLoading(true);
-            const response = await fetch('http://localhost:3000/student/allStudents');
-
-            if (!response.ok) {
-                throw new Error((await response.json()).message || 'Failed to fetch students');
-            }
-
-            const data = await response.json();
-            setStudents(data.students || []);
-        } catch (err) {
-            setError(err.message || 'Failed to fetch students'); // Set the error message
-        } finally {
-            setLoading(false);
+    try {
+        setLoading(true);
+        const response = await fetch('http://localhost:3000/student/allStudents');
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error("Error fetching students:", errorData);
+            throw new Error(errorData.message || 'Failed to fetch students');
         }
-    }, []);
+
+        const data = await response.json();
+        console.log("Students data received:", data); // Log the response
+        
+        const processedStudents = (data.students || []).map(student => ({
+            ...student,
+            result: student.result ?? 'Not Available', // Default to 'Not Available' if result is null or undefined
+        }));
+
+        setStudents(processedStudents); // Update the state
+    } catch (err) {
+        console.error("Error in fetchStudents:", err);
+        setError(err.message || 'Failed to fetch students');
+    } finally {
+        setLoading(false);
+    }
+}, []);
+
+    
+    
 
     const fetchExams = useCallback(async () => {
         try {
@@ -247,6 +261,7 @@ const AdminDashboard = () => {
         { field: 'mobileNumber', headerName: 'Phone Number', flex: 1 },
         { field: 'whatsappNumber', headerName: 'WA Number', flex: 1 },
         { field: 'dateOfBirth', headerName: 'DOB', flex: 1 },
+        { field : 'result', headerName: 'Result', flex: 1}
     ];
 
     const adminColumns = [
