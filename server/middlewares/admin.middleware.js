@@ -185,6 +185,18 @@ const validateAnnouncement = (req, res, next) => {
   next();
 };
 
+const resultSchema = Joi.object({
+  seatNumber: Joi.string().required(),
+  marks: Joi.number().required(),
+});
+
+const validateUpdateResult = (req, res, next)=>{
+  const { error } = resultSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
+  next();
+}
 module.exports = {
   adminAuth,
   cityAuth,
@@ -194,4 +206,5 @@ module.exports = {
   validateAnnouncement,
   validateExamConfig,
   loginValidation,
+  validateUpdateResult
 };

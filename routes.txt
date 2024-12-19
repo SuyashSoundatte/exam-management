@@ -28,9 +28,11 @@ put =>
 
 get =>
 ('/examConfig', adminAuth, getExamConfig); //done
+("/exportToExcel", adminAuth, exportToExcel)
 
 post =>
 ('/announcements', authenticateSuperAdmin, createAnnouncement);
+("/submitMarks", adminAuth, validateUpdateResult, updateStudentMarks);
 
 get =>
 ('/announcements', adminAuth, getAnnouncements);

@@ -17,6 +17,8 @@ const {
     getAllColleges,
     getAllCities,
     getDataByYear,
+    createExam,
+    updateStudentMarks
 } = require("../controllers/admin.controller");
 
 const {
@@ -26,6 +28,7 @@ const {
     adminAuth,
     authenticateSuperAdmin,
     loginValidation,
+    validateUpdateResult
 } = require("../middlewares/admin.middleware");
 
 router.get("/verifyToken", adminAuth, (req, res) => {
@@ -56,12 +59,13 @@ router.delete("/delete", authenticateSuperAdmin, deleteAdmin);
 
 router.put("/examConfig", authenticateSuperAdmin, updateExamConfig);
 router.get("/examConfig", adminAuth, getExamConfig);
+router.post("/createExam", adminAuth, createExam);
 
 router.post("/announcements", authenticateSuperAdmin, createAnnouncement);
 router.get("/announcements", adminAuth, getAnnouncements);
 
-//TODO: Create the controllers
-router.post("/submitMarks", adminAuth, updateStudentMarks); //using seat number, maybe with subject?
+
+router.post("/submitMarks", adminAuth, validateUpdateResult, updateStudentMarks);
 
 router.get("/exportToExcel", adminAuth, exportToExcel);
 
