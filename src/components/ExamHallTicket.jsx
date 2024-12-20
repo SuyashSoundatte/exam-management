@@ -17,6 +17,30 @@ const ExamHallTicket = () => {
   const [logoBase64, setLogoBase64] = useState("");
   const [profile, setProfile] = useState('');
 
+  // Add this useEffect hook to your component
+  useEffect(() => {
+    const preventDevTools = (e) => {
+      if (e.key === 'F12') {
+        e.preventDefault();
+      }
+      if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C' || e.key === 'U')) {
+        e.preventDefault();
+      }
+      if (e.ctrlKey && e.key === 'u') {
+        e.preventDefault();
+      }
+    };
+  
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+    
+    document.addEventListener('keydown', preventDevTools);
+  
+    return () => {
+      document.removeEventListener('contextmenu', (e) => e.preventDefault());
+      document.removeEventListener('keydown', preventDevTools);
+    };
+  }, []);
+  
   useEffect(() => {
     const token = localStorage.getItem('token');
     setIsLoggedIn(!!token);
@@ -80,6 +104,7 @@ const ExamHallTicket = () => {
         const data = await response.json();
         setStudentData(data);
         toast.success('Verification successful!');
+        setShowDialog(false);
         handleDownloadPDF();
      
     } catch (err) {
@@ -88,70 +113,70 @@ const ExamHallTicket = () => {
     }
   };
 
-  // const handleDownloadPDF = () => {
-  //   const element = document.getElementById('hall-ticket');
-  //   const opts = {
-  //     filename: `hall-ticket-${studentData.seatNumber}.pdf`,
-  //     image: { type: 'jpeg', quality: 1 },
-  //     html2canvas: { scale: 2 },
-  //     jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-  //   };
-
-  //   toast.promise(
-  //     html2pdf().set(opts).from(element).save(),
-  //     {
-  //       loading: 'Generating PDF...',
-  //       success: 'Hall ticket downloaded successfully!',
-  //       error: 'Failed to download hall ticket'
-  //     }
-  //   );
-  // };
-
-  
   const handleDownloadPDF = () => {
     const element = document.getElementById('hall-ticket');
-  
+    const opts = {
+      filename: `hall-ticket-${studentData.seatNumber}.pdf`,
+      image: { type: 'jpeg', quality: 1 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+    };
+
     toast.promise(
-      toPng(element, {
-        quality: 1,
-        pixelRatio: 2, // Similar to scale in html2canvas
-      })
-        .then(dataUrl => {
-          // Create an image element to display the generated image
-          const img = new Image();
-          img.src = dataUrl;
-          
-          // Create a modal or container to show the image
-          const modal = document.createElement('div');
-          modal.style.position = 'fixed';
-          modal.style.top = '0';
-          modal.style.left = '0';
-          modal.style.width = '100%';
-          modal.style.height = '100%';
-          modal.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-          modal.style.display = 'flex';
-          modal.style.justifyContent = 'center';
-          modal.style.alignItems = 'center';
-          modal.style.zIndex = '1000';
-  
-          // Add click event to close modal
-          modal.onclick = () => modal.remove();
-  
-          // Style the image
-          img.style.maxWidth = '90%';
-          img.style.maxHeight = '90%';
-          img.style.objectFit = 'contain';
-  
-          modal.appendChild(img);
-          document.body.appendChild(modal);
-        }),
+      html2pdf().set(opts).from(element).save(),
       {
-        loading: 'Generating image...',
-        success: 'Hall ticket image generated!',
-        error: 'Failed to generate image'
+        loading: 'Generating PDF...',
+        success: 'Hall ticket downloaded successfully!',
+        error: 'Failed to download hall ticket'
       }
     );
   };
+
+  
+  // const handleDownloadPDF = () => {
+  //   const element = document.getElementById('hall-ticket');
+  
+  //   toast.promise(
+  //     toPng(element, {
+  //       quality: 1,
+  //       pixelRatio: 2, // Similar to scale in html2canvas
+  //     })
+  //       .then(dataUrl => {
+  //         // Create an image element to display the generated image
+  //         const img = new Image();
+  //         img.src = dataUrl;
+          
+  //         // Create a modal or container to show the image
+  //         const modal = document.createElement('div');
+  //         modal.style.position = 'fixed';
+  //         modal.style.top = '0';
+  //         modal.style.left = '0';
+  //         modal.style.width = '100%';
+  //         modal.style.height = '100%';
+  //         modal.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+  //         modal.style.display = 'flex';
+  //         modal.style.justifyContent = 'center';
+  //         modal.style.alignItems = 'center';
+  //         modal.style.zIndex = '1000';
+  
+  //         // Add click event to close modal
+  //         modal.onclick = () => modal.remove();
+  
+  //         // Style the image
+  //         img.style.maxWidth = '90%';
+  //         img.style.maxHeight = '90%';
+  //         img.style.objectFit = 'contain';
+  
+  //         modal.appendChild(img);
+  //         document.body.appendChild(modal);
+  //       }),
+  //     {
+  //       loading: 'Generating image...',
+  //       success: 'Hall ticket image generated!',
+  //       error: 'Failed to generate image'
+  //     }
+  //   );
+  // };
   
   return (
     <div className="min-h-screen bg-gray-100">
