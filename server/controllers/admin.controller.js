@@ -8,6 +8,7 @@ const Student = require('../models/Student.models');
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const nodemailer = require('nodemailer');
+const sendEmail = require("../config/sendEmail")
 
 const addCollege = async(req, res) => {
   try {
@@ -410,20 +411,20 @@ const getStudentsByExamTitle = async (req, res) => {
   }
 };
 
-const updateStudentMarks = (req, res)=>{
-  const { studentId, marks } = req.body;
-
-  Student.findByIdAndUpdate(studentId, { marks }, { new: true })
-    .then(updatedStudent => {
-      if (!updatedStudent) {
-        return res.status(404).json({ message: 'Student not found' });
-      }
-      res.json(updatedStudent);
-    })
-    .catch(error => {
-      console.error('Error updating student marks:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    });
+const updateStudentMarks = async (req, res)=>{
+  const { seatNumber, marks } = req.body;
+  try{
+    const student = await Student.findOne({seatNumber});
+    if(!student){
+      return res.status(404).json({ message: 'Student not found' });
+    }
+    student.result = marks;
+    await student.save();
+    res.status(200).json({ message: 'Marks updated successfully', student:student.seatNumber });
+  }catch(error){
+    console.error('Error updating student marks:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
 }
 
 const createExam = async (req, res) => {
