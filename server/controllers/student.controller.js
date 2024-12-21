@@ -71,6 +71,7 @@ const registerStudent = async (req, res) => {
             student: newStudent,
         });
     } catch (error) {
+        console.log('student controller service :: registerStudent :: error : ', error);
         res.status(500).json({
             message: 'Server error. Please try again later.',
             error: error.message,

@@ -67,11 +67,6 @@ const userSchema = new mongoose.Schema({
         type: String, 
         default: null 
     },
-    exam: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'ExamConfig', 
-        required: true 
-    },
 }, {timestamps: true});
 
 const User = mongoose.model('Student', userSchema);
