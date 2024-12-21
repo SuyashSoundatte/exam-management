@@ -381,7 +381,7 @@ const Student = () => {
           {/* Submit Button */}
           <button
             onClick={ () =>{
-              handleSubmit();
+              handleSubmit
             }}
             type="submit"
             className="w-full bg-red-500 text-white font-medium py-2 rounded-lg hover:bg-red-600"
