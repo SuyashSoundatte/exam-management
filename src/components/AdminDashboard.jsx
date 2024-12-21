@@ -11,9 +11,7 @@ import UpdateStudentMarks from './UpdateStudentsMarks';
 import {
     Box,
     Button,
-    
     Typography,
-    
     Drawer,
     List,
     ListItem,
@@ -25,7 +23,8 @@ import {
     Divider,
     useTheme,
     useMediaQuery,
-    
+    TextField,
+    Grid,
 } from '@mui/material';
 import {
     Menu as MenuIcon,
@@ -37,7 +36,7 @@ import {
 import { DataGrid } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
 import { AdminContext } from '../contexts/AdminContext';
-    // import { exportToExcel } from '../../server/config/excelConvertor';
+
 // Setup axios interceptors
 axios.interceptors.request.use((config) => {
     // Ensure requests include cookies
@@ -56,7 +55,6 @@ axios.interceptors.response.use(
     },
 );
 
-
 const AdminDashboard = () => {
     const { isSuperAdmin } = useContext(AdminContext);
     const navigate = useNavigate();
@@ -64,17 +62,18 @@ const AdminDashboard = () => {
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const drawerWidth = 240;
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
     
-      // Function to open the popup
-      const openPopup = () => {
+    // Function to open the popup
+    const openPopup = () => {
         setIsPopupOpen(true);
-      };
+    };
     
-      // Function to close the popup
-      const closePopup = () => {
+    // Function to close the popup
+    const closePopup = () => {
         setIsPopupOpen(false);
-      };
-    
+    };
 
     const [sidebarOpen, setSidebarOpen] = useState(!isMobile);
     const [students, setStudents] = useState([]);
@@ -91,35 +90,32 @@ const AdminDashboard = () => {
     });
 
     const fetchStudents = useCallback(async () => {
-    try {
-        setLoading(true);
-        const response = await fetch('http://localhost:3000/student/allStudents');
-        
-        if (!response.ok) {
-            const errorData = await response.json();
-            console.error("Error fetching students:", errorData);
-            throw new Error(errorData.message || 'Failed to fetch students');
+        try {
+            setLoading(true);
+            const response = await fetch('http://localhost:3000/student/allStudents');
+            
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("Error fetching students:", errorData);
+                throw new Error(errorData.message || 'Failed to fetch students');
+            }
+
+            const data = await response.json();
+            console.log("Students data received:", data); // Log the response
+            
+            const processedStudents = (data.students || []).map(student => ({
+                ...student,
+                result: student.result ?? 'Not Available', // Default to 'Not Available' if result is null or undefined
+            }));
+
+            setStudents(processedStudents); // Update the state
+        } catch (err) {
+            console.error("Error in fetchStudents:", err);
+            setError(err.message || 'Failed to fetch students');
+        } finally {
+            setLoading(false);
         }
-
-        const data = await response.json();
-        console.log("Students data received:", data); // Log the response
-        
-        const processedStudents = (data.students || []).map(student => ({
-            ...student,
-            result: student.result ?? 'Not Available', // Default to 'Not Available' if result is null or undefined
-        }));
-
-        setStudents(processedStudents); // Update the state
-    } catch (err) {
-        console.error("Error in fetchStudents:", err);
-        setError(err.message || 'Failed to fetch students');
-    } finally {
-        setLoading(false);
-    }
-}, []);
-
-    
-    
+    }, []);
 
     const fetchExams = useCallback(async () => {
         try {
@@ -168,6 +164,35 @@ const AdminDashboard = () => {
             setLoading(false); // Stop loading state
         }
     }, []);
+
+    const handleSearch = async () => {
+        try {
+            setLoading(true);
+            const response = await fetch(`http://localhost:3000/admin/search?term=${searchTerm}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+            });
+
+            if (!response.ok) {
+                throw new Error((await response.json()).message || 'Failed to search');
+            }
+
+            const data = await response.json();
+            setSearchResults(data);
+        } catch (err) {
+            setError(err.message || 'Failed to search');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleReset = () => {
+        setSearchTerm('');
+        setSearchResults([]);
+    };
 
     useEffect(() => {
         let mounted = true;
@@ -283,8 +308,7 @@ const AdminDashboard = () => {
             renderCell: (params) => (params.row.isAdmin ? 'Yes' : 'No'),
         },
         { field: 'email', headerName: 'Email', flex: 1 },
-        
-      ];
+    ];
 
     const redTheme = createTheme({
         palette: {
@@ -422,17 +446,51 @@ const AdminDashboard = () => {
                                     >
                                         <ExportButton />
                                     </Button>
+                                    <Grid container spacing={2} sx={{ mb: 2 }}>
+                                        <Grid item xs={6} sm={4} md={3}>
+                                            <TextField
+                                                label="Search by Exam Year or Exam Number"
+                                                value={searchTerm}
+                                                onChange={(e) => setSearchTerm(e.target.value)}
+                                                fullWidth
+                                                margin="normal"
+                                                sx={{ borderRadius: 2 }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={3} sm={2} md={1.5}>
+                                            <Button
+                                                variant="contained"
+                                                onClick={handleSearch}
+                                                sx={{ mt: 3, borderRadius: 2 }}
+                                                fullWidth
+                                            >
+                                                Search
+                                            </Button>
+                                        </Grid>
+                                        <Grid item xs={3} sm={2} md={1.5}>
+                                            <Button
+                                                variant="outlined"
+                                                onClick={handleReset}
+                                                sx={{ mt: 3, borderRadius: 2 }}
+                                                fullWidth
+                                            >
+                                                Reset
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
                                 </>
                             )}
     
                             <Box sx={{ height: 'calc(100vh - 180px)', width: '100%' }}>
                                 <DataGrid
                                     rows={
-                                        activeSection === 'exams'
-                                            ? exams
-                                            : activeSection === 'admins'
-                                                ? admins
-                                                : students
+                                        searchResults.length > 0
+                                            ? searchResults
+                                            : activeSection === 'exams'
+                                                ? exams
+                                                : activeSection === 'admins'
+                                                    ? admins
+                                                    : students
                                     }
                                     columns={
                                         activeSection === 'exams'
@@ -463,6 +521,5 @@ const AdminDashboard = () => {
         </ThemeProvider>
     );
 };
-
 
 export default AdminDashboard;
