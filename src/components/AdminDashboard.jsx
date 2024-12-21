@@ -11,15 +11,9 @@ import UpdateStudentMarks from './UpdateStudentsMarks';
 import {
     Box,
     Button,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    CircularProgress,
-    TextField,
+    
     Typography,
-    Snackbar,
-    Alert,
+    
     Drawer,
     List,
     ListItem,
@@ -41,12 +35,9 @@ import {
     Logout as LogoutIcon,
 } from '@mui/icons-material';
 import { DataGrid } from '@mui/x-data-grid';
-import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useNavigate } from 'react-router-dom';
 import { AdminContext } from '../contexts/AdminContext';
-import { header } from 'server/reply';
-// import { exportToExcel } from '../../server/config/excelConvertor';
+    // import { exportToExcel } from '../../server/config/excelConvertor';
 // Setup axios interceptors
 axios.interceptors.request.use((config) => {
     // Ensure requests include cookies
@@ -306,7 +297,6 @@ const AdminDashboard = () => {
         },
     });
 
-     
     return (
         <ThemeProvider theme={redTheme}>
             <Box sx={{ display: 'flex' }}>
@@ -325,7 +315,7 @@ const AdminDashboard = () => {
                         </Typography>
                     </Toolbar>
                 </AppBar>
-
+    
                 <Drawer
                     variant={isMobile ? 'temporary' : 'permanent'}
                     open={sidebarOpen}
@@ -362,7 +352,7 @@ const AdminDashboard = () => {
                                 </ListItemIcon>
                                 <ListItemText primary="Students" />
                             </ListItem>
-                            <ListItem
+                            {isSuperAdmin && (<ListItem
                                 button
                                 selected={activeSection === 'createUser'}
                                 onClick={() => setActiveSection('createUser')}
@@ -371,7 +361,7 @@ const AdminDashboard = () => {
                                     <PersonAddIcon />
                                 </ListItemIcon>
                                 <ListItemText primary="Create User" />
-                            </ListItem>
+                            </ListItem>)}
                             {isSuperAdmin && (
                                 <ListItem
                                     button
@@ -396,165 +386,80 @@ const AdminDashboard = () => {
                         </List>
                     </Box>
                 </Drawer>
-
+    
                 <Box component="main" sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}>
                     <Toolbar />
-
-                    {activeSection === 'exams' && (
-                        <Button
-                            variant="contained"
-                            onClick={() => setDialogOpen(true)}
-                            sx={{ mb: 2 }}
-                            startIcon={<AssignmentIcon />}
-                        >
-                            Create New Exam
-                        </Button>
-                    )}
-
-                    {activeSection === 'students' && (
-                        <Button
-                        variant="contained"
-                        onClick={() => {
-                            openPopup();
-                          }}
-                        sx={{ mb: 2, mr:4}}
-                        startIcon={<AssignmentIcon />}
-                    >
-                        Enter Marks
-                    </Button>
-                    )}
-
-                    {activeSection === 'students' && (
-                        <Button
-                            variant="contained"
-                            // onClick={}
-                            sx={{ mb: 2 }}
-                            startIcon={<AssignmentIcon />}
-                        >
-                            <ExportButton />
-                        </Button>
-                    )}
-                    <Box sx={{ height: 'calc(100vh - 180px)', width: '100%' }}>
-                        <DataGrid
-                            rows={
-                                activeSection === 'exams'
-                                    ? exams
-                                    : activeSection === 'admins'
-                                      ? admins
-                                      : students
-                            }
-                            columns={
-                                activeSection === 'exams'
-                                    ? examColumns
-                                    : activeSection === 'admins'
-                                      ? adminColumns
-                                      : studentColumns
-                            }
-                            pageSize={5}
-                            rowsPerPageOptions={[5]}
-                            getRowId={(row) =>
-                                row._id || row.studentId || row.adminId
-                            }
-                            loading={loading}
-                            sx={{
-                                boxShadow: 2,
-                                border: 2,
-                                borderColor: 'primary.light',
-                                '& .MuiDataGrid-cell:hover': {
-                                    color: 'primary.main',
-                                },
-                            }}
-                        />
-                    </Box>
-
-                    <Dialog
-                        open={dialogOpen}
-                        onClose={() => setDialogOpen(false)}
-                    >
-                        <DialogTitle>Create New Exam</DialogTitle>
-                        <DialogContent>
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                }}
-                            >
-                                <TextField
-                                    label="Exam Title"
-                                    value={examForm.examTitle}
-                                    onChange={(e) =>
-                                        setExamForm({
-                                            ...examForm,
-                                            examTitle: e.target.value,
-                                        })
-                                    }
-                                    fullWidth
-                                    margin="normal"
-                                />
-                                <LocalizationProvider
-                                    dateAdapter={AdapterDayjs}
+                    
+                    {activeSection === 'createUser' ? (
+                        <Signup />
+                    ) : (
+                        <>
+                            {activeSection === 'exams' && (
+                                <Button
+                                    variant="contained"
+                                    onClick={() => setDialogOpen(true)}
+                                    sx={{ mb: 2 }}
+                                    startIcon={<AssignmentIcon />}
                                 >
-                                    <DatePicker
-                                        label="Exam Date"
-                                        value={examForm.examDate}
-                                        onChange={(date) =>
-                                            setExamForm({
-                                                ...examForm,
-                                                examDate: date,
-                                            })
-                                        }
-                                        fullWidth
-                                        margin="normal"
-                                    />
-                                </LocalizationProvider>
-                                <TextField
-                                    label="Description"
-                                    value={examForm.description}
-                                    onChange={(e) =>
-                                        setExamForm({
-                                            ...examForm,
-                                            description: e.target.value,
-                                        })
+                                    Create New Exam
+                                </Button>
+                            )}
+    
+                            {activeSection === 'students' && (
+                                <>
+                                    <Button
+                                        variant="contained"
+                                        onClick={openPopup}
+                                        sx={{ mb: 2, mr: 4 }}
+                                        startIcon={<AssignmentIcon />}
+                                    >
+                                        Enter Marks
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        sx={{ mb: 2 }}
+                                        startIcon={<AssignmentIcon />}
+                                    >
+                                        <ExportButton />
+                                    </Button>
+                                </>
+                            )}
+    
+                            <Box sx={{ height: 'calc(100vh - 180px)', width: '100%' }}>
+                                <DataGrid
+                                    rows={
+                                        activeSection === 'exams'
+                                            ? exams
+                                            : activeSection === 'admins'
+                                                ? admins
+                                                : students
                                     }
-                                    fullWidth
-                                    margin="normal"
+                                    columns={
+                                        activeSection === 'exams'
+                                            ? examColumns
+                                            : activeSection === 'admins'
+                                                ? adminColumns
+                                                : studentColumns
+                                    }
+                                    pageSize={5}
+                                    rowsPerPageOptions={[5]}
+                                    getRowId={(row) => row._id || row.studentId || row.adminId}
+                                    loading={loading}
+                                    sx={{
+                                        boxShadow: 2,
+                                        border: 2,
+                                        borderColor: 'primary.light',
+                                        '& .MuiDataGrid-cell:hover': {
+                                            color: 'primary.main',
+                                        },
+                                    }}
                                 />
                             </Box>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={() => setDialogOpen(false)} color="primary">
-                                Cancel
-                            </Button>
-                            <Button onClick={handleCreateExam} color="primary" disabled={loading}>
-                                {loading ? (
-                                    <CircularProgress size={24} sx={{ color: 'white' }} />
-                                ) : (
-                                    'Create'
-                                )}
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
-
-                    {error && (
-                        <Snackbar
-                            open={Boolean(error)}
-                            autoHideDuration={6000}
-                            onClose={() => setError('')}
-                        >
-                            <Alert
-                                onClose={() => setError('')}
-                                severity="error"
-                            >
-                                {error}
-                            </Alert>
-                        </Snackbar>
+                        </>
                     )}
-                    <Snackbar open={!!error} autoHideDuration={6000} onClose={() => setError('')}>
-                        <Alert severity="error">{error}</Alert>
-                    </Snackbar>
                 </Box>
+                {isPopupOpen && <UpdateStudentMarks closePopup={closePopup} />}
             </Box>
-            {isPopupOpen && <UpdateStudentMarks closePopup={closePopup} />}
         </ThemeProvider>
     );
 };
