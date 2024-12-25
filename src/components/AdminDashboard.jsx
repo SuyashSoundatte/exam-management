@@ -25,6 +25,10 @@ import {
     useMediaQuery,
     TextField,
     Grid,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions
 } from '@mui/material';
 import {
     Menu as MenuIcon,
@@ -173,9 +177,9 @@ const AdminDashboard = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body:{
-                        year:searchTerm
-                },
+                body: JSON.stringify({
+                    year: searchTerm
+                }),
                 credentials: 'include',
             });
 
@@ -323,6 +327,25 @@ const AdminDashboard = () => {
             },
         },
     });
+
+    const handleDialogClose = () => {
+        setDialogOpen(false);
+        setExamForm({ examTitle: '', examDate: null, description: '' });
+    };
+
+    const handleExamSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            // API call to create exam would go here
+            await handleCreateExam();
+            setDialogOpen(false);
+            setExamForm({ examTitle: '', examDate: null, description: '' });
+            // Refresh exams list
+            fetchExams();
+        } catch (error) {
+            setError('Failed to create exam');
+        }
+    };
 
     return (
         <ThemeProvider theme={redTheme}>
@@ -521,6 +544,45 @@ const AdminDashboard = () => {
                 </Box>
                 {isPopupOpen && <UpdateStudentMarks closePopup={closePopup} />}
             </Box>
+
+            <Dialog open={dialogOpen} onClose={handleDialogClose}>
+                <DialogTitle>Create New Exam</DialogTitle>
+                <DialogContent>
+                    <form onSubmit={handleExamSubmit}>
+                        <TextField
+                            fullWidth
+                            label="Exam Title"
+                            value={examForm.examTitle}
+                            onChange={(e) => setExamForm({...examForm, examTitle: e.target.value})}
+                            margin="normal"
+                        />
+                        <TextField
+                            fullWidth
+                            type="date"
+                            label="Exam Date"
+                            InputLabelProps={{ shrink: true }}
+                            value={examForm.examDate}
+                            onChange={(e) => setExamForm({...examForm, examDate: e.target.value})}
+                            margin="normal"
+                        />
+                        <TextField
+                            fullWidth
+                            multiline
+                            rows={4}
+                            label="Description"
+                            value={examForm.description}
+                            onChange={(e) => setExamForm({...examForm, description: e.target.value})}
+                            margin="normal"
+                        />
+                        <DialogActions>
+                            <Button onClick={handleDialogClose}>Cancel</Button>
+                            <Button type="submit" variant="contained" color="primary">
+                                Create Exam
+                            </Button>
+                        </DialogActions>
+                    </form>
+                </DialogContent>
+            </Dialog>
         </ThemeProvider>
     );
 };
