@@ -66,6 +66,7 @@ router.post("/createExam", adminAuth, createExam);
 router.post("/announcements", authenticateSuperAdmin, createAnnouncement);
 router.get("/announcements", adminAuth, getAnnouncements);
 
+router.post("/search",adminAuth,getDataByYear);
 
 router.post("/submitMarks", adminAuth, validateUpdateResult, updateStudentMarks);
 

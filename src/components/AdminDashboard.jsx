@@ -168,10 +168,13 @@ const AdminDashboard = () => {
     const handleSearch = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`http://localhost:3000/admin/search?term=${searchTerm}`, {
-                method: 'GET',
+            const response = await fetch(`http://localhost:3000/admin/search`, {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                },
+                body:{
+                        year:searchTerm
                 },
                 credentials: 'include',
             });
