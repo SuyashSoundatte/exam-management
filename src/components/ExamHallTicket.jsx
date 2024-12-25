@@ -103,6 +103,7 @@ const ExamHallTicket = () => {
         }
         const data = await response.json();
         setStudentData(data);
+        setShowDialog(false);
         toast.success('Verification successful!');
         setShowDialog(false);
         handleDownloadPDF();
