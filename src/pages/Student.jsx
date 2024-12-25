@@ -369,8 +369,7 @@ const Student = () => {
                 onChange={handleChange}
                 required
                 className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
-              >
-                <option value="">Medium</option>
+              >   ̥               <option value="">Medium</option>
                 <option value="Marathi">Marathi</option>
                 <option value="Semi-English">Semi-English</option>
                 <option value="English">English</option>
