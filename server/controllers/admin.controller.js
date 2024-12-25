@@ -350,19 +350,17 @@ const getAnnouncements = async (req, res) => {
     res.status(500).json({ message: 'Error retrieving announcements.', error: error.message });
   }
 };
-
-const getDataByYear = async (req, res)=>{
+const getDataByYear = async (req, res) => {
   const { year } = req.body;
-  if (!year || isNaN(year)) {
+  if (!year || isNaN(year) || year.toString().length !== 4) {
     return res.status(400).json({ message: 'Invalid or missing year' });
   }
 
   try {
+    const yearPrefix = year.toString().slice(2);
+    console.log("yearPrefix: ", yearPrefix)
     const students = await Student.find({
-      createdAt: {
-        $gte: new Date(`${year}-01-01T00:00:00.000Z`),
-        $lt: new Date(`${year}-12-31T23:59:59.999Z`),
-      },
+      seatNumber: new RegExp(`^${yearPrefix}`),
     });
 
     res.status(200).json(students);
@@ -370,7 +368,9 @@ const getDataByYear = async (req, res)=>{
     console.error('Error fetching students:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
-} 
+};
+
+
 
 
 const getStudentsByExamTitle = async (req, res) => {

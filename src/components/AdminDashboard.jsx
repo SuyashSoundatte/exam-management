@@ -173,9 +173,9 @@ const AdminDashboard = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body:{
-                        year:searchTerm
-                },
+                body: JSON.stringify({
+                    year:searchTerm
+                }),
                 credentials: 'include',
             });
 
@@ -184,6 +184,7 @@ const AdminDashboard = () => {
             }
 
             const data = await response.json();
+            setStudents(data);
             setSearchResults(data);
         } catch (err) {
             setError(err.message || 'Failed to search');
